@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.w3c.dom.views.DocumentView;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
@@ -9,31 +11,41 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers.RawFiducial;
-//import frc.robot.Limelight.LimelightHelpers.LimelightTarget_Fiducial;
+//import frc.robot.Vision.LimelightHelpers.LimelightTarget_Fiducial;
 //import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.controller.PIDController;
 
-public class RobotAlignCommand extends Command {
+
+class PIDControllerConfigurable extends PIDController {
+  public PIDControllerConfigurable(double kP, double kI, double kD) {
+      super(kP, kI, kD);
+  }
+  
+  public PIDControllerConfigurable(double kP, double kI, double kD, double tolerance) {
+      super(kP, kI, kD);
+      this.setTolerance(tolerance);
+  }
+}
+public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
-  private final LimelightSubsystem m_limelight;
+  private final VisionSubsystem m_limelight;
   private int m_tagId;
 
-  private final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.1);
-  private final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.2);
-  private final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.3);
+  private  final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.1);
+  private  final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.2);
+  private  final PIDControllerConfigurable yPidController = new PIDControllerConfigurable(0.3, 0, 0, 0.3);
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
   private static final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
   public double rotationalRate = 0;
   public double velocityX = 0;
 
-  public RobotAlignCommand(CommandSwerveDrivetrain drivetrain, LimelightSubsystem limelight, int tagId) {
+  public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int tagId) {
     this.m_drivetrain = drivetrain;
     this.m_limelight = limelight;
     this.m_tagId = tagId;
-    SmartDashboard.putNumber("RobotAlign/TagToFindIn", tagId);
-    SmartDashboard.putNumber("RobotAlign/TagToFind", m_tagId);
     addRequirements(m_limelight);
   }
 
@@ -69,19 +81,19 @@ public class RobotAlignCommand extends Command {
         this.end(true);
       }
 
-      SmartDashboard.putNumber("RobotAlignCommand/txnc", fiducial.txnc);
-      SmartDashboard.putNumber("RobotAlignCommand/ta", fiducial.ta);
-      SmartDashboard.putNumber("RobotAlignCommand/distToRobot", fiducial.distToRobot);
-      SmartDashboard.putNumber("RobotAlignCommand/distToCamera", fiducial.distToCamera);
-      SmartDashboard.putNumber("RobotAlignCommand/rotationalPidController", rotationalRate);
-      SmartDashboard.putNumber("RobotAlignCommand/xPidController", velocityX);
-      SmartDashboard.putNumber("RobotAlignCommand/TagID", m_tagId);
+      SmartDashboard.putNumber("AlignCommand/txnc", fiducial.txnc);
+      SmartDashboard.putNumber("AlignCommand/ta", fiducial.ta);
+      SmartDashboard.putNumber("AlignCommand/distToRobot", fiducial.distToRobot);
+      SmartDashboard.putNumber("AlignCommand/distToCamera", fiducial.distToCamera);
+      SmartDashboard.putNumber("AlignCommand/rotationalPidController", rotationalRate);
+      SmartDashboard.putNumber("AlignCommand/xPidController", velocityX);
+      SmartDashboard.putNumber("AlignCommand/TagID", m_tagId);
 
 
       /* move the robot to correct position */
       m_drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(velocityX));
       
-    } catch (LimelightSubsystem.NoSuchTargetException nste) { 
+    } catch (VisionSubsystem.NoSuchTargetException nste) { 
       //System.out.println("No apriltag found");
       if ((rotationalRate != 0) && (velocityX != 0)){
         /* move the robot until apriltag is found??? */
@@ -102,7 +114,7 @@ public class RobotAlignCommand extends Command {
   @Override
   public boolean isFinished() {
     boolean temp = rotationalPidController.atSetpoint() && xPidController.atSetpoint();
-    SmartDashboard.putBoolean("RobotAlignCommand/AlignFinished", temp);
+    SmartDashboard.putBoolean("AlignCommand/AlignFinished", temp);
     return temp;
   }
 

@@ -22,6 +22,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.commands.AlignCommand;
+import frc.robot.commands.RobotAlignCommand;
 import frc.robot.commands.TurretAlignCommand;
 
 public class RobotContainer {
@@ -42,8 +45,10 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     private final LimelightSubsystem limelight = new LimelightSubsystem();
+    private final VisionSubsystem m_vision = new VisionSubsystem();
+
     /** TurretSubsystem */
-    //private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
+    private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
 
      /** RangeSensorSubsystem */
      private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
@@ -88,8 +93,8 @@ public class RobotContainer {
         joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         /* run turret motor in suck-in and push-out modes */
-        /* 
-        boolean useTurretSubsystem = false;
+         
+        boolean useTurretSubsystem = true;
         if ( useTurretSubsystem ) {
             // y() -> Turreting the robot UP
             joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
@@ -99,18 +104,26 @@ public class RobotContainer {
 
             joystick.rightBumper().onTrue(new TurretAlignCommand(m_turretSubsystem, limelight, 0));
         }
-            */
+            
 
         /* get distance and move for that amount */
-        boolean getRangeAndGoTest = true;
+        boolean getRangeAndGoTest = false;
         if (getRangeAndGoTest) {
-            joystick.a().onTrue(new SequentialCommandGroup(
+            joystick.y().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> drivetrain.setCurrentPose()),
                 drivetrain.sysIdDynamic(Direction.kForward)
                     .until(() -> drivetrain.isDesiredPoseReached(m_sensorSubsystem.getDistance()))
             ));
         }
 
+        /* align robot */
+        boolean alignTesting = true;
+        if (alignTesting) {
+            int testTagId = 12;
+            joystick.x().onTrue(
+                new AlignCommand(drivetrain, m_vision, testTagId)
+            );
+        }
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
