@@ -1,0 +1,25 @@
+import frc.robot.Constants; // Assuming you have a constants file for heights
+import limelight.LimelightHelpers;
+import edu.wpi.first.math.geometry.Rotation2d;
+
+public class LimelightDistanceEstimator {
+
+    // Define constants for your robot and target (measure these physically)
+    private static final double LIMELIGHT_MOUNT_ANGLE = 20.0; // Degrees
+    private static final double TARGET_HEIGHT = 2.5; // Meters or inches, consistently
+    private static final double LIMELIGHT_HEIGHT = 0.5; // Meters or inches, consistently
+
+    public double getDistance() {
+        // Get the vertical offset angle (ty) from the Limelight
+        double ty = LimelightHelpers.getTY("limelight"); // "limelight" is the default name, change if yours is different
+
+        // Calculate the angle to the goal using the camera mount angle and ty
+        Rotation2d angleToGoal = Rotation2d.fromDegrees(LIMELIGHT_MOUNT_ANGLE)
+            .plus(Rotation2d.fromDegrees(ty));
+
+        // Use trigonometry to calculate the distance: distance = (targetHeight - limelightHeight) / tan(angleToGoal)
+        double distance = (TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(angleToGoal.getRadians());
+
+        return distance;
+    }
+}
