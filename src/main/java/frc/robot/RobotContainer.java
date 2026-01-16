@@ -82,15 +82,18 @@ public class RobotContainer {
             point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
         ));*/
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        boolean runSysIdCommands = false;
+        if (runSysIdCommands) {
+            // Run SysId routines when holding back/start and X/Y.
+            // Note that each routine should be run exactly once in a single log.
+            joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+            joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+            joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+            joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        }
 
         // reset the field-centric heading on left bumper press
-        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         /* run turret motor in suck-in and push-out modes */
          
@@ -123,7 +126,17 @@ public class RobotContainer {
             joystick.x().onTrue(
                 new AlignCommand(drivetrain, m_vision, testTagId)
             );
+
+            joystick.y().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> AlignCommand.setTagId(1)),
+                new AlignCommand(drivetrain, m_vision, testTagId)
+            ));
+
+            joystick.leftBumper().onTrue(
+                new AlignCommand(drivetrain, m_vision, 5)
+            );
         }
+        
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 

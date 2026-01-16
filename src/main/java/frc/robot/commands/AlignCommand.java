@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.*;
 
-import org.w3c.dom.views.DocumentView;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
@@ -15,23 +13,11 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers.RawFiducial;
 //import frc.robot.Vision.LimelightHelpers.LimelightTarget_Fiducial;
 //import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.controller.PIDController;
 
-
-class PIDControllerConfigurable extends PIDController {
-  public PIDControllerConfigurable(double kP, double kI, double kD) {
-      super(kP, kI, kD);
-  }
-  
-  public PIDControllerConfigurable(double kP, double kI, double kD, double tolerance) {
-      super(kP, kI, kD);
-      this.setTolerance(tolerance);
-  }
-}
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_limelight;
-  private int m_tagId;
+  static private int m_tagId;
 
   private  final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.1);
   private  final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.2);
@@ -45,7 +31,7 @@ public class AlignCommand extends Command {
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int tagId) {
     this.m_drivetrain = drivetrain;
     this.m_limelight = limelight;
-    this.m_tagId = tagId;
+    m_tagId = tagId;
     addRequirements(m_limelight);
   }
 
@@ -122,5 +108,9 @@ public class AlignCommand extends Command {
   public void end(boolean interrupted) {
     m_drivetrain.applyRequest(() -> idleRequest);
     
+  }
+
+  static public void setTagId(int tagId) {
+    m_tagId = tagId;
   }
 }
