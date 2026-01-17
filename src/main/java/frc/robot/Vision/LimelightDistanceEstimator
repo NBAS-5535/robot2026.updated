@@ -1,3 +1,9 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.Vision;
+
 import frc.robot.Constants; // Assuming you have a constants file for heights
 import limelight.LimelightHelpers;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +15,7 @@ public class LimelightDistanceEstimator {
     private static final double TARGET_HEIGHT = 2.5; // Meters or inches, consistently
     private static final double LIMELIGHT_HEIGHT = 0.5; // Meters or inches, consistently
 
+    
     public double getDistance() {
         // Get the vertical offset angle (ty) from the Limelight
         double ty = LimelightHelpers.getTY("limelight"); // "limelight" is the default name, change if yours is different

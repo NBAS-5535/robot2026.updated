@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,13 +18,20 @@ import frc.robot.Vision.LimelightHelpers.RawFiducial;
 import frc.robot.Vision.LimelightHelpers.LimelightResults;
 import frc.robot.Vision.LimelightHelpers.LimelightTarget_Fiducial;
 
+
 public class VisionSubsystem extends SubsystemBase {
   private RawFiducial[] fiducials;
   private LimelightResults limelightResults;
   private final String limelightName = "";
-    private double m_minDistance = 0.;
+  private double m_minDistance = 0.;
   
   //public final AprilTagFieldLayout aprilTagFieldLayout = new AprilTagFieldLayout(jsonPath);
+  //private LimelightDistanceEstimator estimator = new LimelightDistanceEstimator();
+
+// Define constants for your robot and target (measure these physically)
+  private static final double LIMELIGHT_MOUNT_ANGLE = 19.; //7.0; // Degrees
+  private static final double TARGET_HEIGHT = 0.85; // Meters or inches, consistently
+  private static final double LIMELIGHT_HEIGHT = 0.24; // Meters or inches, consistently
 
   public VisionSubsystem() {
     config();
@@ -40,10 +48,10 @@ public class VisionSubsystem extends SubsystemBase {
     // LimelightHelpers.setCropWindow("", -0.5, 0.5, -0.5, 0.5);
     LimelightHelpers.setCameraPose_RobotSpace(
       this.limelightName,
-        0.38, //meters Meters.convertFrom(30. / 2., Inches), // forward location wrt robot center
-        0.25, // assume perfect alignment with robor center
-        0.26, //m Meters.convertFrom(VisionConstants.limelightLensHeightInches, Inches), // height of camera from the floor
-        0,
+        Meters.convertFrom(16.5, Inches), // forward location wrt robot center: half side + camera thickness
+        0., // assume perfect alignment with robor center
+        LIMELIGHT_HEIGHT, //m Meters.convertFrom(VisionConstants.limelightLensHeightInches, Inches), // height of camera from the floor
+        LIMELIGHT_MOUNT_ANGLE,
         0,
         0);
     // Overrides the valid AprilTag IDs that will be used for localization. 
@@ -72,7 +80,35 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
     this.limelightResults = LimelightHelpers.getLatestResults(this.limelightName);
-    SmartDashboard.putNumber("VisionSubsystem/num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
+    SmartDashboard.putNumber("/VisionSubsystem/num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
+
+    /*
+    for (RawFiducial fiducial : fiducials) {
+      int id = fiducial.id; // Tag ID
+      double txnc = fiducial.txnc; // X offset (no crosshair)
+      double tync = fiducial.tync; // Y offset (no crosshair)
+      double ta = fiducial.ta; // Target area
+      double distToCamera = fiducial.distToCamera; // Distance to camera
+      double distToRobot = fiducial.distToRobot; // Distance to robot
+      double ambiguity = fiducial.ambiguity; // Tag pose ambiguity
+      SmartDashboard.putNumber("/DebugVision/id", id);
+      SmartDashboard.putNumber("/DebugVision/txnc", txnc);
+      SmartDashboard.putNumber("/DebugVision/tync", tync);
+      
+      SmartDashboard.putNumber("/DebugVision/ty", tync);
+      SmartDashboard.putNumber("/DebugVision/ta", ta);
+      SmartDashboard.putNumber("/DebugVision/distToCamera", distToCamera);
+      SmartDashboard.putNumber("/DebugVision/distToRobot", distToRobot);
+      SmartDashboard.putNumber("/DebugVision/ambiguity", ambiguity);
+    }
+    */
+    SmartDashboard.putNumber("/DebugVision/tx", LimelightHelpers.getTX(""));
+    SmartDashboard.putNumber("/DebugVision/ty", LimelightHelpers.getTY(""));
+    SmartDashboard.putNumber("/DebugVision/txnc", LimelightHelpers.getTXNC(""));
+    SmartDashboard.putNumber("/DebugVision/tync", LimelightHelpers.getTYNC(""));
+    SmartDashboard.putNumber("/DebugVision/ta", LimelightHelpers.getTA(""));
+
+    getDistance();
 
   }
 
@@ -90,7 +126,7 @@ public class VisionSubsystem extends SubsystemBase {
             minDistance = fiducial.ta;
         }
     }
-    SmartDashboard.putNumber("VisionSubsystem/minDistance", minDistance);
+    SmartDashboard.putNumber("/VisionSubsystem/minDistance", minDistance);
 
     /* persist closest distance value */
     setMinDistance(minDistance);
@@ -141,10 +177,10 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
     throw new NoSuchTargetException("No target with ID " + id + " is in view!");
   }
   
-  /* keep track of the minDistance found via linelight Apriltag search */
+  /* keep track of the minDistance found via limelight Apriltag search */
   public void setMinDistance(double distance) {
     m_minDistance = distance;
-    SmartDashboard.putNumber("VisionSubsystem/VisionClosetAprilTag", distance);
+    SmartDashboard.putNumber("/VisionSubsystem/VisionClosetAprilTag", distance);
   }
 
   public double getMinDistance() {
@@ -186,6 +222,23 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   /* set Limelight preset pipeline */
   public static void setPipeline(int index){
     LimelightHelpers.setPipelineIndex("", index);
-    SmartDashboard.putNumber("VisionSubsystem/PipeLineInUse", index);
+    SmartDashboard.putNumber("/VisionSubsystem/PipeLineInUse", index);
   }
+
+  public double getDistance() {
+        // Get the vertical offset angle (ty) from the Limelight
+        double ty = LimelightHelpers.getTY("limelight"); // "limelight" is the default name, change if yours is different
+
+        // Calculate the angle to the goal using the camera mount angle and ty
+        Rotation2d angleToGoal = Rotation2d.fromDegrees(LIMELIGHT_MOUNT_ANGLE)
+            .plus(Rotation2d.fromDegrees(ty));
+
+        // Use trigonometry to calculate the distance: distance = (targetHeight - limelightHeight) / tan(angleToGoal)
+        double distance = (TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(angleToGoal.getRadians());
+
+        //SmartDashboard.putNumber("/VisionSubsystem/EstimatedDistance", distance);
+        SmartDashboard.putNumber("/VisionSubsystem/ty_estimator", distance);
+
+        return distance;
+    } 
 }

@@ -44,7 +44,7 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
-    private final LimelightSubsystem limelight = new LimelightSubsystem();
+    //private final LimelightSubsystem limelight = new LimelightSubsystem();
     private final VisionSubsystem m_vision = new VisionSubsystem();
 
     /** TurretSubsystem */
@@ -105,7 +105,7 @@ public class RobotContainer {
             // start() -> Lowering the robot DOWN
             joystick.b().whileTrue(m_turretSubsystem.runTurretLeftCommand());
 
-            joystick.rightBumper().onTrue(new TurretAlignCommand(m_turretSubsystem, limelight, 0));
+            //joystick.rightBumper().onTrue(new TurretAlignCommand(m_turretSubsystem, limelight, 0));
         }
             
 
@@ -122,24 +122,30 @@ public class RobotContainer {
         /* align robot */
         boolean alignTesting = true;
         if (alignTesting) {
-            int testTagId = 12;
+            int testTagId = 0;
             joystick.x().onTrue(
                 new AlignCommand(drivetrain, m_vision, testTagId)
             );
 
-            joystick.y().onTrue(new SequentialCommandGroup(
+            joystick.back().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> AlignCommand.setTagId(1)),
                 new AlignCommand(drivetrain, m_vision, 1)
             ));
 
-            joystick.leftBumper().onTrue(
-                new AlignCommand(drivetrain, m_vision, 5)
+            joystick.y().onTrue(
+                new AlignCommand(drivetrain, m_vision, 12)
             );
+            
+            /* use a preset pipeline index = 5 */
+            joystick.rightBumper().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
+                new AlignCommand(drivetrain, m_vision, 1)
+            )); 
 
             /* use a preset pipeline index = 3 */
-            joystick.back().onTrue(new SequentialCommandGroup(
+            joystick.leftBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
-                new AlignCommand(drivetrain, m_vision, 15)
+                new AlignCommand(drivetrain, m_vision, 12)
             ));
         }
         
