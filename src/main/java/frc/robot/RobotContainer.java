@@ -129,12 +129,18 @@ public class RobotContainer {
 
             joystick.y().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> AlignCommand.setTagId(1)),
-                new AlignCommand(drivetrain, m_vision, testTagId)
+                new AlignCommand(drivetrain, m_vision, 1)
             ));
 
             joystick.leftBumper().onTrue(
                 new AlignCommand(drivetrain, m_vision, 5)
             );
+
+            /* use a preset pipeline index = 3 */
+            joystick.back().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
+                new AlignCommand(drivetrain, m_vision, 15)
+            ));
         }
         
         drivetrain.registerTelemetry(logger::telemeterize);

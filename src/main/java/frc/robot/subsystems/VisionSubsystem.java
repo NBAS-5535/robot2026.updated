@@ -72,7 +72,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
     this.limelightResults = LimelightHelpers.getLatestResults(this.limelightName);
-    SmartDashboard.putNumber("num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
+    SmartDashboard.putNumber("VisionSubsystem/num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
 
   }
 
@@ -90,7 +90,7 @@ public class VisionSubsystem extends SubsystemBase {
             minDistance = fiducial.ta;
         }
     }
-    SmartDashboard.putNumber("minDistance", minDistance);
+    SmartDashboard.putNumber("VisionSubsystem/minDistance", minDistance);
 
     /* persist closest distance value */
     setMinDistance(minDistance);
@@ -144,7 +144,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   /* keep track of the minDistance found via linelight Apriltag search */
   public void setMinDistance(double distance) {
     m_minDistance = distance;
-    SmartDashboard.putNumber("VisionClosetAprilTag", distance);
+    SmartDashboard.putNumber("VisionSubsystem/VisionClosetAprilTag", distance);
   }
 
   public double getMinDistance() {
@@ -181,5 +181,11 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   }
   public double getClosestTA(){
     return getClosestFiducial().ta;
+  }
+
+  /* set Limelight preset pipeline */
+  public static void setPipeline(int index){
+    LimelightHelpers.setPipelineIndex("", index);
+    SmartDashboard.putNumber("VisionSubsystem/PipeLineInUse", index);
   }
 }

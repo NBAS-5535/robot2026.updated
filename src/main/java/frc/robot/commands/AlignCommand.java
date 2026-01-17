@@ -17,7 +17,7 @@ import frc.robot.Vision.LimelightHelpers.RawFiducial;
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_limelight;
-  static private int m_tagId;
+  private static int m_tagId;
 
   private  final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.1);
   private  final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.2);
@@ -110,7 +110,7 @@ public class AlignCommand extends Command {
     
   }
 
-  static public void setTagId(int tagId) {
+  public static void setTagId(int tagId) {
     m_tagId = tagId;
   }
 }
