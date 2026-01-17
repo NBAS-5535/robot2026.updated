@@ -17,7 +17,7 @@ import frc.robot.Vision.LimelightHelpers.RawFiducial;
 public class AlignCommand extends Command {
   private final CommandSwerveDrivetrain m_drivetrain;
   private final VisionSubsystem m_limelight;
-  private static int m_tagId;
+  private int m_tagId;
 
   private  final PIDControllerConfigurable rotationalPidController = new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.1);
   private  final PIDControllerConfigurable xPidController = new PIDControllerConfigurable(0.400000, 0.000000, 0.000600, 0.2);
@@ -31,7 +31,7 @@ public class AlignCommand extends Command {
   public AlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight, int tagId) {
     this.m_drivetrain = drivetrain;
     this.m_limelight = limelight;
-    m_tagId = tagId;
+    this.m_tagId = tagId;
     addRequirements(m_limelight);
   }
 
@@ -67,13 +67,13 @@ public class AlignCommand extends Command {
         this.end(true);
       }
 
-      SmartDashboard.putNumber("AlignCommand/txnc", fiducial.txnc);
-      SmartDashboard.putNumber("AlignCommand/ta", fiducial.ta);
-      SmartDashboard.putNumber("AlignCommand/distToRobot", fiducial.distToRobot);
-      SmartDashboard.putNumber("AlignCommand/distToCamera", fiducial.distToCamera);
-      SmartDashboard.putNumber("AlignCommand/rotationalPidController", rotationalRate);
-      SmartDashboard.putNumber("AlignCommand/xPidController", velocityX);
-      SmartDashboard.putNumber("AlignCommand/TagID", m_tagId);
+      SmartDashboard.putNumber("/AlignCommand/txnc", fiducial.txnc);
+      SmartDashboard.putNumber("/AlignCommand/ta", fiducial.ta);
+      SmartDashboard.putNumber("/AlignCommand/distToRobot", fiducial.distToRobot);
+      SmartDashboard.putNumber("/AlignCommand/distToCamera", fiducial.distToCamera);
+      SmartDashboard.putNumber("/AlignCommand/rotationalPidController", rotationalRate);
+      SmartDashboard.putNumber("/AlignCommand/xPidController", velocityX);
+      SmartDashboard.putNumber("/AlignCommand/TagID", m_tagId);
 
 
       /* move the robot to correct position */
@@ -90,7 +90,7 @@ public class AlignCommand extends Command {
       } else {
         /* if there is no apriltag in sight move the robot until one is found */
         // TO DO !!!!
-        m_drivetrain.setControl(alignRequest.withRotationalRate(-0.05));//.withVelocityX(0.2));
+        //m_drivetrain.setControl(alignRequest.withRotationalRate(-0.05));//.withVelocityX(0.2));
         // simply end the command to stop the robot
         //this.end(true);
       }
@@ -100,7 +100,7 @@ public class AlignCommand extends Command {
   @Override
   public boolean isFinished() {
     boolean temp = rotationalPidController.atSetpoint() && xPidController.atSetpoint();
-    SmartDashboard.putBoolean("AlignCommand/AlignFinished", temp);
+    SmartDashboard.putBoolean("/AlignCommand/AlignFinished", temp);
     return temp;
   }
 
@@ -111,6 +111,6 @@ public class AlignCommand extends Command {
   }
 
   public static void setTagId(int tagId) {
-    m_tagId = tagId;
+    //m_tagId = tagId;
   }
 }

@@ -66,6 +66,7 @@ public class RangeSensorSubsystem extends SubsystemBase {
 
       SmartDashboard.putNumber("CANRAnge/Distance (mm)", distance.getValueAsDouble());
       SmartDashboard.putNumber("CANRAnge/signalStrength", signalStrength.getValue());
+      SmartDashboard.putBoolean("CANRAnge/CANRAngeObject Detected", isDetected.getValue());
       SmartDashboard.putBoolean("CANRAngeObject Detected", isDetected.getValue());
     }
   }
