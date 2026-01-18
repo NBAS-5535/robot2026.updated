@@ -67,13 +67,13 @@ public class AlignCommand extends Command {
         this.end(true);
       }
 
-      SmartDashboard.putNumber("/AlignCommand/txnc", fiducial.txnc);
-      SmartDashboard.putNumber("/AlignCommand/ta", fiducial.ta);
-      SmartDashboard.putNumber("/AlignCommand/distToRobot", fiducial.distToRobot);
-      SmartDashboard.putNumber("/AlignCommand/distToCamera", fiducial.distToCamera);
-      SmartDashboard.putNumber("/AlignCommand/rotationalPidController", rotationalRate);
-      SmartDashboard.putNumber("/AlignCommand/xPidController", velocityX);
-      SmartDashboard.putNumber("/AlignCommand/TagID", m_tagId);
+      SmartDashboard.putNumber("AlignCommand/txnc", fiducial.txnc);
+      SmartDashboard.putNumber("AlignCommand/ta", fiducial.ta);
+      SmartDashboard.putNumber("AlignCommand/distToRobot", fiducial.distToRobot);
+      SmartDashboard.putNumber("AlignCommand/distToCamera", fiducial.distToCamera);
+      SmartDashboard.putNumber("AlignCommand/rotationalPidController", rotationalRate);
+      SmartDashboard.putNumber("AlignCommand/xPidController", velocityX);
+      SmartDashboard.putNumber("AlignCommand/TagID", m_tagId);
 
 
       /* move the robot to correct position */
@@ -100,7 +100,7 @@ public class AlignCommand extends Command {
   @Override
   public boolean isFinished() {
     boolean temp = rotationalPidController.atSetpoint() && xPidController.atSetpoint();
-    SmartDashboard.putBoolean("/AlignCommand/AlignFinished", temp);
+    SmartDashboard.putBoolean("AlignCommand/AlignFinished", temp);
     return temp;
   }
 

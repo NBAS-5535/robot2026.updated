@@ -80,7 +80,7 @@ public class VisionSubsystem extends SubsystemBase {
   public void periodic() {
     fiducials = LimelightHelpers.getRawFiducials("");
     this.limelightResults = LimelightHelpers.getLatestResults(this.limelightName);
-    SmartDashboard.putNumber("/VisionSubsystem/num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
+    //SmartDashboard.putNumber("VisionSubsystem/num" + this.limelightName, this.limelightResults.targets_Fiducials.length);
 
     /*
     for (RawFiducial fiducial : fiducials) {
@@ -102,11 +102,11 @@ public class VisionSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("/DebugVision/ambiguity", ambiguity);
     }
     */
-    SmartDashboard.putNumber("/DebugVision/tx", LimelightHelpers.getTX(""));
-    SmartDashboard.putNumber("/DebugVision/ty", LimelightHelpers.getTY(""));
-    SmartDashboard.putNumber("/DebugVision/txnc", LimelightHelpers.getTXNC(""));
-    SmartDashboard.putNumber("/DebugVision/tync", LimelightHelpers.getTYNC(""));
-    SmartDashboard.putNumber("/DebugVision/ta", LimelightHelpers.getTA(""));
+    SmartDashboard.putNumber("VisionSubsystem/LimelightDetails/tx", LimelightHelpers.getTX(""));
+    SmartDashboard.putNumber("VisionSubsystem/LimelightDetails/ty", LimelightHelpers.getTY(""));
+    SmartDashboard.putNumber("VisionSubsystem/LimelightDetails/txnc", LimelightHelpers.getTXNC(""));
+    SmartDashboard.putNumber("VisionSubsystem/LimelightDetails/tync", LimelightHelpers.getTYNC(""));
+    SmartDashboard.putNumber("VisionSubsystem/LimelightDetails/ta", LimelightHelpers.getTA(""));
 
     getDistance();
 
@@ -126,7 +126,7 @@ public class VisionSubsystem extends SubsystemBase {
             minDistance = fiducial.ta;
         }
     }
-    SmartDashboard.putNumber("/VisionSubsystem/minDistance", minDistance);
+    SmartDashboard.putNumber("VisionSubsystem/minDistance", minDistance);
 
     /* persist closest distance value */
     setMinDistance(minDistance);
@@ -180,7 +180,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   /* keep track of the minDistance found via limelight Apriltag search */
   public void setMinDistance(double distance) {
     m_minDistance = distance;
-    SmartDashboard.putNumber("/VisionSubsystem/VisionClosetAprilTag", distance);
+    SmartDashboard.putNumber("VisionSubsystem/VisionClosetAprilTag", distance);
   }
 
   public double getMinDistance() {
@@ -222,7 +222,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   /* set Limelight preset pipeline */
   public static void setPipeline(int index){
     LimelightHelpers.setPipelineIndex("", index);
-    SmartDashboard.putNumber("/VisionSubsystem/PipeLineInUse", index);
+    SmartDashboard.putNumber("VisionSubsystem/PipeLineInUse", index);
   }
 
   public double getDistance() {
@@ -237,7 +237,7 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
         double distance = (TARGET_HEIGHT - LIMELIGHT_HEIGHT) / Math.tan(angleToGoal.getRadians());
 
         //SmartDashboard.putNumber("/VisionSubsystem/EstimatedDistance", distance);
-        SmartDashboard.putNumber("/VisionSubsystem/ty_estimator", distance);
+        SmartDashboard.putNumber("VisionSubsystem/ty_estimator", distance);
 
         return distance;
     } 

@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 
 /** Add your docs here. */
-class PIDControllerConfigurable extends PIDController {
+public class PIDControllerConfigurable extends PIDController {
     public PIDControllerConfigurable(double kP, double kI, double kD) {
         super(kP, kI, kD);
     }
