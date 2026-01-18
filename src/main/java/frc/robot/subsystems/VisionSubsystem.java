@@ -51,9 +51,9 @@ public class VisionSubsystem extends SubsystemBase {
         Meters.convertFrom(16.5, Inches), // forward location wrt robot center: half side + camera thickness
         0., // assume perfect alignment with robor center
         LIMELIGHT_HEIGHT, //m Meters.convertFrom(VisionConstants.limelightLensHeightInches, Inches), // height of camera from the floor
+        0.,
         LIMELIGHT_MOUNT_ANGLE,
-        0,
-        0);
+        0.);
     // Overrides the valid AprilTag IDs that will be used for localization. 
     // Tags not in this list will be ignored for robot pose estimation.
     /*
