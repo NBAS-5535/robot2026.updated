@@ -23,6 +23,7 @@ import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.TurretAlignCommand;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.experimental.RobotAlignCommand;
@@ -126,16 +127,17 @@ public class RobotContainer {
             joystick.x().onTrue(
                 new AlignCommand(drivetrain, m_vision, testTagId)
             );
-
+            /*
             joystick.back().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> AlignCommand.setTagId(1)),
                 new AlignCommand(drivetrain, m_vision, 1)
             ));
+            */
 
             joystick.y().onTrue(
                 new AlignCommand(drivetrain, m_vision, 12)
             );
-            
+    
             /* use a preset pipeline index = 5 */
             joystick.rightBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
@@ -146,6 +148,31 @@ public class RobotContainer {
             joystick.leftBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
                 new AlignCommand(drivetrain, m_vision, 12)
+            ));
+        }
+
+        /* align robot */
+        boolean findAndAlignTesting = true;
+        if (findAndAlignTesting) {
+            int testTagId = 0;
+            joystick.povRight().onTrue(
+                new FindAndAlignCommand(drivetrain, m_vision, testTagId)
+            );
+
+            joystick.povLeft().onTrue(
+                new FindAndAlignCommand(drivetrain, m_vision, 12)
+            );
+            
+            /* use a preset pipeline index = 5 */
+            joystick.povDown().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
+                new FindAndAlignCommand(drivetrain, m_vision, 1)
+            )); 
+
+            /* use a preset pipeline index = 3 */
+            joystick.povUp().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
+                new FindAndAlignCommand(drivetrain, m_vision, 12)
             ));
         }
         
