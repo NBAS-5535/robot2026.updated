@@ -190,8 +190,9 @@ public RawFiducial getFiducialWithId(int id, boolean verbose) {
   /* calculate the distance in meters */
   public double getDistanceToTargetInMeters(double distance) {
     /* use/update estimation formula via resgression*/
-    double distInMeters = -70.08 * distance + 2.35; 
-    System.out.print(distance + " - " + distInMeters);
+    double distInMeters = 0.345 * getDistance() + 0.141; //Note in Meters!!!
+    //System.out.print(distance + " - " + distInMeters);
+    SmartDashboard.putNumber("VisionSubsystem/ActualDistance", distInMeters);
     return distInMeters;
   }
 

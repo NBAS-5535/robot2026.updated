@@ -152,7 +152,7 @@ public class RobotContainer {
         }
 
         /* align robot */
-        boolean findAndAlignTesting = true;
+        boolean findAndAlignTesting = false;
         if (findAndAlignTesting) {
             int testTagId = 0;
             joystick.povRight().onTrue(
