@@ -19,11 +19,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.Vision.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -49,6 +50,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     /* user command-related markers */
     private Pose2d m_initialPose = this.getState().Pose;
+
+    /* Initialize the Field2d object */
+    private final Field2d m_field = new Field2d();
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -154,6 +158,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        /* Post the Field object to SmartDashboard once at startup */
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -239,6 +246,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+
+        /* update pose estimate continuously */
+        updateVisionPose();
+
+        /* Update the Field2d widget with the current pose estimate */
+        m_field.setRobotPose(this.getState().Pose);
     }
 
     private void startSimThread() {
@@ -288,6 +301,30 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Matrix<N3, N1> visionMeasurementStdDevs
     ) {
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
+    }
+
+    public void updateVisionPose() {
+        // 1. Send current robot orientation to Limelight for MegaTag2 logic
+        // Replace 'this.getState().Pose' with your drivetrain's current pose
+        var driveState = this.getState().Pose;
+        double currentYaw = driveState.getRotation().getDegrees();
+        LimelightHelpers.SetRobotOrientation("limelight", currentYaw, 0, 0, 0, 0, 0);
+
+        // 2. Retrieve the MegaTag2 pose estimate
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+        // 3. Apply filters before adding the measurement
+        // Reject if no tags are visible or if the robot is rotating too fast (> 720 deg/s)
+        double angleRPS = this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
+        if (mt2.tagCount > 0 && Math.abs(angleRPS) < 720) {
+
+            // 4. Update the CTRE SwerveDrivetrain pose estimator
+            // MegaTag2 handles latency internally via its timestamp
+            this.addVisionMeasurement(
+                mt2.pose, 
+                mt2.timestampSeconds
+            );
+        }
     }
 
     /* check if the desired Pose is reached */
