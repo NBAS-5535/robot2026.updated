@@ -24,6 +24,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
+import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.TurretAlignCommand;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.experimental.RobotAlignCommand;
@@ -123,17 +124,24 @@ public class RobotContainer {
         /* align robot */
         boolean alignTesting = true;
         if (alignTesting) {
+            /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;
             joystick.x().onTrue(
                 new AlignCommand(drivetrain, m_vision, testTagId)
             );
-            /*
+            
             joystick.back().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> AlignCommand.setTagId(1)),
                 new AlignCommand(drivetrain, m_vision, 1)
             ));
             */
 
+            /* Face the April Tag while moving*/
+            joystick.x().whileTrue(
+                new FollowAprilTagCommand(drivetrain, m_vision)
+            );
+
+            /* Align with a specific AprilTag: 12*/
             joystick.y().onTrue(
                 new AlignCommand(drivetrain, m_vision, 12)
             );
@@ -141,13 +149,13 @@ public class RobotContainer {
             /* use a preset pipeline index = 5 */
             joystick.rightBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
-                new AlignCommand(drivetrain, m_vision, 1)
+                new AlignCommand(drivetrain, m_vision, 0)
             )); 
 
             /* use a preset pipeline index = 3 */
             joystick.leftBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
-                new AlignCommand(drivetrain, m_vision, 12)
+                new AlignCommand(drivetrain, m_vision, 0)
             ));
         }
 

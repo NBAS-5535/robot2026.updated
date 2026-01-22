@@ -48,6 +48,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
+    /* follow AprilTag via Limelight*/
+    public final SwerveRequest.RobotCentricFacingAngle visionFollowRequest = new SwerveRequest.RobotCentricFacingAngle();
+
     /* user command-related markers */
     private Pose2d m_initialPose = this.getState().Pose;
 
@@ -318,12 +321,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double angleRPS = this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
         if (mt2.tagCount > 0 && Math.abs(angleRPS) < 720) {
 
-            // 4. Update the CTRE SwerveDrivetrain pose estimator
-            // MegaTag2 handles latency internally via its timestamp
-            this.addVisionMeasurement(
-                mt2.pose, 
-                mt2.timestampSeconds
-            );
+        // 4. Update the CTRE SwerveDrivetrain pose estimator
+        // MegaTag2 handles latency internally via its timestamp
+        this.addVisionMeasurement(
+            mt2.pose, 
+            mt2.timestampSeconds
+        );
         }
     }
 
