@@ -23,12 +23,15 @@ public class FollowAprilTagCommand extends Command {
   boolean hasTarget;
 
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
+  Rotation2d targetDirection;
   
   /** Creates a new FollowAprilTagCommand. */
   public FollowAprilTagCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem limelight) {
     m_drivetrain = drivetrain;
     m_limelight = limelight;
     
+    targetDirection = m_drivetrain.getPigeon2().getRotation2d();
+
     addRequirements(m_drivetrain, m_limelight);
   }
 
@@ -53,7 +56,7 @@ public class FollowAprilTagCommand extends Command {
             m_drivetrain.visionFollowRequest
                 .withVelocityX(forwardSpeed)
                 .withVelocityY(sidewaysSpeed)
-                .withTargetDirection(Rotation2d.fromDegrees(0)) // Face tag directly
+                .withTargetDirection(targetDirection.minus(Rotation2d.fromDegrees(tx))) // Face tag directly
         );
         System.out.println("target in sight");
     } else {
