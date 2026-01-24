@@ -7,6 +7,7 @@ package frc.robot.commands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -54,6 +55,10 @@ public class FollowAprilTagCommand extends Command {
                 .withVelocityY(sidewaysSpeed)
                 .withTargetDirection(Rotation2d.fromDegrees(0)) // Face tag directly
         );
+        System.out.println("target in sight");
+    } else {
+      SmartDashboard.putBoolean("FollowAprilTagCommand/hasTarget", hasTarget);
+      System.out.println("NO target");
     }
   }
 

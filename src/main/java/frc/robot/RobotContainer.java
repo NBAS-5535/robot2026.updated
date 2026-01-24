@@ -22,6 +22,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
@@ -136,10 +137,16 @@ public class RobotContainer {
             ));
             */
 
+            /* reset pipeline to generic and align to the closest AprilTag*/
+            joystick.x().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(0)),
+                new AlignCommand(drivetrain, m_vision, 0)
+            ));
+
             /* Face the April Tag while moving*/
-            joystick.x().whileTrue(
+            joystick.back().whileTrue(
                 new FollowAprilTagCommand(drivetrain, m_vision)
-            );
+            ); /**/
 
             /* Align with a specific AprilTag: 12*/
             joystick.y().onTrue(
@@ -157,6 +164,19 @@ public class RobotContainer {
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
                 new AlignCommand(drivetrain, m_vision, 0)
             ));
+             /* use a preset pipeline index = 0 */
+            joystick.start().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> VisionSubsystem.setPipeline(0))
+            ));
+            /*
+            joystick.back().whileTrue(
+                drivetrain.applyRequest(() ->
+                    drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-LimelightHelpers.getTA("") * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                )
+            );
+            */
         }
 
         /* align robot */

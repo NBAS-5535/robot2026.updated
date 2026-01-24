@@ -52,7 +52,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public final SwerveRequest.RobotCentricFacingAngle visionFollowRequest = new SwerveRequest.RobotCentricFacingAngle();
 
     /* user command-related markers */
-    private Pose2d m_initialPose = this.getState().Pose;
+    private Pose2d m_initialPose = new Pose2d(3.03, 3.47, Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
+    private Pose2d m_initialPose_opposite = new Pose2d(14.09, 4.92, Rotation2d.fromDegrees(0.));
 
     /* Initialize the Field2d object */
     private final Field2d m_field = new Field2d();
@@ -137,6 +138,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        
+        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
+            this.resetPose(m_initialPose);
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){      
+            this.resetPose(m_initialPose_opposite);
+        }   
     }
 
     /**
