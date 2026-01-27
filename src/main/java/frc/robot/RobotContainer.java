@@ -8,8 +8,11 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -56,8 +59,22 @@ public class RobotContainer {
      /** RangeSensorSubsystem */
      private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
 
+     /* Path follower */
+    private final SendableChooser<Command> autoChooser;
+    /* autonomous dropdown menu */
+    private SendableChooser<String> autonomousChooser;
+
     public RobotContainer() {
         configureBindings();
+
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("PathPlanner Scenario", autoChooser);
+        /* autonomous position chooser 
+        autonomousChooser = new SendableChooser<>();
+        autonomousChooser.setDefaultOption("No Action", "None");
+        autonomousChooser.addOption("Blue_1", "Start_Right");
+        SmartDashboard.putData("AutonomousMenu", autonomousChooser);
+        */
     }
 
     private void configureBindings() {
@@ -208,9 +225,13 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
+        Command autoCommand = null;
+        boolean simpleDriveForward = false;
+        if (simpleDriveForward) 
+        {
         // Simple drive forward auton
         final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
+        autoCommand = Commands.sequence(
             // Reset our field centric heading to match the robot
             // facing away from our alliance station wall (0 deg).
             drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
@@ -220,9 +241,13 @@ public class RobotContainer {
                     .withVelocityY(0)
                     .withRotationalRate(0)
             )
-            .withTimeout(5.0),
+            .withTimeout(1.0),
             // Finally idle for the rest of auton
             drivetrain.applyRequest(() -> idle)
         );
+        } else {
+            autoCommand = autoChooser.getSelected();
+        }
+        return autoCommand;
     }
 }
