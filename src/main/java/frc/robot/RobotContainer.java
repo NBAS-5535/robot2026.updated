@@ -60,15 +60,15 @@ public class RobotContainer {
      private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
 
      /* Path follower */
-    private final SendableChooser<Command> autoChooser;
+    //private final SendableChooser<Command> autoChooser;
     /* autonomous dropdown menu */
     private SendableChooser<String> autonomousChooser;
 
     public RobotContainer() {
         configureBindings();
 
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("PathPlanner Scenario", autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser();
+        //SmartDashboard.putData("PathPlanner Scenario", autoChooser);
         /* autonomous position chooser 
         autonomousChooser = new SendableChooser<>();
         autonomousChooser.setDefaultOption("No Action", "None");
@@ -246,7 +246,7 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle)
         );
         } else {
-            autoCommand = autoChooser.getSelected();
+            //autoCommand = autoChooser.getSelected();
         }
         return autoCommand;
     }
