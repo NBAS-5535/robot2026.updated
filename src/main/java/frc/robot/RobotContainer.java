@@ -118,7 +118,7 @@ public class RobotContainer {
 
         /* run turret motor in suck-in and push-out modes */
          
-        boolean useTurretSubsystem = true;
+        boolean useTurretSubsystem = false;
         if ( useTurretSubsystem ) {
             // y() -> Turreting the robot UP
             joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
@@ -155,6 +155,11 @@ public class RobotContainer {
             ));
             */
 
+            /* Experimental */
+            joystick.a().whileTrue(
+                new RobotAlignCommand(drivetrain, m_vision, 10)
+            ); /**/
+
             /* reset pipeline to generic and align to the closest AprilTag*/
             joystick.x().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(0)),
@@ -168,7 +173,7 @@ public class RobotContainer {
 
             /* Align with a specific AprilTag: 12*/
             joystick.y().onTrue(
-                new AlignCommand(drivetrain, m_vision, 12)
+                new AlignCommand(drivetrain, m_vision, 13)
             );
     
             /* use a preset pipeline index = 5 */
@@ -180,7 +185,7 @@ public class RobotContainer {
             /* use a preset pipeline index = 3 */
             joystick.leftBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
-                new AlignCommand(drivetrain, m_vision, 0)
+                new AlignCommand(drivetrain, m_vision, 13)
             ));
              /* use a preset pipeline index = 0 */
             joystick.start().onTrue(new SequentialCommandGroup(
