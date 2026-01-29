@@ -65,8 +65,7 @@ public class RobotContainer {
     private SendableChooser<String> autonomousChooser;
 
     public RobotContainer() {
-        configureBindings();
-
+        
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("PathPlanner Scenario", autoChooser);
         /* autonomous position chooser 
@@ -75,6 +74,8 @@ public class RobotContainer {
         autonomousChooser.addOption("Blue_1", "Start_Right");
         SmartDashboard.putData("AutonomousMenu", autonomousChooser);
         */
+
+        configureBindings();
     }
 
     private void configureBindings() {
@@ -229,24 +230,24 @@ public class RobotContainer {
         boolean simpleDriveForward = false;
         if (simpleDriveForward) 
         {
-        // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        autoCommand = Commands.sequence(
-            // Reset our field centric heading to match the robot
-            // facing away from our alliance station wall (0 deg).
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // Then slowly drive forward (away from us) for 5 seconds.
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(1.0),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
-        );
+            // Simple drive forward auton
+            final var idle = new SwerveRequest.Idle();
+            autoCommand = Commands.sequence(
+                // Reset our field centric heading to match the robot
+                // facing away from our alliance station wall (0 deg).
+                drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
+                // Then slowly drive forward (away from us) for 5 seconds.
+                drivetrain.applyRequest(() ->
+                    drive.withVelocityX(0.5)
+                        .withVelocityY(0)
+                        .withRotationalRate(0)
+                )
+                .withTimeout(1.0),
+                // Finally idle for the rest of auton
+                drivetrain.applyRequest(() -> idle)
+            );
         } else {
-            //autoCommand = autoChooser.getSelected();
+            autoCommand = autoChooser.getSelected();
         }
         return autoCommand;
     }
