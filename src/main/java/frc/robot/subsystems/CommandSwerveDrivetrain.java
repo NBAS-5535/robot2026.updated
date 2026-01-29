@@ -341,13 +341,50 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // Reject if no tags are visible or if the robot is rotating too fast (> 720 deg/s)
         double angleRPS = this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
         if (mt2.tagCount > 0 && Math.abs(angleRPS) < 720) {
+            // 4. Update the CTRE SwerveDrivetrain pose estimator
+            // MegaTag2 handles latency internally via its timestamp
+            this.addVisionMeasurement(
+                mt2.pose, 
+                mt2.timestampSeconds
+            );
+        }
+    }
 
-        // 4. Update the CTRE SwerveDrivetrain pose estimator
-        // MegaTag2 handles latency internally via its timestamp
-        this.addVisionMeasurement(
-            mt2.pose, 
-            mt2.timestampSeconds
+    public void updateVisionPose_MT_1and2() {
+        /* inspired by 2026CompetitiveConcept - wcp */
+        // 1. Send current robot orientation to Limelight for MegaTag2 logic
+        // Replace 'this.getState().Pose' with your drivetrain's current pose
+        var driveState = this.getState().Pose;
+        double currentYaw = driveState.getRotation().getDegrees();
+        LimelightHelpers.SetRobotOrientation("limelight", currentYaw, 0, 0, 0, 0, 0);
+
+        // 2. Retrieve MeageTag1 & MegaTag2 pose estimates
+        LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+
+        // 2.1 Check if there are valid estimates or AprilTags in sight
+        if ( mt1 == null || mt2 == null || mt1.tagCount == 0 && mt2.tagCount == 0 ) {
+            return; // no valid estimates
+        }
+
+        // Combine the readings from MegaTag1 and MegaTag2:
+        // 1. Use the more stable position from MegaTag2
+        // 2. Use the rotation from MegaTag1 (with low confidence) to counteract gyro drift
+        mt2.pose = new Pose2d(
+            mt2.pose.getTranslation(),
+            mt1.pose.getRotation()
         );
+        // 3. Apply filters before adding the measurement
+        // Reject if no tags are visible or if the robot is rotating too fast (> 720 deg/s)
+        double angleRPS = this.getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
+        if (mt2.tagCount > 0 && Math.abs(angleRPS) < 720) {
+
+            // 4. Update the CTRE SwerveDrivetrain pose estimator
+            // MegaTag2 handles latency internally via its timestamp
+            this.addVisionMeasurement(
+                mt2.pose, 
+                mt2.timestampSeconds
+            );
         }
     }
 

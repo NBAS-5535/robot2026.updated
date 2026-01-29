@@ -11,6 +11,6 @@ import edu.wpi.first.apriltag.AprilTagFields;
 public class Vision {
 
     /** April Tag Field Layout of the year. */
-    //public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+    public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
 }
