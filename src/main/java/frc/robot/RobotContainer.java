@@ -157,7 +157,7 @@ public class RobotContainer {
 
             /* Experimental */
             joystick.a().whileTrue(
-                new RobotAlignCommand(drivetrain, m_vision, 10)
+                new RobotAlignCommand(drivetrain, m_vision, 13)
             ); /**/
 
             /* reset pipeline to generic and align to the closest AprilTag*/

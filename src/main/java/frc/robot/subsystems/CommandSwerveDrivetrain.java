@@ -147,9 +147,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         
         if ( DriverStation.getAlliance().get() == Alliance.Red ) {
-            this.resetPose(m_initialPose);
-        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){      
             this.resetPose(m_initialPose_opposite);
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){      
+            this.resetPose(m_initialPose);
         } 
         
         // configure PathPlanner
