@@ -163,7 +163,7 @@ public class RobotContainer {
             */
 
             /* Experimental */
-            joystick.a().whileTrue(
+            joystick.povUp().whileTrue(
                 new RobotAlignCommand(drivetrain, m_vision, 13)
             ); /**/
 
