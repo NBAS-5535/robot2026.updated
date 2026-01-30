@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -29,6 +30,7 @@ import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.commands.NewTurretCommand;
 import frc.robot.commands.TurretAlignCommand;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.experimental.RobotAlignCommand;
@@ -43,6 +45,7 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -61,7 +64,7 @@ public class RobotContainer {
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
-    /* autonomous dropdown menu */
+    /*  autonomous dropdown menu */
     private SendableChooser<String> autonomousChooser;
 
     public RobotContainer() {
@@ -121,7 +124,11 @@ public class RobotContainer {
         boolean useTurretSubsystem = false;
         if ( useTurretSubsystem ) {
             // y() -> Turreting the robot UP
-            joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
+            //joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
+           joystick.a().whileTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
+
+
+
 
             // start() -> Lowering the robot DOWN
             joystick.b().whileTrue(m_turretSubsystem.runTurretLeftCommand());

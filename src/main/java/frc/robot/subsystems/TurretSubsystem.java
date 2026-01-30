@@ -55,6 +55,11 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.set(power);
   }
 
+  public double getAngle() { 
+    double rotations = turretEncoder.getPosition();
+    return rotations * 360.0;
+  } // NEO encoder gives rotations return rotations * 360.0; }
+
     /**
    * Command to set the subsystem setpoint. This will set the Turret its predefined
    * positions for the given setpoint.
@@ -94,6 +99,11 @@ public class TurretSubsystem extends SubsystemBase {
     }
   }
 
+  /** Sets turret motor speed (-1 to 1) */ 
+  public void setMotor(double speed) {
+     turretMotor.set(speed); 
+    }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -120,5 +130,19 @@ public class TurretSubsystem extends SubsystemBase {
         () -> this.setTurretPower((-1) * TurretSubsystemConstants.TurretSetpointTestSpeed), 
         () -> this.setTurretPower(0.0));
   }
+
+  
+
+  /*
+  Functionality: soemthing that makes sure that 
+  the motor is in constant alignement with a setpoint 
+
+  How are we going to get the turret to align: some sort of align command 
+
+  
+   */
+  
+
+  
 
 }
