@@ -81,15 +81,18 @@ public class RobotAlignCommand extends Command {
 
 
     /* move the robot to correct position */
+    /*
     drivetrain.setControl(alignRequest.withVelocityX(velocityX)
                                       .withVelocityY(velocityY)
                                       .withRotationalRate(rotationalRate));
-      
+    */
+    drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate));
   }
 
   @Override
   public boolean isFinished() {
-    return xPidController.atGoal() && yPidController.atGoal() && rotationalPidController.atGoal();
+    // return xPidController.atGoal() && yPidController.atGoal() && rotationalPidController.atGoal();
+    return rotationalPidController.atGoal();
   }
 
   @Override

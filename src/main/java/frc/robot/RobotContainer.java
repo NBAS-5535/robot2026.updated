@@ -148,7 +148,7 @@ public class RobotContainer {
         }
 
         /* align robot */
-        boolean alignTesting = false;
+        boolean alignTesting = true;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;
@@ -163,7 +163,7 @@ public class RobotContainer {
             */
 
             /* Experimental */
-            joystick.povUp().whileTrue(
+            joystick.povUp().onTrue(
                 new RobotAlignCommand(drivetrain, m_vision, 13)
             );  
 

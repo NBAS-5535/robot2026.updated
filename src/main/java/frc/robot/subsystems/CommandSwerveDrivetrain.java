@@ -60,8 +60,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public final SwerveRequest.RobotCentricFacingAngle visionFollowRequest = new SwerveRequest.RobotCentricFacingAngle();
 
     /* user command-related markers */
-    private Pose2d m_initialPose = new Pose2d(3.62, 2.35, Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
-    private Pose2d m_initialPose_opposite = new Pose2d(14.09, 4.92, Rotation2d.fromDegrees(0.));
+    private Pose2d m_initialPose;
+    private Pose2d m_initialPose_Blue = new Pose2d(3.62, 2.35, Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
+    private Pose2d m_initialPose_Red = new Pose2d(12.92, 5.72, Rotation2d.fromDegrees(0.));
 
     /* Initialize the Field2d object */
     private final Field2d m_field = new Field2d();
@@ -148,15 +149,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        
-        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
-            this.resetPose(m_initialPose_opposite);
-        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){      
-            this.resetPose(m_initialPose);
-        } 
+        /* field-specific pose initialization */
+        setInitializePose();
         
         // configure PathPlanner
         configureAutoBuilder();
+        /* Post the Field object to SmartDashboard once at startup */
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -182,10 +181,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
 
-        /* Post the Field object to SmartDashboard once at startup */
-        SmartDashboard.putData("Field", m_field);
+        
+        /* field-specific pose initialization */
+        setInitializePose();
 
         configureAutoBuilder();
+
+        /* Post the Field object to SmartDashboard once at startup */
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -218,8 +221,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (Utils.isSimulation()) {
             startSimThread();
         }
-
+        /* field-specific pose initialization */
+        setInitializePose();
         configureAutoBuilder();
+        /* Post the Field object to SmartDashboard once at startup */
+        SmartDashboard.putData("Field", m_field);
     }
 
     /**
@@ -389,6 +395,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 mt2.timestampSeconds
             );
         }
+    }
+
+    /* set starting dimensions to preset values */
+    public void setInitializePose(){
+        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
+            SmartDashboard.putString("Initialize/Alliance","red");
+            this.m_initialPose = m_initialPose_Red;
+
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){      
+            this.m_initialPose = m_initialPose_Blue;
+            SmartDashboard.putString("Initialize/Alliance","blue");
+        } 
+        this.resetPose(m_initialPose);
+        SmartDashboard.putNumber("Initialize/PoseX", this.getState().Pose.getX());
+        SmartDashboard.putNumber("Initialize/PoseY", this.getState().Pose.getY());
     }
 
     /* check if the desired Pose is reached */

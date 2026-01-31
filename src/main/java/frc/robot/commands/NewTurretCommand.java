@@ -13,8 +13,8 @@ public class NewTurretCommand extends Command {
     private final TurretSubsystem turret;
     private final CommandSwerveDrivetrain drivetrain;
 
-    private static final double targetX = 1.82;
-    private static final double targetY = 1.58;
+    private static final double targetX = 4.55;
+    private static final double targetY = 3.97;
 
     private final PIDController pid = new PIDController(0.03, 0, 0);
 
