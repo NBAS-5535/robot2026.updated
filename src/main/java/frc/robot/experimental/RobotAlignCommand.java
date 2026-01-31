@@ -20,13 +20,12 @@ import frc.robot.Vision.Vision;
 
 public class RobotAlignCommand extends Command {
   private final CommandSwerveDrivetrain drivetrain;
-  private final VisionSubsystem vision;
   private int tagId;
   private final Pose3d targetPose; // The desired field pose
 
-  private static final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(0.5, 0.0);
-  private final ProfiledPIDController rotationalPidController = new ProfiledPIDController(0.05000, 0.000000, 0.001000, constraints);
-  private final ProfiledPIDController xPidController = new ProfiledPIDController(0.400000, 0.000000, 0.000600, constraints);
+  private static final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(5., 0.0);
+  private final ProfiledPIDController rotationalPidController = new ProfiledPIDController(0.10, 0.0,0.0, constraints);
+  private final ProfiledPIDController xPidController = new ProfiledPIDController(0.4, 0.0, 0.0006, constraints);
   private final ProfiledPIDController yPidController = new ProfiledPIDController(0.3, 0, 0, constraints);
   
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -34,15 +33,16 @@ public class RobotAlignCommand extends Command {
 
   public RobotAlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem vision, int tagId) {
     this.drivetrain = drivetrain;
-    this.vision = vision;
     this.tagId = tagId;
-    SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
+    //SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
 
     // retrieve the target pose from the FieldLayout based on the tag ID
     this.targetPose = Vision.fieldLayout.getTagPose(tagId).get();
     SmartDashboard.putString("RobotAlignCommand/targetPose", this.targetPose.toString());
+    //SmartDashboard.putNumberArray("RobotAlignCommand/Tolerances", new double[] {rotationalPidController.getPositionTolerance(), 
+    //                                      rotationalPidController.getVelocityTolerance()});
 
-    addRequirements(drivetrain, vision);
+    addRequirements(drivetrain);
   }
 
 
@@ -64,9 +64,9 @@ public class RobotAlignCommand extends Command {
 
     Pose2d currentPose = drivetrain.getCurrentPose();
 
-    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_X", currentPose.getX());
-    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_Y", currentPose.getY());
-    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_Rot", currentPose.getRotation().getRadians());
+    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_X", currentPose.getX());
+    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_Y", currentPose.getY());
+    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_Rot", currentPose.getRotation().getRadians());
 
     // Calculate movement based on PID
     double velocityX = xPidController.calculate(currentPose.getX(), targetPose.getX());
