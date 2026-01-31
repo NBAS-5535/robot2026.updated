@@ -55,9 +55,12 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.set(power);
   }
 
-  public double getAngle() { 
+  
+
+  public double getAngle(double GEAR_RATIO) { 
     double rotations = turretEncoder.getPosition();
-    return rotations * 360.0;
+    double turretRotations = rotations / GEAR_RATIO;
+    return turretRotations * 360.0;
   } // NEO encoder gives rotations return rotations * 360.0; }
 
     /**

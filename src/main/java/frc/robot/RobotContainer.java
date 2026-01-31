@@ -121,11 +121,11 @@ public class RobotContainer {
 
         /* run turret motor in suck-in and push-out modes */
          
-        boolean useTurretSubsystem = false;
+        boolean useTurretSubsystem = true;
         if ( useTurretSubsystem ) {
             // y() -> Turreting the robot UP
             //joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
-           joystick.a().whileTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
+           joystick.a().onTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
 
 
 
@@ -148,7 +148,7 @@ public class RobotContainer {
         }
 
         /* align robot */
-        boolean alignTesting = true;
+        boolean alignTesting = false;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;
@@ -162,10 +162,10 @@ public class RobotContainer {
             ));
             */
 
-            /* Experimental */
-            joystick.a().whileTrue(
+             //Experimental 
+             joystick.a().whileTrue(
                 new RobotAlignCommand(drivetrain, m_vision, 13)
-            ); /**/
+            );  
 
             /* reset pipeline to generic and align to the closest AprilTag*/
             joystick.x().onTrue(new SequentialCommandGroup(
