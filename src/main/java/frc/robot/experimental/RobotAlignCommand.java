@@ -36,11 +36,11 @@ public class RobotAlignCommand extends Command {
     this.drivetrain = drivetrain;
     this.vision = vision;
     this.tagId = tagId;
-    SmartDashboard.putNumber("RobotAlign/TagToFindIn", tagId);
+    SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
 
     // retrieve the target pose from the FieldLayout based on the tag ID
     this.targetPose = Vision.fieldLayout.getTagPose(tagId).get();
-    SmartDashboard.putString("RobotAlign/targetPose", this.targetPose.toString());
+    SmartDashboard.putString("RobotAlignCommand/targetPose", this.targetPose.toString());
 
     addRequirements(drivetrain, vision);
   }
@@ -52,6 +52,9 @@ public class RobotAlignCommand extends Command {
     xPidController.reset(drivetrain.getCurrentPose().getX());
     yPidController.reset(drivetrain.getCurrentPose().getY());
     rotationalPidController.reset(drivetrain.getCurrentPose().getRotation().getRadians());
+    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_X", drivetrain.getCurrentPose().getX());
+    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_Y", drivetrain.getCurrentPose().getY());
+    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_Rot", drivetrain.getCurrentPose().getRotation().getRadians());
   }
 
   @Override
@@ -60,6 +63,10 @@ public class RobotAlignCommand extends Command {
     drivetrain.updateVisionPose();
 
     Pose2d currentPose = drivetrain.getCurrentPose();
+
+    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_X", currentPose.getX());
+    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_Y", currentPose.getY());
+    SmartDashboard.putNumber("RobotAlignCommand/TargetPose_Rot", currentPose.getRotation().getRadians());
 
     // Calculate movement based on PID
     double velocityX = xPidController.calculate(currentPose.getX(), targetPose.getX());
