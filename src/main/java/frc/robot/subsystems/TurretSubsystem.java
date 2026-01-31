@@ -12,6 +12,8 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
@@ -29,6 +31,7 @@ public class TurretSubsystem extends SubsystemBase {
   }
   
   /** Creates a new TurretSubsystem. */
+  private final PIDController pid = new PIDController(0.025, 0, 0);
   private SparkFlex turretMotor =
       new SparkFlex(44, MotorType.kBrushless);
   private SparkClosedLoopController turretController = turretMotor.getClosedLoopController();
@@ -45,6 +48,8 @@ public class TurretSubsystem extends SubsystemBase {
 
     // Zero turret and elevator encoders on initialization
     turretEncoder.setPosition(0);
+    pid.enableContinuousInput(-180, 180);
+
   }
 
   public void moveToSetpoint() {
@@ -55,13 +60,39 @@ public class TurretSubsystem extends SubsystemBase {
     turretMotor.set(power);
   }
 
+  public double rotate(double targetDegrees) {
+
+    // Convert motor rotations → turret degrees
+    double turretDegrees = (turretEncoder.getPosition() / 20.0) * 360.0;
+    turretDegrees = MathUtil.inputModulus(turretDegrees, -180, 180);
+
+
+    // PID calculates the motor output
+    double output = pid.calculate(turretDegrees, targetDegrees);
+
+    // Clamp the output so the turret doesn't move too fast
+    output = MathUtil.clamp(output, -0.25, 0.25);
+
+    // Stop when close enough
+    if (Math.abs(targetDegrees - turretDegrees) < 2.0) {
+        setTurretPower(0);
+        return 0;
+    }
+
+    // Apply PID output
+    setTurretPower(output);
+
+    return turretDegrees;
+    
+}
+
+
+
   
 
-  public double getAngle(double GEAR_RATIO) { 
-    double rotations = turretEncoder.getPosition();
-    double turretRotations = rotations / GEAR_RATIO;
-    return turretRotations * 360.0;
-  } // NEO encoder gives rotations return rotations * 360.0; }
+  public double getAngle() { double motorRotations = turretEncoder.getPosition();
+     return (motorRotations / 20.0) * 360.0; 
+    } // NEO encoder gives rotations return rotations * 360.0; }
 
     /**
    * Command to set the subsystem setpoint. This will set the Turret its predefined
