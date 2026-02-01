@@ -18,7 +18,7 @@ import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.Vision;
 
 
-public class RobotAlignCommand extends Command {
+public class RobotAlignCommandTest extends Command {
   private final CommandSwerveDrivetrain drivetrain;
   private int tagId;
   private final Pose3d targetPose; // The desired field pose
@@ -31,15 +31,15 @@ public class RobotAlignCommand extends Command {
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-  public RobotAlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem vision, int tagId) {
+  public RobotAlignCommandTest(CommandSwerveDrivetrain drivetrain, VisionSubsystem vision, int tagId) {
     this.drivetrain = drivetrain;
     this.tagId = tagId;
-    //SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
+    //SmartDashboard.putNumber("RobotAlignCommandTest/TagToFindIn", tagId);
 
     // retrieve the target pose from the FieldLayout based on the tag ID
     this.targetPose = Vision.fieldLayout.getTagPose(tagId).get();
-    SmartDashboard.putString("RobotAlignCommand/targetPose", this.targetPose.toString());
-    //SmartDashboard.putNumberArray("RobotAlignCommand/Tolerances", new double[] {rotationalPidController.getPositionTolerance(), 
+    SmartDashboard.putString("RobotAlignCommandTest/targetPose", this.targetPose.toString());
+    //SmartDashboard.putNumberArray("RobotAlignCommandTest/Tolerances", new double[] {rotationalPidController.getPositionTolerance(), 
     //                                      rotationalPidController.getVelocityTolerance()});
 
     addRequirements(drivetrain);
@@ -52,9 +52,9 @@ public class RobotAlignCommand extends Command {
     xPidController.reset(drivetrain.getCurrentPose().getX());
     yPidController.reset(drivetrain.getCurrentPose().getY());
     rotationalPidController.reset(drivetrain.getCurrentPose().getRotation().getRadians());
-    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_X", drivetrain.getCurrentPose().getX());
-    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_Y", drivetrain.getCurrentPose().getY());
-    SmartDashboard.putNumber("RobotAlignCommand/InitialPose_Rot", drivetrain.getCurrentPose().getRotation().getRadians());
+    SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_X", drivetrain.getCurrentPose().getX());
+    SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_Y", drivetrain.getCurrentPose().getY());
+    SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_Rot", drivetrain.getCurrentPose().getRotation().getRadians());
   }
 
   @Override
@@ -64,20 +64,20 @@ public class RobotAlignCommand extends Command {
 
     Pose2d currentPose = drivetrain.getCurrentPose();
 
-    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_X", currentPose.getX());
-    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_Y", currentPose.getY());
-    SmartDashboard.putNumber("RobotAlignCommand/CurrentPose_Rot", currentPose.getRotation().getRadians());
+    SmartDashboard.putNumber("RobotAlignCommandTest/CurrentPose_X", currentPose.getX());
+    SmartDashboard.putNumber("RobotAlignCommandTest/CurrentPose_Y", currentPose.getY());
+    SmartDashboard.putNumber("RobotAlignCommandTest/CurrentPose_Rot", currentPose.getRotation().getRadians());
 
     // Calculate movement based on PID
     double velocityX = xPidController.calculate(currentPose.getX(), targetPose.getX());
     double velocityY = yPidController.calculate(currentPose.getY(), targetPose.getY());
     double rotationalRate = rotationalPidController.calculate(currentPose.getRotation().getRadians(), targetPose.getRotation().toRotation2d().getRadians());
 
-    SmartDashboard.putNumber("RobotAlignCommand/xPidController", velocityX);
-    SmartDashboard.putNumber("RobotAlignCommand/yPidController", velocityY);
-    SmartDashboard.putNumber("RobotAlignCommand/rotationalPidController", rotationalRate);
+    SmartDashboard.putNumber("RobotAlignCommandTest/xPidController", velocityX);
+    SmartDashboard.putNumber("RobotAlignCommandTest/yPidController", velocityY);
+    SmartDashboard.putNumber("RobotAlignCommandTest/rotationalPidController", rotationalRate);
     
-    SmartDashboard.putNumber("RobotAlignCommand/TagID", tagId);
+    SmartDashboard.putNumber("RobotAlignCommandTest/TagID", tagId);
 
 
     /* move the robot to correct position */

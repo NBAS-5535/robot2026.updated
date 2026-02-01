@@ -16,4 +16,10 @@ public class PIDControllerConfigurable extends PIDController {
         super(kP, kI, kD);
         this.setTolerance(tolerance);
     }
+
+    public PIDControllerConfigurable(double kP, double kI, double kD, double setpoint, double tolerance) {
+        super(kP, kI, kD);
+        this.setSetpoint(setpoint);
+        this.setTolerance(tolerance);
+    }
   }
