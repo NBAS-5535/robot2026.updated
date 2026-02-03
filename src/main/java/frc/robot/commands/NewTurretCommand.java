@@ -28,21 +28,26 @@ public class NewTurretCommand extends Command {
         addRequirements(turret);
     }
 
+     @Override
+    public void initialize() {
+        pid.setTolerance(10);
+  }
+
     @Override
     public void execute() {
-
         Pose2d robotPose = drivetrain.getCurrentPose();
+        double rotationangle = robotPose.getRotation().getDegrees();
         double dx = targetX - robotPose.getX();
         double dy = targetY - robotPose.getY();
 
         // Angle from robot to target (field-relative)
         double targetFieldAngle = Math.toDegrees(Math.atan2(dy, dx));
-        turret.rotate(targetFieldAngle);
-        if((turret.rotate(targetFieldAngle) - targetFieldAngle) < 0.2){
-            turret.setTurretPower(0);
-        }
-        SmartDashboard.putNumber("Ttest/ Turret Degrees" , turret.rotate(targetFieldAngle));
-        SmartDashboard.putNumber("Ttest/TargetAngle", targetFieldAngle);
+        double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
+        turret.rotate(desiredTurretAngle,rotationangle);
+
+        SmartDashboard.putNumber("Ttest/RotationAngle", rotationangle);
+        SmartDashboard.putNumber("Ttest/TargetFieldAngle", targetFieldAngle);
+        SmartDashboard.putNumber("Ttest/TurretAngle", turret.getFieldRelativeTurretAngle(rotationangle));
         SmartDashboard.putNumber("Ttest/Targetx" , targetX);
         SmartDashboard.putNumber("Ttest/Targety" , targetY);
         SmartDashboard.putNumber("Ttest/RobotPoseX" , robotPose.getX());
