@@ -50,6 +50,8 @@ public class RobotAlignCommandWithLimeLight extends Command {
     // Reset the controllers with the current robot pose
     //rotationalPidController.reset();
     LimelightHelpers.setLEDMode_PipelineControl("limelight");
+    double t = LimelightHelpers.getFiducialID("");
+    SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/TagToFindIn", t);
   }
 
   @Override
@@ -63,24 +65,42 @@ public class RobotAlignCommandWithLimeLight extends Command {
     // Check if a target is valid
     if (LimelightHelpers.getTV("limelight")) {
 
+      boolean justGo = true;
+
       for (RawFiducial fiducial : fiducials) {
         int tagId = fiducial.id; // This is the AprilTag ID
         if (tagId == m_tagId) {
           SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/TargetFound", true);
           SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", tagId);
+          if ( !justGo) {
+            // Calculate movement based on PID
+            double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+            //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
+            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
+
+            drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+
+            if (rotationalPidController.atSetpoint()) {
+              System.out.println("STOP alignment");
+              this.end(true);
+            }
+          }
         }
         
       }
-      // Calculate movement based on PID
-      double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
-      //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-      SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
 
-      drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+      if ( justGo) {
+        // Calculate movement based on PID
+        double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+        //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
+        SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
 
-      if (rotationalPidController.atSetpoint()) {
-        System.out.println("STOP alignment");
-        this.end(true);
+        drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+
+        if (rotationalPidController.atSetpoint()) {
+          System.out.println("STOP alignment");
+          this.end(true);
+        }
       }
     }
 

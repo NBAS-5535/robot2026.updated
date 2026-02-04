@@ -170,7 +170,7 @@ public class RobotContainer {
             );  
 
             joystick.povDown().onTrue(new SequentialCommandGroup(
-                //new RobotAlignCommand(drivetrain, m_vision, 13)
+                //new RobotAlignCommand(drivetrain, m_vision, 10)
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(10)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 10)
             )); 
@@ -178,7 +178,7 @@ public class RobotContainer {
             joystick.povRight().onTrue(new SequentialCommandGroup(
                 //new RobotAlignCommand(drivetrain, m_vision, 13)
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(13)),
-                new RobotAlignCommandWithLimeLight(drivetrain, 10)
+                new RobotAlignCommandWithLimeLight(drivetrain, 13)
             ));
 
             /* reset pipeline to generic and align to the closest AprilTag*/
