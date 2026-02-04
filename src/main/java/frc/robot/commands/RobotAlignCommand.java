@@ -24,7 +24,7 @@ public class RobotAlignCommand extends Command {
 
  
   private  final PIDControllerConfigurable rotationalPidController = 
-                    new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, 0.0, 1.); // tol=1deg
+                    new PIDControllerConfigurable(0.5000, 0.000000, 0.001000, 0.0, 5.); // tol=deg
 
   
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);

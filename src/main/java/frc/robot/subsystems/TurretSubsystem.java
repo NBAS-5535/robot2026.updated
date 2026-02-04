@@ -64,37 +64,38 @@ public class TurretSubsystem extends SubsystemBase {
 
   
 
-public double rotate(double targetDegrees, double robotHeading) {
+  public double rotate(double targetDegrees, double robotHeading) {
 
-    double turretFieldAngle = getFieldRelativeTurretAngle(robotHeading);
+      double turretFieldAngle = getFieldRelativeTurretAngle(robotHeading);
 
-    double output = pid.calculate(turretFieldAngle, targetDegrees);
-    output = MathUtil.clamp(output, -0.25, 0.25);
+      double output = pid.calculate(turretFieldAngle, targetDegrees);
+      SmartDashboard.putNumber("Turret/PID-rate", output);
+      output = MathUtil.clamp(output, -0.25, 0.25);
 
-    if (Math.abs(targetDegrees - turretFieldAngle) < 2.0) {
-        setTurretPower(0);
-        return 0;
-    }
+      if (Math.abs(targetDegrees - turretFieldAngle) < 2.0) {
+          setTurretPower(0);
+          return 0;
+      }
 
-    setTurretPower(output);
-    return output;
-}
+      setTurretPower(output);
+      return output;
+  }
 
 
-public double getFieldRelativeTurretAngle(double robotHeading) {
-   double motorRotations = turretEncoder.getPosition();
+  public double getFieldRelativeTurretAngle(double robotHeading) {
+    double motorRotations = turretEncoder.getPosition();
     double turretDegrees = (motorRotations / 20.0) * 360.0;
-     double fieldAngle = turretDegrees + robotHeading;
-      return MathUtil.inputModulus(fieldAngle, -180, 180);
-     }
-      
+    double fieldAngle = turretDegrees + robotHeading;
+    return MathUtil.inputModulus(fieldAngle, -180, 180);
+  }
+        
   
 
   public double getAngleinDegrees() { 
     double motorRotations = turretEncoder.getPosition(); 
     double turretDegrees = (motorRotations / 20.0) * 360.0;
-     return MathUtil.inputModulus(turretDegrees, -180, 180); 
-     }
+    return MathUtil.inputModulus(turretDegrees, -180, 180); 
+  }
 // NEO encoder gives rotations return rotations * 360.0; 
     /**
    * Command to set the subsystem setpoint. This will set the Turret its predefined
@@ -119,13 +120,13 @@ public double getFieldRelativeTurretAngle(double robotHeading) {
   }
  
   public boolean isSetpointReached(double setpoint){
-    SmartDashboard.putNumber("TurretCurrentTarget", TurretCurrentTarget);
+    SmartDashboard.putNumber("Turret/TurretCurrentTarget", TurretCurrentTarget);
     double currentPosition = turretEncoder.getPosition();
-    SmartDashboard.putNumber("TurretPosition", currentPosition);
+    SmartDashboard.putNumber("Turret/TurretPosition", currentPosition);
     // TO DO: may need to adjust
     double setpointTolerance = 0.5; 
     boolean condition = Math.abs(currentPosition - TurretCurrentTarget) <= setpointTolerance; 
-    SmartDashboard.putBoolean("Turret-isSetpointReached", condition);
+    SmartDashboard.putBoolean("Turret/Turret-isSetpointReached", condition);
     if ( condition ) {
       setTurretPower(0.);
       System.out.println("Turret Motor Stopped: ");

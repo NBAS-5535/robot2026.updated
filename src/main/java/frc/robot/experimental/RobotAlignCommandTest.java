@@ -52,6 +52,9 @@ public class RobotAlignCommandTest extends Command {
     xPidController.reset(drivetrain.getCurrentPose().getX());
     yPidController.reset(drivetrain.getCurrentPose().getY());
     rotationalPidController.reset(drivetrain.getCurrentPose().getRotation().getRadians());
+    xPidController.setTolerance(0.01);
+    yPidController.setTolerance(0.01);
+    rotationalPidController.setTolerance(3.0 * Math.PI/180.0); // 3 degrees 
     SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_X", drivetrain.getCurrentPose().getX());
     SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_Y", drivetrain.getCurrentPose().getY());
     SmartDashboard.putNumber("RobotAlignCommandTest/InitialPose_Rot", drivetrain.getCurrentPose().getRotation().getRadians());

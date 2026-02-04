@@ -100,6 +100,7 @@ public class RobotAlignCommandWithLimeLight extends Command {
   }
 
   public static void setTagId(int tag){
+    SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/SettingTagID", tag);
     m_tagId = tag;
   }
 }
