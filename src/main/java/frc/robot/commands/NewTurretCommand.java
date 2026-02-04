@@ -91,6 +91,6 @@ public class NewTurretCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return pid.atSetpoint();
     }
 }

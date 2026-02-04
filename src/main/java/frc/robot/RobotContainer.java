@@ -35,6 +35,7 @@ import frc.robot.commands.TurretAlignCommand;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
 import frc.robot.experimental.RobotAlignCommandTest;
+import frc.robot.experimental.RobotAlignCommandWithLimeLight;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.8; // kSpeedAt12Volts desired top speed
@@ -165,18 +166,27 @@ public class RobotContainer {
 
             /* Experimental */
             joystick.povUp().onTrue(
-                new RobotAlignCommandTest(drivetrain, m_vision, 13)
+                new RobotAlignCommandWithLimeLight(drivetrain, 13)
             );  
 
-            joystick.povDown().onTrue(
-                new RobotAlignCommand(drivetrain, m_vision, 13)
-            ); 
+            joystick.povDown().onTrue(new SequentialCommandGroup(
+                //new RobotAlignCommand(drivetrain, m_vision, 13)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(10)),
+                new RobotAlignCommandWithLimeLight(drivetrain, 10)
+            )); 
+
+            joystick.povRight().onTrue(new SequentialCommandGroup(
+                //new RobotAlignCommand(drivetrain, m_vision, 13)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(13)),
+                new RobotAlignCommandWithLimeLight(drivetrain, 10)
+            ));
 
             /* reset pipeline to generic and align to the closest AprilTag*/
             joystick.x().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(0)),
                 new AlignCommand(drivetrain, m_vision, 0)
             ));
+
 
             /* Face the April Tag while moving*/
             joystick.back().whileTrue(

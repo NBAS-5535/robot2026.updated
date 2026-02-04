@@ -22,12 +22,14 @@ import frc.robot.commands.PIDControllerConfigurable;
 
 public class RobotAlignCommandWithLimeLight extends Command {
   private final CommandSwerveDrivetrain drivetrain;
-  private int m_tagId;
+  private static int m_tagId;
   private final double kSetpoint = 0.0; // Desired horizontal offset in degrees
   private final double kSetpointTolerance = 1.0; // Desired horizontal offset tolerance in degrees
  
   private  final PIDControllerConfigurable rotationalPidController = 
                     new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, kSetpoint, kSetpointTolerance); // tol=1deg
+  private  final PIDControllerConfigurable xPidController = 
+                    new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, kSetpoint, kSetpointTolerance);
 
   private RawFiducial[] fiducials;
 
@@ -71,9 +73,10 @@ public class RobotAlignCommandWithLimeLight extends Command {
       }
       // Calculate movement based on PID
       double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+      //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
       SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
 
-      drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate));
+      drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
 
       if (rotationalPidController.atSetpoint()) {
         System.out.println("STOP alignment");
@@ -94,5 +97,9 @@ public class RobotAlignCommandWithLimeLight extends Command {
   public void end(boolean interrupted) {
     drivetrain.applyRequest(() -> idleRequest);
     
+  }
+
+  public static void setTagId(int tag){
+    m_tagId = tag;
   }
 }
