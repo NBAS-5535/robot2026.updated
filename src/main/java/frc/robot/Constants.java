@@ -22,7 +22,8 @@ public class Constants {
       
         public static final class TurretSubSystemSetpoints {
           public static final double kBase = 0;
-          public static final double kmaxTurretSetpoint = 0.2;
+          public static final double kMoveRightSetpoint = 0.2;
+          public static final double kMoveLeftSetpoint = -0.2;
          }
     
     }

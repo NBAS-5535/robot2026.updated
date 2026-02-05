@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -60,6 +61,7 @@ public class RobotContainer {
 
     /** TurretSubsystem */
     private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
+    private final DynamicTurretSubsystem m_dynamicTurretSubsystem = new DynamicTurretSubsystem();
 
      /** RangeSensorSubsystem */
      private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
@@ -125,17 +127,14 @@ public class RobotContainer {
          
         boolean useTurretSubsystem = true;
         if ( useTurretSubsystem ) {
-            // y() -> Turreting the robot UP
-            //joystick.a().whileTrue(m_turretSubsystem.runTurretRightCommand());
-           joystick.a().onTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
-
-
-
-
-            // start() -> Lowering the robot DOWN
+            /* original TurretSubsustem
+            joystick.a().onTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
             joystick.b().whileTrue(m_turretSubsystem.runTurretLeftCommand());
+            */
 
-            //joystick.rightBumper().onTrue(new TurretAlignCommand(m_turretSubsystem, limelight, 0));
+            /* to determine encoder setting versus deg of rotation */
+            joystick.a().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretRightCommand());
+            joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
             
 

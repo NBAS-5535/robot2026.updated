@@ -106,10 +106,10 @@ public class TurretSubsystem extends SubsystemBase {
         () -> {
           switch (setpoint) {
             case kmaxRightSetpoint:
-              TurretCurrentTarget = TurretSubSystemSetpoints.kmaxTurretSetpoint;
+              TurretCurrentTarget = TurretSubSystemSetpoints.kMoveRightSetpoint;
               break;
             case kmaxLeftSetpoint:
-              TurretCurrentTarget = -TurretSubSystemSetpoints.kmaxTurretSetpoint;
+              TurretCurrentTarget = -TurretSubSystemSetpoints.kMoveLeftSetpoint;
               break;
             case kBase:
               TurretCurrentTarget = TurretSubSystemSetpoints.kBase;
