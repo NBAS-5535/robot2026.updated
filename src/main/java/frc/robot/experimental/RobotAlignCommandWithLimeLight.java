@@ -65,7 +65,7 @@ public class RobotAlignCommandWithLimeLight extends Command {
     // Check if a target is valid
     if (LimelightHelpers.getTV("limelight")) {
 
-      boolean justGo = true;
+      boolean justGo = false;
 
       for (RawFiducial fiducial : fiducials) {
         int tagId = fiducial.id; // This is the AprilTag ID
