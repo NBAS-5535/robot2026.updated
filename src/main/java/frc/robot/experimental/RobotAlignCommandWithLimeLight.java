@@ -32,7 +32,8 @@ public class RobotAlignCommandWithLimeLight extends Command {
                     new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, kSetpoint, kSetpointTolerance);
 
   private RawFiducial[] fiducials;
-  boolean justGo = false;
+  private boolean justGo = false;
+  private boolean findAGenericTag = false;
 
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
@@ -90,17 +91,39 @@ public class RobotAlignCommandWithLimeLight extends Command {
           */      
 
       if ( justGo) {
-        // Calculate movement based on PID
-        double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
-        //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-        SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
+        // get info on a specific m_tagId
+        for (RawFiducial fiducial : fiducials) {
+          int tagId = fiducial.id; // This is the AprilTag ID
+          if (tagId == m_tagId) {
+            SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/TargetFound", true);
+            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", tagId);
+            // Calculate movement based on PID
+            double rotationalRate = rotationalPidController.calculate(fiducial.txnc, kSetpoint);
+            //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
+            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
 
-        drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+            drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
 
-        if (rotationalPidController.atSetpoint()) {
-          System.out.println("STOP alignment");
-          this.end(true);
+            if (rotationalPidController.atSetpoint()) {
+              System.out.println("STOP alignment");
+              this.end(true);
+            }
+          }
         }
+      } else if ( findAGenericTag ){
+          /* most probably valid for the closet Apriltag !!!!!!!!!!!!!!!!!!! */
+          // Calculate movement based on PID
+          double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+          //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
+          SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
+
+          drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+
+          if (rotationalPidController.atSetpoint()) {
+            System.out.println("STOP alignment");
+            this.end(true);
+          }
+
       } else {
         RawFiducial closestFiducial = getIdOfClosestFiducial();
         if (closestFiducial != null) {
