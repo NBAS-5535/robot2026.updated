@@ -32,7 +32,7 @@ public class RobotAlignCommandWithLimeLight extends Command {
                     new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, kSetpoint, kSetpointTolerance);
 
   private RawFiducial[] fiducials;
-  boolean justGo = false;
+  boolean justGo = true;
 
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();

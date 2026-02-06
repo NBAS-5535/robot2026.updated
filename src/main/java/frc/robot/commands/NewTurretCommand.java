@@ -8,19 +8,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.DynamicTurretSubsystem;
 
 public class NewTurretCommand extends Command {
 
-    private final TurretSubsystem turret;
+    private final DynamicTurretSubsystem dynmaic_turret;
+    //private final TurretSubsystem turret;
     private final CommandSwerveDrivetrain drivetrain;
 
     private static final double targetX = 11.7; //Blue=4.55;
     private static final double targetY = 3.97;
+    private static final double gearratio = 70.0;
 
     private final PIDController pid = new PIDController(0.025, 0, 0);
 
-    public NewTurretCommand(TurretSubsystem turret,CommandSwerveDrivetrain drivetrain) {
-        this.turret = turret;
+    public NewTurretCommand(/*TurretSubsystem turret*/ DynamicTurretSubsystem turret ,CommandSwerveDrivetrain drivetrain) {
+        this.dynmaic_turret = turret;
         this.drivetrain = drivetrain;
 
         pid.enableContinuousInput(-180, 180);
@@ -39,17 +42,28 @@ public class NewTurretCommand extends Command {
         double rotationangle = robotPose.getRotation().getDegrees();
         double dx = targetX - robotPose.getX();
         double dy = targetY - robotPose.getY();
-        double gearratio = 70;
+        double targetFieldAngle = Math.toDegrees(Math.atan2(dy, dx));
+        double dynamicmotorPosition = dynmaic_turret.getPosition();
+        double dynamicangle = (dynamicmotorPosition * 360) / gearratio;
+        //dynmaic_turret.setPointAtTargetSetpointValue(targetFieldAngle);
+        //dynmaic_turret.moveToSetpoint();
+        double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
+        SmartDashboard.putNumber("Ttest/targetFieldAngle", targetFieldAngle);
+        SmartDashboard.putNumber("Ttest/dynamicencoderposition", dynamicmotorPosition);
+        SmartDashboard.putNumber("Ttest/dynamicAngle", dynamicangle);
+
+
+        /* 
         double turretAngle = (turret.turretEncoder.getPosition()) * 360 / gearratio;
         
         turretAngle = MathUtil.inputModulus(turretAngle, -180, 180);
         // Angle from robot to target (field-relative)
-        double targetFieldAngle = Math.toDegrees(Math.atan2(dy, dx));
-        //double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
+        double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
         //turret.rotate(desiredTurretAngle,rotationangle);
         SmartDashboard.putNumber("Ttest/ turret angle" , turretAngle);
         SmartDashboard.putNumber("Ttest/ turret Encoder Value",turret.turretEncoder.getPosition());
-        /* 
+        
+        
         SmartDashboard.putNumber("Ttest/RotationAngle", rotationangle);
         SmartDashboard.putNumber("Ttest/TargetFieldAngle", targetFieldAngle);
         SmartDashboard.putNumber("Ttest/TurretAngle", turret.getFieldRelativeTurretAngle(rotationangle));
@@ -57,7 +71,7 @@ public class NewTurretCommand extends Command {
         SmartDashboard.putNumber("Ttest/Targety" , targetY);
         SmartDashboard.putNumber("Ttest/RobotPoseX" , robotPose.getX());
         SmartDashboard.putNumber("Ttest/RobotPoseY" , robotPose.getY());
-        */
+        
        
         
         // Robot heading (field-relative)
@@ -78,6 +92,7 @@ public class NewTurretCommand extends Command {
         SmartDashboard.putNumber("Ttest/targetFieldAngle" , targetFieldAngle);
         SmartDashboard.putNumber("Ttest/robotHeading" , robotHeading);
         SmartDashboard.putNumber("Ttest/PIDOutput" , output);
+        */
         /* 
         SmartDashboard.putNumber("Ttest/desiredTurretAngle" , desiredTurretAngle);
         SmartDashboard.putNumber("Ttest/currentTurretAngle" , currentTurretAngle);
@@ -87,7 +102,7 @@ public class NewTurretCommand extends Command {
         SmartDashboard.putNumber("Ttest/MotorRotations", motorRotations);
         SmartDashboard.putNumber("Ttest/CurrentTurretAngle", currentTurretAngle);
         */
-        //turret.setMotor(output);
+        
         
     }
 

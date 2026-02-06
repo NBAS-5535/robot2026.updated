@@ -8,6 +8,8 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +37,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   private SparkClosedLoopController dynamicturretController = dynamicturretMotor.getClosedLoopController();
   private RelativeEncoder dynamicturretEncoder = dynamicturretMotor.getEncoder();
 
+  // need swerve info
+  private CommandSwerveDrivetrain mDrivetrain;
   // Member variables for subsystem state management
   private double DynamicTurretCurrentTarget = TurretSubSystemSetpoints.kBase; // may have to start at 0
 
@@ -43,8 +47,12 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   // gear ratio
   private static final double GEAR_RATIO = 70.;
-  
-  public DynamicTurretSubsystem() {
+
+  // Fuel Bucket Positions
+  private static final double targetX = 11.7; //Blue=4.55;
+  private static final double targetY = 3.97;
+
+  public DynamicTurretSubsystem(CommandSwerveDrivetrain drivetrain) {
     /*
      * Apply the appropriate configurations to the SPARKs.
      *
@@ -64,7 +72,11 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     // Zero DynamicTurret and elevator encoders on initialization
     dynamicturretEncoder.setPosition(0);
 
+    // link to Swerve
+    this.mDrivetrain = drivetrain;
+
   }
+
 
   /**
    * Drive the DynamicTurret and elevator motors to their respective setpoints. This will use MAXMotion
@@ -81,6 +93,9 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     dynamicturretMotor.set(power);
   }
 
+    public double getPosition() {
+       return dynamicturretMotor.getEncoder().getPosition(); 
+      }
   /**
    * Command to set the subsystem setpoint. This will set the DynamicTurret and elevator to their predefined
    * positions for the given setpoint.
@@ -99,7 +114,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
               DynamicTurretCurrentTarget = TurretSubSystemSetpoints.kBase;
               break;
             case kPointAtTargetSetpoint:
-              DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
+              //DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
+              DynamicTurretCurrentTarget = setPointAtTargetSetpointValue();
               break;
 
           }
@@ -122,6 +138,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     return this.startEnd(
         () -> this.setDynamicTurretPower((-1) * TurretSubsystemConstants.TurretSetpointTestSpeed), 
         () -> this.setDynamicTurretPower(0.0));
+
   }
 
 
@@ -141,13 +158,25 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   }
 
   /* have the turret encoder position set through some angle calculations */
-  public void setPointAtTargetSetpointValue(double value){
+  public double setPointAtTargetSetpointValue(){
     // may be good enough to pass the angle to move and scale using the fixed setpoint values
     // for example, determine encoder values for 30deg, 45deg, 60deg, 90deg etc and interpolate?
-    kPointAtTargetSetpointValue = value;
+    Pose2d robotPose = mDrivetrain.getCurrentPose();
+    //double rotationangle = robotPose.getRotation().getDegrees();
+    double dx = targetX - robotPose.getX();
+    double dy = targetY - robotPose.getY();
+    double targetFieldAngle = Math.atan2(dy, dx);
+    SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
+    SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
+    SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
+    SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (rad)", targetFieldAngle);
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", targetFieldAngle * 180. / Math.PI);
+    //kPointAtTargetSetpointValue = targetFieldAngle;
 
     // assign this value as the next setpoint such that when moveToSetpoint() is called, it will move there
-    DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
+    //DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
+    return targetFieldAngle * 180. / Math.PI;
   }
 
 }
