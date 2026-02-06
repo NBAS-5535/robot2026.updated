@@ -128,6 +128,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
    * Intended to step through to adjust proper setpoints for elevator heights
    * When the command is interrupted, e.g. the button is released, the motor will stop.
    */
+  /* MUST COMMENT OUT  moveToSetpoint() in execute() to make this work!!! */
   public Command runDynamicTurretRightCommand() {
     return this.startEnd(
         () -> this.setDynamicTurretPower(TurretSubsystemConstants.TurretSetpointTestSpeed), 
