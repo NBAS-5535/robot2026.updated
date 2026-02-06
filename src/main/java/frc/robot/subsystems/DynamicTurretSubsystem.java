@@ -5,6 +5,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -29,8 +30,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   // Initialize DynamicTurret SPARK. We will use MAXMotion position control for the DynamicTurret, so we also need to
   // initialize the closed loop controller and encoder.
-  private SparkMax dynamicturretMotor =
-      new SparkMax(TurretSubsystemConstants.kTurretMotorCanId, MotorType.kBrushless);
+  private SparkFlex dynamicturretMotor =
+      new SparkFlex(TurretSubsystemConstants.kTurretMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController dynamicturretController = dynamicturretMotor.getClosedLoopController();
   private RelativeEncoder dynamicturretEncoder = dynamicturretMotor.getEncoder();
 
@@ -39,6 +40,9 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   // encoder setting determined from the target position for the turret - some angle calculations
   private double kPointAtTargetSetpointValue;
+
+  // gear ratio
+  private static final double GEAR_RATIO = 70.;
   
   public DynamicTurretSubsystem() {
     /*
@@ -128,6 +132,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     // Display subsystem values
     SmartDashboard.putNumber("DynamicTurret/Target Position", DynamicTurretCurrentTarget);
     SmartDashboard.putNumber("DynamicTurret/Actual Position", dynamicturretEncoder.getPosition());
+    SmartDashboard.putNumber("DynamicTurret/Actual Angle", dynamicturretEncoder.getPosition() * (360. / GEAR_RATIO));
     
   }
 

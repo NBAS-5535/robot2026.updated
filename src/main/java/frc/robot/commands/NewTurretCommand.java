@@ -14,7 +14,7 @@ public class NewTurretCommand extends Command {
     private final TurretSubsystem turret;
     private final CommandSwerveDrivetrain drivetrain;
 
-    private static final double targetX = 4.55;
+    private static final double targetX = 11.7; //Blue=4.55;
     private static final double targetY = 3.97;
 
     private final PIDController pid = new PIDController(0.025, 0, 0);
@@ -39,12 +39,17 @@ public class NewTurretCommand extends Command {
         double rotationangle = robotPose.getRotation().getDegrees();
         double dx = targetX - robotPose.getX();
         double dy = targetY - robotPose.getY();
-
+        double gearratio = 70;
+        double turretAngle = (turret.turretEncoder.getPosition()) * 360 / gearratio;
+        
+        turretAngle = MathUtil.inputModulus(turretAngle, -180, 180);
         // Angle from robot to target (field-relative)
         double targetFieldAngle = Math.toDegrees(Math.atan2(dy, dx));
-        double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
-        turret.rotate(desiredTurretAngle,rotationangle);
-
+        //double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
+        //turret.rotate(desiredTurretAngle,rotationangle);
+        SmartDashboard.putNumber("Ttest/ turret angle" , turretAngle);
+        SmartDashboard.putNumber("Ttest/ turret Encoder Value",turret.turretEncoder.getPosition());
+        /* 
         SmartDashboard.putNumber("Ttest/RotationAngle", rotationangle);
         SmartDashboard.putNumber("Ttest/TargetFieldAngle", targetFieldAngle);
         SmartDashboard.putNumber("Ttest/TurretAngle", turret.getFieldRelativeTurretAngle(rotationangle));
@@ -52,22 +57,17 @@ public class NewTurretCommand extends Command {
         SmartDashboard.putNumber("Ttest/Targety" , targetY);
         SmartDashboard.putNumber("Ttest/RobotPoseX" , robotPose.getX());
         SmartDashboard.putNumber("Ttest/RobotPoseY" , robotPose.getY());
-
+        */
        
         
         // Robot heading (field-relative)
-        /* 
+         
         double robotHeading = robotPose.getRotation().getDegrees();
 
         // Convert to turret-relative angle
-        double desiredTurretAngle = targetFieldAngle - robotHeading;
-        desiredTurretAngle = MathUtil.inputModulus(desiredTurretAngle, -180, 180);
-        double turretOffset = 45; // example 
-        double motorRotations = turret.getAngle(); // raw encoder rotations 
-        double turretDegrees = (motorRotations / 20.0) * 360.0; // Wrap to [-180, 180] 
-        double currentTurretAngle = MathUtil.inputModulus(turretDegrees + turretOffset, -180, 180);
-        double output = pid.calculate(currentTurretAngle, desiredTurretAngle);
-        output = MathUtil.clamp(output, -0.25, 0.25);
+       
+        double output = pid.calculate(turretAngle, targetFieldAngle);
+        //output = MathUtil.clamp(output, -0.25, 0.25);
 
         
 
@@ -77,16 +77,18 @@ public class NewTurretCommand extends Command {
         SmartDashboard.putNumber("Ttest/RobotPoseY" , robotPose.getY());
         SmartDashboard.putNumber("Ttest/targetFieldAngle" , targetFieldAngle);
         SmartDashboard.putNumber("Ttest/robotHeading" , robotHeading);
+        SmartDashboard.putNumber("Ttest/PIDOutput" , output);
+        /* 
         SmartDashboard.putNumber("Ttest/desiredTurretAngle" , desiredTurretAngle);
         SmartDashboard.putNumber("Ttest/currentTurretAngle" , currentTurretAngle);
-        SmartDashboard.putNumber("Ttest/PIDOutput" , output);
+       
         SmartDashboard.putNumber("Ttest/TurretRawAngle", turret.getAngle());
         SmartDashboard.putNumber("Ttest/TurretDegrees", turretDegrees);
         SmartDashboard.putNumber("Ttest/MotorRotations", motorRotations);
         SmartDashboard.putNumber("Ttest/CurrentTurretAngle", currentTurretAngle);
-
-        turret.setMotor(output);
         */
+        //turret.setMotor(output);
+        
     }
 
     @Override

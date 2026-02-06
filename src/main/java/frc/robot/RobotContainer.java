@@ -61,7 +61,7 @@ public class RobotContainer {
 
     /** TurretSubsystem */
     private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
-    private final DynamicTurretSubsystem m_dynamicTurretSubsystem = new DynamicTurretSubsystem();
+    //private final DynamicTurretSubsystem m_dynamicTurretSubsystem = new DynamicTurretSubsystem();
 
      /** RangeSensorSubsystem */
      private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
@@ -127,14 +127,14 @@ public class RobotContainer {
          
         boolean useTurretSubsystem = true;
         if ( useTurretSubsystem ) {
-            /* original TurretSubsustem
-            joystick.a().onTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
+             //original TurretSubsustem
+            joystick.a().whileTrue(new NewTurretCommand(m_turretSubsystem, drivetrain));
             joystick.b().whileTrue(m_turretSubsystem.runTurretLeftCommand());
-            */
+            
 
             /* to determine encoder setting versus deg of rotation */
-            joystick.a().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretRightCommand());
-            joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
+            //joystick.a().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretRightCommand());
+            //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
             
 
