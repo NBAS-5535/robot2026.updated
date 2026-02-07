@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.CANRangeConstants;
@@ -17,7 +18,7 @@ public class Configs {
     * TurretSubsystem 
     */
    public static final class TurretSubsystemConfiguration {
-     public static final SparkMaxConfig turretConfig = new SparkMaxConfig();
+     public static final SparkFlexConfig turretConfig = new SparkFlexConfig();
  
      static {
        // Configure basic setting of the turret motor

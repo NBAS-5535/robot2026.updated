@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,6 +48,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   // gear ratio
   private static final double GEAR_RATIO = 70.;
+  // CPR for NOE/NEO 550
+  private static final double CPR = 42.0;
 
   // Fuel Bucket Positions
   private static final double targetX = 11.7; //Blue=4.55;
@@ -69,7 +72,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
         PersistMode.kPersistParameters);
 
 
-    // Zero DynamicTurret and elevator encoders on initialization
+    // Zero DynamicTurret encoder on initialization
     dynamicturretEncoder.setPosition(0);
 
     // link to Swerve
@@ -151,7 +154,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("DynamicTurret/Target Position", DynamicTurretCurrentTarget);
     SmartDashboard.putNumber("DynamicTurret/Actual Position", dynamicturretEncoder.getPosition());
     SmartDashboard.putNumber("DynamicTurret/Actual Angle", dynamicturretEncoder.getPosition() * (360. / GEAR_RATIO));
-    
+    SmartDashboard.putNumber("DynamicTurret/Actual CPR-adjusted Angle", dynamicturretEncoder.getPosition() / encoderConversionFactor());
   }
 
   @Override
@@ -173,11 +176,20 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (rad)", targetFieldAngle);
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", targetFieldAngle * 180. / Math.PI);
-    //kPointAtTargetSetpointValue = targetFieldAngle;
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (enc)", targetFieldAngle * 180. / Math.PI * encoderConversionFactor());
 
     // assign this value as the next setpoint such that when moveToSetpoint() is called, it will move there
-    //DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
-    return targetFieldAngle * 180. / Math.PI;
+    targetFieldAngle = targetFieldAngle * 180. / Math.PI * encoderConversionFactor();
+    // limit to -180 to 180 degrees
+    targetFieldAngle = Rotation2d.fromDegrees(targetFieldAngle).getDegrees();
+    return targetFieldAngle;
   }
 
+  private double encoderConversionFactor() {
+    // conversion factor to convert from angle to encoder position
+    // this is determined by the gear ratio and the encoder counts per revolution
+    // for example, if the gear ratio is 70:1 and the encoder (NEO/NEO550) has 42 counts per revolution, 
+    // then the conversion factor is 70 * 42 = 2940
+    return GEAR_RATIO * CPR / 360.0; // encoder counts per degree of turret rotation
+  }
 }
