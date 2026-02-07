@@ -169,20 +169,32 @@ public class RobotContainer {
             */
 
             /* Experimental */
-            joystick.povUp().onTrue(
-                new RobotAlignCommandWithLimeLight(drivetrain, 13)
-            );  
+            joystick.povUp().onTrue(new SequentialCommandGroup(
+                //new RobotAlignCommand(drivetrain, m_vision, 10)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(0)),
+                //new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(14)),
+                new RobotAlignCommandWithLimeLight(drivetrain, 0)
+            ));  
 
             joystick.povDown().onTrue(new SequentialCommandGroup(
                 //new RobotAlignCommand(drivetrain, m_vision, 10)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(1)),
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(10)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 10)
             )); 
 
             joystick.povRight().onTrue(new SequentialCommandGroup(
                 //new RobotAlignCommand(drivetrain, m_vision, 13)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(1)),
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(13)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 13)
+            ));
+
+            joystick.povLeft().onTrue(new SequentialCommandGroup(
+                //new RobotAlignCommand(drivetrain, m_vision, 13)
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(2)),
+                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(14)),
+                new RobotAlignCommandWithLimeLight(drivetrain, 14)
             ));
 
             /* reset pipeline to generic and align to the closest AprilTag*/
