@@ -31,9 +31,12 @@ public class RobotAlignCommandWithLimeLight extends Command {
   private  final PIDControllerConfigurable xPidController = 
                     new PIDControllerConfigurable(0.05000, 0.000000, 0.001000, kSetpoint, kSetpointTolerance);
 
-  private RawFiducial[] fiducials;
-  private boolean justGo = true;
-  private boolean findAGenericTag = false;
+  private double rotationalRate = 0.0;
+  private double velocityX = 0.1;
+  
+  //private RawFiducial[] fiducials;
+  private boolean interruptCommand = false;
+  private static int m_testCase;// = 0; // 0: align to the closest tag, 1: align to a specific m_tagId, 2: align to any tag (probably the closest one)
 
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
@@ -58,91 +61,59 @@ public class RobotAlignCommandWithLimeLight extends Command {
 
   @Override
   public void execute() {
-    
-    // Get the horizontal offset from the Limelight
-    double tx = LimelightHelpers.getTX("limelight");
-    fiducials = LimelightHelpers.getRawFiducials("limelight");
-
-    SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/tx", tx);
-    // Check if a target is valid
+        // Check if a target is valid
     if (LimelightHelpers.getTV("limelight")) {
       SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/idInSight", LimelightHelpers.getFiducialID("limelight"));
-      //boolean justGo = false; // resetting tagId seems to work only with "false" 02/04/26 !!!!!
-      /*
-      for (RawFiducial fiducial : fiducials) {
-        int tagId = fiducial.id; // This is the AprilTag ID
-        if (tagId == m_tagId) {
-          SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/TargetFound", true);
-          SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", tagId);
-          if ( !justGo) {
-            // Calculate movement based on PID
-            double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
-            //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
+      // Get the horizontal offset from the Limelight
+      double tx = LimelightHelpers.getTX("limelight");
+      RawFiducial[] fiducials = LimelightHelpers.getRawFiducials("limelight");
+      SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/tx", tx);
 
-            drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
+      switch ( m_testCase ) {
+        case 0: 
+          // align to the closet tag - whichever is in sight - LimeLightHelpers
+          rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+          //velocityX = xPidController.calculate(fiducial.distToRobot, 0.1);
+          break;
 
-            if (rotationalPidController.atSetpoint()) {
-              System.out.println("STOP alignment");
-              this.end(true);
-            }
-          }
-        }
-          */      
-
-      if ( justGo) {
-        // get info on a specific m_tagId
-        for (RawFiducial fiducial : fiducials) {
-          int tagId = fiducial.id; // This is the AprilTag ID
-          if (tagId == m_tagId) {
-            SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/TargetFound", true);
-            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", tagId);
-            // Calculate movement based on PID
-            double rotationalRate = rotationalPidController.calculate(fiducial.txnc, kSetpoint);
-            //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-            SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
-
-            drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
-
-            if (rotationalPidController.atSetpoint()) {
-              System.out.println("STOP alignment");
-              this.end(true);
-            }
-          }
-        }
-      } else if ( findAGenericTag ){
-          /* most probably valid for the closet Apriltag !!!!!!!!!!!!!!!!!!! */
-          // Calculate movement based on PID
-          double rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
-          //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-          SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
-
-          drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
-
-          if (rotationalPidController.atSetpoint()) {
-            System.out.println("STOP alignment");
-            this.end(true);
-          }
-
-      } else {
-        RawFiducial closestFiducial = getIdOfClosestFiducial();
-        if (closestFiducial != null) {
-          SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", closestFiducial.id);
-            // Calculate movement based on PID
-          double rotationalRate = rotationalPidController.calculate(closestFiducial.txnc, kSetpoint);
-          //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1)
-          SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
-
-          drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(0.1));
-
-          if (rotationalPidController.atSetpoint()) {
-            System.out.println("STOP alignment");
-            this.end(true);
-          }
+        case 1: 
+          // align to the closest tag only if it is the same as the input m_tagId
+          if (LimelightHelpers.getFiducialID("limelight") == m_tagId) {
+            rotationalRate = rotationalPidController.calculate(tx, kSetpoint);
+            //velocityX = xPidController.calculate(fiducial.distToRobot, 0.1);
           } else {
-            System.out.println("NO alignment");
-            this.end(true);
+            System.out.println("Not our tag - NO alignment");
+            interruptCommand = true;
           }
+          break;
+
+        case 2: 
+          // align to m_tagId if it is in sight, otherwise end/interrupt command
+          // get info on a specific m_tagId
+          for (RawFiducial fiducial : fiducials) {
+            if (fiducial.id == m_tagId) {
+              SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/TargetFound", true);
+              SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/DetectedTagID", fiducial.id);
+              // Calculate movement based on PID
+              rotationalRate = rotationalPidController.calculate(fiducial.txnc, kSetpoint);
+              //double velocityX = xPidController.calculate(fiducial.distToRobot, 0.1);
+            } else {
+              System.out.println("Not my tag - NO alignment");
+              interruptCommand = true;
+            }
+          }
+          break;
+
+      }
+
+      SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/rotationalPidController", rotationalRate);
+      drivetrain.setControl(alignRequest.withRotationalRate(rotationalRate).withVelocityX(velocityX));
+
+      // check we reached the setpoint 
+      if (rotationalPidController.atSetpoint()) {
+              System.out.println("STOP alignment");
+              // interruptCommand = true;
+              this.end(true);
       }
     }
   }
@@ -151,7 +122,8 @@ public class RobotAlignCommandWithLimeLight extends Command {
   public boolean isFinished() {
     boolean temp = rotationalPidController.atSetpoint();
     SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/AlignFinished", temp);
-    return temp;
+    SmartDashboard.putBoolean("RobotAlignCommandWithLimeLight/InterruptCommand", interruptCommand);
+    return temp || interruptCommand;
   }
 
   @Override
@@ -165,6 +137,12 @@ public class RobotAlignCommandWithLimeLight extends Command {
     m_tagId = tag;
   }
 
+  public static void setScenario(int testScenario){
+    SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/SettingCase", testScenario);
+    m_testCase = testScenario;
+  }
+
+  /*
   public RawFiducial getIdOfClosestFiducial() {
     if (fiducials == null || fiducials.length == 0) {
         return null;
@@ -181,4 +159,5 @@ public class RobotAlignCommandWithLimeLight extends Command {
     SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/closetTag", closest.id);
     return closest;
   }
+    */
 }
