@@ -62,7 +62,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     /* user command-related markers */
     private Pose2d m_initialPose;
     private Pose2d m_initialPose_Blue = new Pose2d(3.62, 2.35, Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
-    private Pose2d m_initialPose_Red = new Pose2d(12.92, 5.72, Rotation2d.fromDegrees(0.));
+    private Pose2d m_initialPose_Red = new Pose2d(12.92, 6.10, Rotation2d.fromDegrees(0.));
 
     /* Initialize the Field2d object */
     private final Field2d m_field = new Field2d();

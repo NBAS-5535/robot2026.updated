@@ -12,7 +12,7 @@ import frc.robot.subsystems.DynamicTurretSubsystem;
 
 public class NewTurretCommand extends Command {
 
-    private final DynamicTurretSubsystem dynmaic_turret;
+    private final DynamicTurretSubsystem dynamic_turret;
     //private final TurretSubsystem turret;
     private final CommandSwerveDrivetrain drivetrain;
 
@@ -23,7 +23,7 @@ public class NewTurretCommand extends Command {
     private final PIDController pid = new PIDController(0.025, 0, 0);
 
     public NewTurretCommand(/*TurretSubsystem turret*/ DynamicTurretSubsystem turret ,CommandSwerveDrivetrain drivetrain) {
-        this.dynmaic_turret = turret;
+        this.dynamic_turret = turret;
         this.drivetrain = drivetrain;
 
         pid.enableContinuousInput(-180, 180);
@@ -42,17 +42,30 @@ public class NewTurretCommand extends Command {
         double rotationangle = robotPose.getRotation().getDegrees();
         double dx = targetX - robotPose.getX();
         double dy = targetY - robotPose.getY();
-        double targetFieldAngle = Math.toDegrees(Math.atan2(dy, dx));
-        double dynamicmotorPosition = dynmaic_turret.getPosition();
-        double dynamicangle = (dynamicmotorPosition * 360) / gearratio;
+        double targetFieldAngle = Math.atan2(dy, dx);
+        double targetfieldangledegrees = Math.toDegrees(targetFieldAngle);
+        targetfieldangledegrees = MathUtil.inputModulus(targetfieldangledegrees, -180,180);
+        double dynamicmotorPosition = dynamic_turret.getPosition();
+        double dynmaicturretencoderangle = dynamicmotorPosition * gearratio * dynamic_turret.encoderConversionFactor();
+        double motorcountsperrev = dynamic_turret.encoderConversionFactor();
+        double dynamicangle = Math.toDegrees((dynamic_turret.encoderConversionFactor() * dynamic_turret.getPosition() / gearratio) / 360);
         //dynmaic_turret.setPointAtTargetSetpointValue(targetFieldAngle);
         //dynmaic_turret.moveToSetpoint();
+         double output = pid.calculate(dynamicangle, targetFieldAngle);
         double desiredTurretAngle = MathUtil.inputModulus( targetFieldAngle - rotationangle, -180, 180 );
-        SmartDashboard.putNumber("Ttest/targetFieldAngle", targetFieldAngle);
+        SmartDashboard.putNumber("Ttest/targetFieldAngle(rad)", targetFieldAngle);
+        SmartDashboard.putNumber("Ttest/targetFieldAngle(deg)", targetfieldangledegrees);
         SmartDashboard.putNumber("Ttest/dynamicencoderposition", dynamicmotorPosition);
+        SmartDashboard.putNumber("Ttest/dynamicturretencoderangle", dynmaicturretencoderangle);
         SmartDashboard.putNumber("Ttest/dynamicAngle", dynamicangle);
+        SmartDashboard.putNumber("Ttest/Motorcounts", motorcountsperrev);
+        SmartDashboard.putNumber("Ttest/PIDoutput",output);
+
+        //dynamic_turret.setDynamicTurretPower(output);
+        //dynamic_turret.setDynamicTurretPower(output);
 
 
+        
         /* 
         double turretAngle = (turret.turretEncoder.getPosition()) * 360 / gearratio;
         
@@ -80,7 +93,7 @@ public class NewTurretCommand extends Command {
 
         // Convert to turret-relative angle
        
-        double output = pid.calculate(turretAngle, targetFieldAngle);
+       
         //output = MathUtil.clamp(output, -0.25, 0.25);
 
         

@@ -130,11 +130,15 @@ public class RobotContainer {
         if ( useTurretSubsystem ) {
              //original TurretSubsustem
             //joystick.a().onTrue(new NewTurretCommand(m_dynamicTurretSubsystem, drivetrain));
-            //joystick.b().whileTrue(m_turretSubsystem.runTurretLeftCommand());
+            //joystick.a().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretRightCommand());
+            //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
             
 
             /* to determine encoder setting versus deg of rotation */
             joystick.a().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kPointAtTargetSetpoint));
+            joystick.b().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveLeftSetpoint));
+            joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
+            joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
             //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
             
@@ -150,7 +154,7 @@ public class RobotContainer {
         }
 
         /* align robot */
-        boolean alignTesting = true;
+        boolean alignTesting = false;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;

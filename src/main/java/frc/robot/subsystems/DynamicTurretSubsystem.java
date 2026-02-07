@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.TurretSubsystemConstants;
 import frc.robot.Constants.TurretSubsystemConstants.TurretSubSystemSetpoints;
+import edu.wpi.first.math.MathUtil;
 
 
 /* NOTE: this Subsystem uses exact same Config and Constants of the original TurretSubsystem!!!! */
@@ -71,7 +72,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
-
+    dynamicturretMotor.setInverted(true);
     // Zero DynamicTurret encoder on initialization
     dynamicturretEncoder.setPosition(0);
 
@@ -92,7 +93,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   }
 
   /** Set DynamicTurret motor power in the range of [-1, 1]. - TEST Purpose: step through */
-  private void setDynamicTurretPower(double power) {
+  public void setDynamicTurretPower(double power) {
     dynamicturretMotor.set(power);
   }
 
@@ -119,6 +120,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
             case kPointAtTargetSetpoint:
               //DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
               DynamicTurretCurrentTarget = setPointAtTargetSetpointValue();
+              //SmartDashboard.putNumber("DynamicTurret/setpointcommandvalue", setPointAtTargetSetpointValue());
               break;
 
           }
@@ -152,9 +154,9 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
     // Display subsystem values
     SmartDashboard.putNumber("DynamicTurret/Target Position", DynamicTurretCurrentTarget);
-    SmartDashboard.putNumber("DynamicTurret/Actual Position", dynamicturretEncoder.getPosition());
-    SmartDashboard.putNumber("DynamicTurret/Actual Angle", dynamicturretEncoder.getPosition() * (360. / GEAR_RATIO));
-    SmartDashboard.putNumber("DynamicTurret/Actual CPR-adjusted Angle", dynamicturretEncoder.getPosition() / encoderConversionFactor());
+    SmartDashboard.putNumber("DynamicTurret/CurrentEncoderPosition", dynamicturretEncoder.getPosition());
+    SmartDashboard.putNumber("DynamicTurret/CurrentEncoder-Adj.Angle", dynamicturretEncoder.getPosition() * (360. / GEAR_RATIO));
+    //SmartDashboard.putNumber("DynamicTurret/Actual CPR-adjusted Angle", dynamicturretEncoder.getPosition() / encoderConversionFactor());
   }
 
   @Override
@@ -170,22 +172,30 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     double dx = targetX - robotPose.getX();
     double dy = targetY - robotPose.getY();
     double targetFieldAngle = Math.atan2(dy, dx);
-    SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
-    SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
-    SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
-    SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
+    //SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
+    //SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
+    //SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
+    //SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (rad)", targetFieldAngle);
-    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", targetFieldAngle * 180. / Math.PI);
-    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (enc)", targetFieldAngle * 180. / Math.PI * encoderConversionFactor());
-
+    double angleInDegrees = targetFieldAngle * 180. / Math.PI;
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", angleInDegrees);
+    double compAngleInDegrees = angleInDegrees + 180.;
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngleAdj (deg)", compAngleInDegrees);
+    //SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (enc)", targetFieldAngle * 180. / Math.PI * encoderConversionFactor());
+    //SmartDashboard.putNumber("DynamicTurret/targetangle(motorenc)", targetFieldAngle * encoderConversionFactor());
     // assign this value as the next setpoint such that when moveToSetpoint() is called, it will move there
-    targetFieldAngle = targetFieldAngle * 180. / Math.PI * encoderConversionFactor();
+    //targetFieldAngle = targetFieldAngle * 180. / Math.PI * encoderConversionFactor();
+    targetFieldAngle = (180. + compAngleInDegrees) / 360. * GEAR_RATIO;
+    //targetFieldAngle = 90. - compAngleInDegrees;
+    SmartDashboard.putNumber("DynamicTurret/setPointAngle (deg)", targetFieldAngle);
     // limit to -180 to 180 degrees
-    targetFieldAngle = Rotation2d.fromDegrees(targetFieldAngle).getDegrees();
+    //targetFieldAngle = MathUtil.inputModulus(targetFieldAngle,-180,180);
+    //targetFieldAngle = Rotation2d.fromDegrees(targetFieldAngle).getDegrees();
+    //return targetFieldAngle - ourStartAngle;
     return targetFieldAngle;
   }
 
-  private double encoderConversionFactor() {
+  public double encoderConversionFactor() {
     // conversion factor to convert from angle to encoder position
     // this is determined by the gear ratio and the encoder counts per revolution
     // for example, if the gear ratio is 70:1 and the encoder (NEO/NEO550) has 42 counts per revolution, 
