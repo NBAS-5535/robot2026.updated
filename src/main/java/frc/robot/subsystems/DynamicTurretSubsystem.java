@@ -56,6 +56,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   private static final double targetX = 11.7; //Blue=4.55;
   private static final double targetY = 3.97;
 
+  private boolean trackingtarget = false;
+
   public DynamicTurretSubsystem(CommandSwerveDrivetrain drivetrain) {
     /*
      * Apply the appropriate configurations to the SPARKs.
@@ -112,6 +114,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
               DynamicTurretCurrentTarget = TurretSubSystemSetpoints.kMoveRightSetpoint;
               break;
             case kMoveLeftSetpoint:
+              trackingtarget = false;
               DynamicTurretCurrentTarget = TurretSubSystemSetpoints.kMoveLeftSetpoint;
               break;
             case kBase:
@@ -119,6 +122,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
               break;
             case kPointAtTargetSetpoint:
               //DynamicTurretCurrentTarget = kPointAtTargetSetpointValue;
+              trackingtarget = true;
               DynamicTurretCurrentTarget = setPointAtTargetSetpointValue();
               //SmartDashboard.putNumber("DynamicTurret/setpointcommandvalue", setPointAtTargetSetpointValue());
               break;
@@ -150,8 +154,10 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(trackingtarget){
+      DynamicTurretCurrentTarget = setPointAtTargetSetpointValue();
+    }
     moveToSetpoint();
-
     // Display subsystem values
     SmartDashboard.putNumber("DynamicTurret/Target Position", DynamicTurretCurrentTarget);
     SmartDashboard.putNumber("DynamicTurret/CurrentEncoderPosition", dynamicturretEncoder.getPosition());
@@ -168,10 +174,21 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     // may be good enough to pass the angle to move and scale using the fixed setpoint values
     // for example, determine encoder values for 30deg, 45deg, 60deg, 90deg etc and interpolate?
     Pose2d robotPose = mDrivetrain.getCurrentPose();
+    
     //double rotationangle = robotPose.getRotation().getDegrees();
     double dx = targetX - robotPose.getX();
     double dy = targetY - robotPose.getY();
     double targetFieldAngle = Math.atan2(dy, dx);
+    
+    
+    //MyMathequation 
+    
+    double robotheading = robotPose.getRotation().getRadians();
+    double turretangle = targetFieldAngle - robotheading;
+    // Normalize to [-pi, pi] 
+    turretangle = MathUtil.angleModulus(targetFieldAngle - robotheading);
+    double turretRotations = (turretangle / (2 * Math.PI)) * GEAR_RATIO;
+    SmartDashboard.putNumber("DynamicTurret/turretrotations", turretRotations);
     //SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
     //SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
     //SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
@@ -181,18 +198,19 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", angleInDegrees);
     double compAngleInDegrees = angleInDegrees + 180.;
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngleAdj (deg)", compAngleInDegrees);
+    //double target = Math.atan2(targetX - dx , targetY - dy);
     //SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (enc)", targetFieldAngle * 180. / Math.PI * encoderConversionFactor());
     //SmartDashboard.putNumber("DynamicTurret/targetangle(motorenc)", targetFieldAngle * encoderConversionFactor());
     // assign this value as the next setpoint such that when moveToSetpoint() is called, it will move there
     //targetFieldAngle = targetFieldAngle * 180. / Math.PI * encoderConversionFactor();
-    targetFieldAngle = (180. + compAngleInDegrees) / 360. * GEAR_RATIO;
+    //targetFieldAngle = (180. + compAngleInDegrees) / 360. * GEAR_RATIO;
     //targetFieldAngle = 90. - compAngleInDegrees;
     SmartDashboard.putNumber("DynamicTurret/setPointAngle (deg)", targetFieldAngle);
     // limit to -180 to 180 degrees
     //targetFieldAngle = MathUtil.inputModulus(targetFieldAngle,-180,180);
     //targetFieldAngle = Rotation2d.fromDegrees(targetFieldAngle).getDegrees();
-    //return targetFieldAngle - ourStartAngle;
-    return targetFieldAngle;
+    return turretRotations;
+    //return targetFieldAngle;
   }
 
   public double encoderConversionFactor() {

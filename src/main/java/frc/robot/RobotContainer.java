@@ -30,6 +30,7 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.NewTurretCommand;
@@ -90,6 +91,7 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
+        
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
@@ -97,7 +99,10 @@ public class RobotContainer {
                     .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
                     .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
+            
         );
+        
+               
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -140,6 +145,9 @@ public class RobotContainer {
             joystick.b().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveLeftSetpoint));
             joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
             joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
+            joystick.x().whileTrue(new AutoAlignCommand(m_dynamicTurretSubsystem, drivetrain));
+
+
             //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
             
