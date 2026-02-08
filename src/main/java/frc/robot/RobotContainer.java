@@ -34,6 +34,7 @@ import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.NewTurretCommand;
 import frc.robot.commands.TurretAlignCommand;
+import frc.robot.experimental.AlignToClosestAprilTag;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
 import frc.robot.experimental.RobotAlignCommandTest;
@@ -169,30 +170,21 @@ public class RobotContainer {
             */
 
             /* Experimental */
-            joystick.povUp().onTrue(new SequentialCommandGroup(
-                //new RobotAlignCommand(drivetrain, m_vision, 10)
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(0)),
-                //new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(14)),
-                new RobotAlignCommandWithLimeLight(drivetrain, 0)
-            ));  
+            joystick.povUp().onTrue(
+                new AlignToClosestAprilTag(drivetrain)
+            );  
 
             joystick.povDown().onTrue(new SequentialCommandGroup(
-                //new RobotAlignCommand(drivetrain, m_vision, 10)
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(1)),
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(10)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 10)
             )); 
 
             joystick.povRight().onTrue(new SequentialCommandGroup(
-                //new RobotAlignCommand(drivetrain, m_vision, 13)
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(1)),
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(13)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 13)
             ));
 
             joystick.povLeft().onTrue(new SequentialCommandGroup(
-                //new RobotAlignCommand(drivetrain, m_vision, 13)
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setScenario(2)),
                 new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(14)),
                 new RobotAlignCommandWithLimeLight(drivetrain, 14)
             ));
