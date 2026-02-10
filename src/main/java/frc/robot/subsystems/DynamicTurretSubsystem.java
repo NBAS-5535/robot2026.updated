@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -12,6 +14,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,8 +57,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   private static final double CPR = 42.0;
 
   // Fuel Bucket Positions
-  private static final double targetX = 11.7; //Blue=4.55;
-  private static final double targetY = 3.97;
+  private static double targetX = 11.7; //Blue=4.55;
+  private static double targetY = 3.97;
 
   private boolean trackingtarget = false;
 
@@ -81,8 +85,15 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     // link to Swerve
     this.mDrivetrain = drivetrain;
 
+    // set the tower corrdinates according to alliance color
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    targetY = 4.035; // this is the same for both alliances
+    if (alliance.get() == Alliance.Blue) {
+      targetX = 4.62;
+    } else  if (alliance.get() == Alliance.Red) {
+      targetX = 11.92;
+    }
   }
-
 
   /**
    * Drive the DynamicTurret and elevator motors to their respective setpoints. This will use MAXMotion
@@ -211,6 +222,30 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     //targetFieldAngle = Rotation2d.fromDegrees(targetFieldAngle).getDegrees();
     return turretRotations;
     //return targetFieldAngle;
+  }
+
+  public double resetTargetSetpointValue(){
+    // in case we want to point at the target on-demand - not while the robot is moving
+    // 
+    Pose2d robotPose = mDrivetrain.getCurrentPose();
+    double dx = targetX - robotPose.getX();
+    double dy = targetY - robotPose.getY();
+    double targetFieldAngle = Math.atan2(dy, dx);
+    double angleInDegrees = targetFieldAngle * 180. / Math.PI;
+    //SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
+    //SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
+    //SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
+    //SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (rad)", targetFieldAngle);
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", angleInDegrees);
+    double compAngleInDegrees = angleInDegrees + 180.;
+    SmartDashboard.putNumber("DynamicTurret/targetFieldAngleAdj (deg)", compAngleInDegrees);
+    // crucial step: adjust for rotations by gear ratio!
+    targetFieldAngle = (180. + compAngleInDegrees) / 360. * GEAR_RATIO;
+    SmartDashboard.putNumber("DynamicTurret/setPointAngle (deg)", targetFieldAngle);
+
+    return targetFieldAngle;
+
   }
 
   public double encoderConversionFactor() {
