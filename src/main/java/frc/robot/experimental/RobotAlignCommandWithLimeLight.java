@@ -44,7 +44,7 @@ public class RobotAlignCommandWithLimeLight extends Command {
 
   public RobotAlignCommandWithLimeLight(CommandSwerveDrivetrain drivetrain, int tagId) {
     this.drivetrain = drivetrain;
-    m_tagId = tagId;
+    RobotAlignCommandWithLimeLight.m_tagId = tagId;
     //SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
 
     addRequirements(drivetrain);
@@ -109,7 +109,7 @@ public class RobotAlignCommandWithLimeLight extends Command {
 
   public static void setTagId(int tag){
     SmartDashboard.putNumber("RobotAlignCommandWithLimeLight/SettingTagID", tag);
-    m_tagId = tag;
+    RobotAlignCommandWithLimeLight.m_tagId = tag;
   }
 
   /*

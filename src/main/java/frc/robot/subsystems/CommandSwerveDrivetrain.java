@@ -281,7 +281,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         /* update pose estimate continuously */
-        updateVisionPose();
+        //updateVisionPose();
+        /* automatic odometry update when AprilTag is in sight */
+        updateVisionPose_MT_1and2();
 
         /* Update the Field2d widget with the current pose estimate */
         m_field.setRobotPose(this.getState().Pose);

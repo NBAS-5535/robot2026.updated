@@ -30,12 +30,12 @@ import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AlignToClosestAprilTag;
 import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.NewTurretCommand;
 import frc.robot.commands.TurretAlignCommand;
-import frc.robot.experimental.AlignToClosestAprilTag;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
 import frc.robot.experimental.RobotAlignCommandTest;
@@ -183,8 +183,7 @@ public class RobotContainer {
             );  
 
             joystick.povDown().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(10)),
-                new RobotAlignCommandWithLimeLight(drivetrain, 10)
+                new RobotAlignCommand(drivetrain, 10)
             )); 
 
             joystick.povRight().onTrue(new SequentialCommandGroup(
@@ -193,8 +192,8 @@ public class RobotContainer {
             ));
 
             joystick.povLeft().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(14)),
-                new RobotAlignCommandWithLimeLight(drivetrain, 14)
+                new InstantCommand(() -> RobotAlignCommand.setTagId(9)),
+                new RobotAlignCommand(drivetrain, 9)
             ));
 
             /* reset pipeline to generic and align to the closest AprilTag*/

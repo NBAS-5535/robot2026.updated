@@ -13,13 +13,12 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.Vision;
 
 
 public class RobotAlignCommand extends Command {
   private final CommandSwerveDrivetrain drivetrain;
-  private int tagId;
+  private static int tagId;
   private final Pose3d targetPose; // The desired field pose
 
  
@@ -30,9 +29,9 @@ public class RobotAlignCommand extends Command {
   private static final SwerveRequest.RobotCentric alignRequest = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
 
-  public RobotAlignCommand(CommandSwerveDrivetrain drivetrain, VisionSubsystem vision, int tagId) {
+  public RobotAlignCommand(CommandSwerveDrivetrain drivetrain, int tagId) {
     this.drivetrain = drivetrain;
-    this.tagId = tagId;
+    RobotAlignCommand.tagId = tagId;
     //SmartDashboard.putNumber("RobotAlignCommand/TagToFindIn", tagId);
 
     // retrieve the target pose from the FieldLayout based on the tag ID
@@ -85,5 +84,10 @@ public class RobotAlignCommand extends Command {
   public void end(boolean interrupted) {
     drivetrain.applyRequest(() -> idleRequest);
     
+  }
+
+  public static void setTagId(int tag){
+    SmartDashboard.putNumber("RobotAlignCommand/SettingTagID", tag);
+    RobotAlignCommand.tagId = tag;
   }
 }
