@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.TurretSubsystemConstants;
 import frc.robot.Constants.TurretSubsystemConstants.TurretSubSystemSetpoints;
 import edu.wpi.first.math.MathUtil;
@@ -57,8 +58,8 @@ public class DynamicTurretSubsystem extends SubsystemBase {
   private static final double CPR = 42.0;
 
   // Fuel Bucket Positions
-  private static double targetX = 11.7; //Blue=4.55;
-  private static double targetY = 3.97;
+  private static double targetX;// = 11.7; //Blue=4.55;
+  private static double targetY;// = 3.97;
 
   private boolean trackingtarget = false;
 
@@ -87,11 +88,11 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
     // set the tower corrdinates according to alliance color
     Optional<Alliance> alliance = DriverStation.getAlliance();
-    targetY = 4.035; // this is the same for both alliances
+    targetY = FieldConstants.blueTower_Y; // this is the same for both alliances
     if (alliance.get() == Alliance.Blue) {
-      targetX = 4.62;
+      targetX = FieldConstants.blueTower_X;
     } else  if (alliance.get() == Alliance.Red) {
-      targetX = 11.92;
+      targetX = FieldConstants.redTower_X;
     }
   }
 
@@ -162,6 +163,15 @@ public class DynamicTurretSubsystem extends SubsystemBase {
 
   }
 
+  public void onPoseReset() {
+    // Force turret to recompute its target angle immediately
+    resetTargetSetpointValue();
+}
+
+public void enableTracking() {
+    trackingtarget = true;
+}
+
 
   @Override
   public void periodic() {
@@ -200,10 +210,10 @@ public class DynamicTurretSubsystem extends SubsystemBase {
     turretangle = MathUtil.angleModulus(targetFieldAngle - robotheading);
     double turretRotations = (turretangle / (2 * Math.PI)) * GEAR_RATIO;
     SmartDashboard.putNumber("DynamicTurret/turretrotations", turretRotations);
-    //SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
-    //SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
-    //SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
-    //SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
+    SmartDashboard.putNumber("DynamicTurret/Targetx" , targetX);
+    SmartDashboard.putNumber("DynamicTurret/Targety" , targetY);
+    SmartDashboard.putNumber("DynamicTurret/RobotPoseX" , robotPose.getX());
+    SmartDashboard.putNumber("DynamicTurret/RobotPoseY" , robotPose.getY());
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (rad)", targetFieldAngle);
     double angleInDegrees = targetFieldAngle * 180. / Math.PI;
     SmartDashboard.putNumber("DynamicTurret/targetFieldAngle (deg)", angleInDegrees);

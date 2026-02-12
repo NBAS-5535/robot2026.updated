@@ -41,8 +41,8 @@ public class Configs {
            .outputRange(-1,1)
            .maxMotion
            // Set MAXMotion parameters for position control
-           .maxVelocity(160000)//used to be 2000
-           .maxAcceleration(640000)//used to be 10000
+           .maxVelocity(320000)//used to be 2000
+           .maxAcceleration(1280000)//used to be 10000
            .allowedClosedLoopError(0.25);
  
        turretConfig.idleMode(IdleMode.kBrake);

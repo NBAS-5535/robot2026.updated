@@ -6,6 +6,22 @@ import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.Second;
 
 public class Constants {
+    public static final class FieldConstants {
+      // starting point
+      public static double blueStart_Right_X = 3.62;
+      public static double blueStart_Right_Y = 2.35;
+
+      public static double redStart_Right_X = 12.92;
+      public static double redStart_Right_Y = 6.10;
+
+      // Fuel Towers
+      public static double blueTower_X = 4.62;
+      public static double blueTower_Y = 4.035;
+
+      public static double redTower_X = 11.92;
+      public static double redTower_Y = 4.035;
+
+    }
     public static final class TurretSubsystemConstants {
         public static final int kTurretMotorCanId = 44;
     

@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -61,8 +62,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     /* user command-related markers */
     private Pose2d m_initialPose;
-    private Pose2d m_initialPose_Blue = new Pose2d(3.62, 2.35, Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
-    private Pose2d m_initialPose_Red = new Pose2d(12.92, 6.10, Rotation2d.fromDegrees(0.));
+    private Pose2d m_initialPose_Blue = new Pose2d(FieldConstants.blueStart_Right_X, 
+                                                   FieldConstants.blueStart_Right_Y, 
+                                                   Rotation2d.fromDegrees(180.)); // = this.getState().Pose;
+    private Pose2d m_initialPose_Red = new Pose2d(FieldConstants.redStart_Right_X, 
+                                                   FieldConstants.redStart_Right_Y, 
+                                                   Rotation2d.fromDegrees(0.)); 
 
     /* Initialize the Field2d object */
     private final Field2d m_field = new Field2d();

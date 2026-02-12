@@ -35,6 +35,7 @@ import frc.robot.commands.AutoAlignCommand;
 import frc.robot.commands.FindAndAlignCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.NewTurretCommand;
+import frc.robot.commands.ResetPoseFromAprilTagCommand;
 import frc.robot.commands.TurretAlignCommand;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
@@ -146,7 +147,10 @@ public class RobotContainer {
             joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
             joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
             joystick.x().whileTrue(new AutoAlignCommand(m_dynamicTurretSubsystem, drivetrain));
+            joystick.y().onTrue(new ResetPoseFromAprilTagCommand(m_dynamicTurretSubsystem,drivetrain));
 
+            joystick.povLeft().onTrue(
+                new InstantCommand(() -> drivetrain.setInitializePose()));
 
             //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
