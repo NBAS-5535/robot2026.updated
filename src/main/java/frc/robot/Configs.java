@@ -9,6 +9,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.CANRangeConstants;
+import frc.robot.Constants.GenericSubsystemConstants;
 import frc.robot.Constants.TurretSubsystemConstants;
 
 public class Configs {
@@ -46,6 +47,41 @@ public class Configs {
            .allowedClosedLoopError(0.25);
  
        turretConfig.idleMode(IdleMode.kBrake);
+     }
+   }
+
+   /* *****************
+    * GenericSubsystem 
+    */
+   public static final class GenericSubsystemConfiguration {
+     public static final SparkFlexConfig genericConfig = new SparkFlexConfig();
+ 
+     static {
+       // Configure basic setting of the generic motor
+       genericConfig
+         .smartCurrentLimit(GenericSubsystemConstants.kGenericCurrentLimit)
+         .closedLoopRampRate(GenericSubsystemConstants.kGenericRampRate);
+ 
+       /*
+        * Configure the closed loop controller. We want to make sure we set the
+        * feedback sensor as the primary encoder.
+        */
+       genericConfig
+           .closedLoop
+           .feedbackSensor(com.revrobotics.spark.FeedbackSensor.kPrimaryEncoder)
+           // Set PID values for position control. We don't need to pass a closed
+           // loop slot, as it will default to slot 0.
+           .pid(GenericSubsystemConstants.kGenericKp, 
+               GenericSubsystemConstants.kGenericKi, 
+               GenericSubsystemConstants.kGenericKd)
+           .outputRange(-1,1)
+           .maxMotion
+           // Set MAXMotion parameters for position control
+           .maxVelocity(320000)//used to be 2000
+           .maxAcceleration(1280000)//used to be 10000
+           .allowedClosedLoopError(0.25);
+ 
+       genericConfig.idleMode(IdleMode.kBrake);
      }
    }
 

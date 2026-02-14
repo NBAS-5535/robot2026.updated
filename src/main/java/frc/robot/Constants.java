@@ -44,6 +44,28 @@ public class Constants {
     
     }
 
+    public static final class GenericSubsystemConstants {
+        public static final int kGenericMotorCanId = 45;
+    
+        public static double kGenericRampRate = 0.1;
+        public static int    kGenericCurrentLimit = 40;
+        public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
+        public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
+    
+        public static final double kGenericKp = 0.5;
+        public static final double kGenericKi = 0;
+        public static final double kGenericKd = 0.;
+        
+        public static final double GenericSetpointTestSpeed = 0.1;
+      
+        public static final class GenericSubSystemSetpoints {
+          public static final double kBase = 0;
+          public static final double kMoveRightSetpoint = 17.5;//135.;//Math.PI / 4.;
+          public static final double kMoveLeftSetpoint = 35.;//Math.PI / 4.;
+         }
+    
+    }
+
     public static final class CANRangeConstants {
       public static final int kCANRangeId = 16;
   
