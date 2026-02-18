@@ -13,8 +13,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.SparkBase.PersistMode;
 
@@ -29,6 +32,8 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
   TalonFX leader = new TalonFX(51, new CANBus("rio")); 
   TalonFX follower = new TalonFX(52, new CANBus("rio"));
 
+  private final DutyCycleOut driveRequest = new DutyCycleOut(0);
+
   TalonFXConfiguration config = new TalonFXConfiguration();
 
   // power setting to be issued from RobotContainer
@@ -38,7 +43,8 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
   private final int maxCurrentLimit = 40;
   private static final double kTestPower = 0.1; // Purpose: step through
 
-    /** Creates a new TwoMotorsSingleShaftSubsystem. */
+
+  /** Constructor */
   public TwoMotorsSingleShaftSubsystem() {
     /* SparkMax configs */
     leaderConfig
@@ -67,6 +73,9 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
     // Apply configuration
     leader.getConfigurator().apply(config);
     follower.getConfigurator().apply(config);
+
+    // Follower setup (Only needs to be called once, typically in robotInit)
+    follower.setControl(new Follower(leader.getDeviceID(), MotorAlignmentValue.Opposed));
   }
 
   @Override
@@ -75,8 +84,9 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
     setPower(m_power);
   }
 
-  /** Set Lift motor power in the range of [-1, 1]. - TEST Purpose: step through */
+  /** Set motor power in the range of [-1, 1]. - TEST Purpose: step through */
   private void setPower(double power) {
     leaderMotor.set(power);
+    leader.setControl(driveRequest.withOutput(power));
   }
 }
