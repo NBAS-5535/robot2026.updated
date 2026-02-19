@@ -133,7 +133,7 @@ public class RobotContainer {
 
         /* run turret motor in suck-in and push-out modes */
          
-        boolean useTurretSubsystem = true;
+        boolean useTurretSubsystem = false;
         if ( useTurretSubsystem ) {
              //original TurretSubsustem
             //joystick.a().onTrue(new NewTurretCommand(m_dynamicTurretSubsystem, drivetrain));
@@ -144,14 +144,20 @@ public class RobotContainer {
             /* to determine encoder setting versus deg of rotation */
             joystick.a().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kPointAtTargetSetpoint));
             joystick.b().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveLeftSetpoint));
-            joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
+            //joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
             joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
             joystick.x().whileTrue(new AutoAlignCommand(m_dynamicTurretSubsystem, drivetrain));
-            joystick.y().onTrue(new ResetPoseFromAprilTagCommand(m_dynamicTurretSubsystem,drivetrain));
+            joystick.y().onTrue(new ResetPoseFromAprilTagCommand(drivetrain, m_dynamicTurretSubsystem));
 
             joystick.povLeft().onTrue(
                 new InstantCommand(() -> drivetrain.setInitializePose()));
 
+                /* Experimental */
+            joystick.povDown().onTrue(
+                new AlignToClosestAprilTag(drivetrain)
+            );
+
+            joystick.povUp().onTrue(new InstantCommand(() -> drivetrain.updateVisionPose_MT_1and2()));
             //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
         }
             
@@ -167,7 +173,7 @@ public class RobotContainer {
         }
 
         /* align robot */
-        boolean alignTesting = false;
+        boolean alignTesting = true;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;

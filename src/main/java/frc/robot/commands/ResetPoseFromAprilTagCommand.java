@@ -1,91 +1,109 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
-import frc.robot.subsystems.DynamicTurretSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DynamicTurretSubsystem;
+import frc.robot.Vision.LimelightHelpers;
+import frc.robot.Vision.LimelightHelpers.RawFiducial;
 
 public class ResetPoseFromAprilTagCommand extends Command {
 
-    private final DynamicTurretSubsystem turret;
     private final CommandSwerveDrivetrain drivetrain;
+    private final DynamicTurretSubsystem turret;
 
-    // Only reset pose from these tags
-    private static final int[] ALLOWED_TAGS = {1, 2, 3, 4, 5, 6, 7, 8,10};
+    private final double kSetpoint = 0.0; // want tx = 0
+    private final double kTolerance = 1.0; // degrees
 
-    public ResetPoseFromAprilTagCommand(DynamicTurretSubsystem turret, CommandSwerveDrivetrain drivetrain) {
-        this.turret = turret;
+    private final PIDControllerConfigurable rotationPID =
+        new PIDControllerConfigurable(0.1, 0.0, 0.0, kSetpoint, kTolerance);
+
+    private double rotationalRate = 0.0;
+    private double forwardSpeed = 0.1;
+
+    private static final SwerveRequest.RobotCentric alignRequest =
+        new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private static final SwerveRequest.Idle idleRequest = new SwerveRequest.Idle();
+
+    RawFiducial[] fiducials;
+
+    public ResetPoseFromAprilTagCommand(CommandSwerveDrivetrain drivetrain, DynamicTurretSubsystem turret) {
         this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
-    }
-
-    private boolean isAllowedTag(int tid) {
-        for (int id : ALLOWED_TAGS) {
-            if (id == tid) return true;
-        }
-        return false;
+        this.turret = turret;
+        addRequirements(drivetrain); // DO NOT require turret
     }
 
     @Override
     public void initialize() {
+        LimelightHelpers.setLEDMode_PipelineControl("limelight");
 
-        var table = NetworkTableInstance.getDefault().getTable("limelight");
+        // Enable turret tracking toward the tower
+        turret.enableTracking();
 
-        double tv = table.getEntry("tv").getDouble(0);
+        // Initial fiducial read
+        fiducials = LimelightHelpers.getRawFiducials("limelight");
 
-        if (tv == 1) {
+        SmartDashboard.putNumber("AutoAlign/TagSeenInit", LimelightHelpers.getFiducialID("limelight"));
+    }
 
-            // Read tag ID
-            int tid = (int) table.getEntry("tid").getDouble(-1);
+    @Override
+    public void execute() {
 
-            // Read distance to tag (meters)
-            double[] targetpose_robotspace =
-                table.getEntry("targetpose_robotspace").getDoubleArray(new double[6]);
+        // Refresh fiducials every cycle
+        fiducials = LimelightHelpers.getRawFiducials("limelight");
 
-            double distance = targetpose_robotspace.length >= 6 ? targetpose_robotspace[2] : 999;
+        // If no target or no fiducials, stop safely
+        if (!LimelightHelpers.getTV("limelight") || fiducials == null || fiducials.length == 0) {
+            SmartDashboard.putBoolean("AutoAlign/HasTarget", false);
+            drivetrain.setControl(idleRequest);
+            return;
+        }
 
-            // Reject tags not in allowed list
-            if (!isAllowedTag(tid)) return;
+        SmartDashboard.putBoolean("AutoAlign/HasTarget", true);
 
-            // Reject tags too far away (optional)
-            if (distance > 4.0) return; // only trust tags within 4 meters
-
-            boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;
-
-            double[] botpose = table
-                .getEntry(isBlue ? "botpose_wpiblue" : "botpose_wpired")
-                .getDoubleArray(new double[6]);
-
-            if (botpose.length >= 6) {
-
-                Pose2d llPose = new Pose2d(
-                    botpose[0],
-                    botpose[1],
-                    Rotation2d.fromDegrees(botpose[5])
-                );
-
-                // Keep gyro heading
-                Pose2d corrected = new Pose2d(
-                    llPose.getX(),
-                    llPose.getY(),
-                    drivetrain.getCurrentPose().getRotation()
-                );
-
-                drivetrain.resetPose(corrected);
-
-                // Enable turret tracking after pose reset
-                turret.enableTracking();
+        // Pick closest tag safely
+        RawFiducial closest = fiducials[0];
+        for (RawFiducial f : fiducials) {
+            if (f.distToRobot < closest.distToRobot) {
+                closest = f;
             }
         }
+
+        SmartDashboard.putNumber("AutoAlign/ClosestTagID", closest.id);
+        SmartDashboard.putNumber("AutoAlign/ClosestTagDist", closest.distToRobot);
+
+        // Robot rotation using tx
+        double tx = LimelightHelpers.getTX("limelight");
+        SmartDashboard.putNumber("AutoAlign/tx", tx);
+
+        rotationalRate = rotationPID.calculate(tx, kSetpoint);
+
+        SmartDashboard.putNumber("AutoAlign/rotRate", rotationalRate);
+
+        drivetrain.setControl(
+            alignRequest
+                .withRotationalRate(rotationalRate)
+                .withVelocityX(forwardSpeed)
+        );
+
+        // ⭐ Turret is NOT controlled here — it updates itself in periodic()
+        // turret.setPointAtTargetSetpointValue() runs automatically when trackingtarget = true
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        boolean done = rotationPID.atSetpoint();
+        SmartDashboard.putBoolean("AutoAlign/Finished", done);
+        return done;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.applyRequest(() -> idleRequest);
     }
 }

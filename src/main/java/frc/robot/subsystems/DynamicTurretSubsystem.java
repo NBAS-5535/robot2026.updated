@@ -138,7 +138,7 @@ public class DynamicTurretSubsystem extends SubsystemBase {
               DynamicTurretCurrentTarget = setPointAtTargetSetpointValue();
               //SmartDashboard.putNumber("DynamicTurret/setpointcommandvalue", setPointAtTargetSetpointValue());
               break;
-
+            
           }
         });
   }
