@@ -2,6 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.signals.UpdateModeValue;
+import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -10,6 +11,8 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.CANRangeConstants;
 import frc.robot.Constants.GenericSubsystemConstants;
+import frc.robot.Constants.HopperSubsystemConstants;
+import frc.robot.Constants.IntakeSubsystemConstants;
 import frc.robot.Constants.TurretSubsystemConstants;
 
 public class Configs {
@@ -99,5 +102,54 @@ public class Configs {
     }
    }   
 
-  
+  /* *****************
+   * IntakeSubsystem 
+   */
+  public static final class IntakeSubsystem {
+    public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
+
+    static {
+      // Configure basic setting of the intake motor
+      intakeConfig
+        .smartCurrentLimit(IntakeSubsystemConstants.kIntakeCurrentLimit)
+        .closedLoopRampRate(IntakeSubsystemConstants.kIntakeRampRate);
+
+      intakeConfig.idleMode(IdleMode.kBrake);
+    }
+  }
+
+    /* *****************
+   * HopperSubsystem 
+   */
+  public static final class HopperSubsystem {
+    public static final SparkMaxConfig hopperConfig = new SparkMaxConfig();
+
+    static {
+      // Configure basic setting of the hopper motor
+      hopperConfig
+        .smartCurrentLimit(HopperSubsystemConstants.kHopperCurrentLimit)
+        .closedLoopRampRate(HopperSubsystemConstants.kHopperRampRate);
+
+      /*
+       * Configure the closed loop controller. We want to make sure we set the
+       * feedback sensor as the primary encoder.
+       */
+      hopperConfig
+          .closedLoop
+          .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+          // Set PID values for position control. We don't need to pass a closed
+          // loop slot, as it will default to slot 0.
+          .pid(HopperSubsystemConstants.kHopperKp, 
+               HopperSubsystemConstants.kHopperKi, 
+               HopperSubsystemConstants.kHopperKd)
+          .outputRange(-1., 1)
+          .maxMotion
+          // Set MAXMotion parameters for position control
+          .maxVelocity(2000)
+          .maxAcceleration(10000)
+          .allowedClosedLoopError(0.25);
+
+      hopperConfig.idleMode(IdleMode.kBrake);
+    }
+  }
 }
