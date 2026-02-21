@@ -67,7 +67,7 @@ public class Constants {
   }
 
   public static final class CANRangeConstants {
-    public static final int kCANRangeId = 16;
+    public static final int kCANRangeId = 66;
 
     public static int    kMinSignalStrengthForValidMeasurement = 2000;
     public static double kProximityThreshold = 0.1;
@@ -79,10 +79,10 @@ public class Constants {
    * IntakeSubsystemConstants
    */
   public static final class IntakeSubsystemConstants{
-    public static final int kIntakeMotorCanId = 51;
+    public static final int kIntakeMotorCanId = 16;
 
     public static double kIntakeRampRate = 0.1;
-    public static int    kIntakeCurrentLimit = 40;
+    public static int    kIntakeCurrentLimit = 60;
     public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
     public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
 
