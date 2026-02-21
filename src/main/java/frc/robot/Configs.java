@@ -106,7 +106,7 @@ public class Configs {
    * IntakeSubsystem 
    */
   public static final class IntakeSubsystem {
-    public static final SparkMaxConfig intakeConfig = new SparkMaxConfig();
+    public static final SparkFlexConfig intakeConfig = new SparkFlexConfig();
 
     static {
       // Configure basic setting of the intake motor
@@ -122,7 +122,7 @@ public class Configs {
    * HopperSubsystem 
    */
   public static final class HopperSubsystem {
-    public static final SparkMaxConfig hopperConfig = new SparkMaxConfig();
+    public static final SparkFlexConfig hopperConfig = new SparkFlexConfig();
 
     static {
       // Configure basic setting of the hopper motor

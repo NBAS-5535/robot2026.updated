@@ -9,7 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Configs;
@@ -22,8 +22,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Initialize Intake SPARK. We will use MAXMotion position control for the Intake, so we also need to
   // initialize the closed loop controller and encoder.
-  private SparkMax hopperMotor =
-      new SparkMax(IntakeSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
+  private SparkFlex hopperMotor =
+      new SparkFlex(IntakeSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
 
   private double m_motorPower = 0.0;
 
@@ -48,7 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
   
   /** Set Intake motor power in the range of [-1, 1]. - TEST Purpose: step through */
-  private void resetIntakePower(double power) {
+  public void resetIntakePower(double power) {
     m_motorPower = power;
   }
 

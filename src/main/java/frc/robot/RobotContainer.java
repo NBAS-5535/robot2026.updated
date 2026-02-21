@@ -27,6 +27,7 @@ import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
@@ -57,18 +58,23 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController copilot = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     //private final LimelightSubsystem limelight = new LimelightSubsystem();
     private final VisionSubsystem m_vision = new VisionSubsystem();
 
+    /* IntakeSubsystem */
+    private final IntakeSubsystem m_intake = new IntakeSubsystem(0.0);
+
     /** TurretSubsystem */
     //private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
-    private final DynamicTurretSubsystem m_dynamicTurretSubsystem = new DynamicTurretSubsystem(drivetrain);
+    //private final DynamicTurretSubsystem m_dynamicTurretSubsystem = new DynamicTurretSubsystem(drivetrain);
 
      /** RangeSensorSubsystem */
-     private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
+    //private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
+
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -128,6 +134,12 @@ public class RobotContainer {
             joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         }
 
+        /* operate the intakemotor */
+        boolean useIntake = true;
+        if ( useIntake ) {
+            copilot.a().onTrue(new InstantCommand(() -> m_intake.resetIntakePower(0.9)));
+            copilot.b().onTrue(new InstantCommand(() -> m_intake.resetIntakePower(0.0)));
+        }
         // reset the field-centric heading on left bumper press
         //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
@@ -142,13 +154,14 @@ public class RobotContainer {
             
 
             /* to determine encoder setting versus deg of rotation */
+            /*
             joystick.a().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kPointAtTargetSetpoint));
             joystick.b().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveLeftSetpoint));
             //joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
             joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
             joystick.x().whileTrue(new AutoAlignCommand(m_dynamicTurretSubsystem, drivetrain));
             joystick.y().onTrue(new ResetPoseFromAprilTagCommand(drivetrain, m_dynamicTurretSubsystem));
-
+            */
             joystick.povLeft().onTrue(
                 new InstantCommand(() -> drivetrain.setInitializePose()));
 
@@ -163,14 +176,16 @@ public class RobotContainer {
             
 
         /* get distance and move for that amount */
+        /*
         boolean getRangeAndGoTest = false;
         if (getRangeAndGoTest) {
             joystick.y().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> drivetrain.setCurrentPose()),
                 drivetrain.sysIdDynamic(Direction.kForward)
-                    .until(() -> drivetrain.isDesiredPoseReached(m_sensorSubsystem.getDistance()))
+                    .until(() -> drivetrain.isDesiredPoseReached(m_sensorSubsystem.getDistance() - 1.))
             ));
         }
+        */
 
         /* align robot */
         boolean alignTesting = true;

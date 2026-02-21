@@ -9,7 +9,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import frc.robot.Configs;
@@ -28,8 +28,8 @@ public class HopperSubsystem extends SubsystemBase {
 
   // Initialize Hopper SPARK. We will use MAXMotion position control for the Hopper, so we also need to
   // initialize the closed loop controller and encoder.
-  private SparkMax hopperMotor =
-      new SparkMax(HopperSubsystemConstants.kHopperMotorCanId, MotorType.kBrushless);
+  private SparkFlex hopperMotor =
+      new SparkFlex(HopperSubsystemConstants.kHopperMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController hopperController = hopperMotor.getClosedLoopController();
   private RelativeEncoder hopperEncoder = hopperMotor.getEncoder();
 
