@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartAndShootAt45"
+            "pathName": "Blue_Right_step1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LANDON "
+            "pathName": "Blue_Right_step2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step3"
           }
         }
       ]
