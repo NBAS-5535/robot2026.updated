@@ -42,6 +42,7 @@ import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
 import frc.robot.experimental.RobotAlignCommandTest;
 import frc.robot.experimental.RobotAlignCommandWithLimeLight;
+import com.pathplanner.lib.auto.NamedCommands;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond) * 0.8; // kSpeedAt12Volts desired top speed
@@ -82,7 +83,9 @@ public class RobotContainer {
     private SendableChooser<String> autonomousChooser;
 
     public RobotContainer() {
-        
+        // create some NamedCommands for PathPlanner
+        configureNamedCommands();
+
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("PathPlanner Scenario", autoChooser);
         /* autonomous position chooser 
@@ -290,6 +293,11 @@ public class RobotContainer {
         }
         
         drivetrain.registerTelemetry(logger::telemeterize);
+    }
+
+    private void configureNamedCommands() {
+        NamedCommands.registerCommand("StartIntakeMotor", new InstantCommand(() -> m_intake.resetIntakePower(0.9)));
+        NamedCommands.registerCommand("StopIntakeMotor", new InstantCommand(() -> m_intake.resetIntakePower(0.0)));
     }
 
     public Command getAutonomousCommand() {

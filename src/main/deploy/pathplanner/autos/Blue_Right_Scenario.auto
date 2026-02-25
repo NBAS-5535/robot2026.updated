@@ -11,9 +11,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StartIntakeMotor"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntakeMotor"
           }
         },
         {
