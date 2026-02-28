@@ -40,7 +40,7 @@ public class GenericSubsystem extends SubsystemBase {
   // Initialize Generic SPARK. We will use MAXMotion position control for the Generic, so we also need to
   // initialize the closed loop controller and encoder.
   private SparkFlex genericMotor =
-      new SparkFlex(GenericSubsystemConstants.kGenericMotorCanId, MotorType.kBrushless);
+      new SparkFlex(22, MotorType.kBrushless);
   private SparkClosedLoopController genericController = genericMotor.getClosedLoopController();
   private RelativeEncoder genericEncoder = genericMotor.getEncoder();
 
@@ -125,13 +125,13 @@ public class GenericSubsystem extends SubsystemBase {
    * When the command is interrupted, e.g. the button is released, the motor will stop.
    */
   /* MUST COMMENT OUT  moveToSetpoint() in execute() to make this work!!! */
-  public Command runGenericRightCommand() {
+  public Command runGenericForwardCommand() {
     return this.startEnd(
         () -> this.setGenericPower(GenericSubsystemConstants.GenericSetpointTestSpeed), 
         () -> this.setGenericPower(0.0));
   }
 
-  public Command runGenericLeftCommand() {
+  public Command runGenericBackwardCommand() {
     return this.startEnd(
         () -> this.setGenericPower((-1) * GenericSubsystemConstants.GenericSetpointTestSpeed), 
         () -> this.setGenericPower(0.0));
@@ -140,7 +140,7 @@ public class GenericSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    moveToSetpoint();
+    //moveToSetpoint();
     // Display subsystem values
     SmartDashboard.putNumber("Generic/Target Position", GenericCurrentTarget);
     SmartDashboard.putNumber("Generic/CurrentEncoderPosition", genericEncoder.getPosition());

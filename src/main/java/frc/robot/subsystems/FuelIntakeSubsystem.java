@@ -47,7 +47,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
     public enum Speed {
         STOP(0),
         SLOW(0.5),
-        INTAKE(0.8);
+        FAST(0.8);
 
         private final double percentOutput;
 
@@ -73,7 +73,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake)
             )
             .withCurrentLimits(
@@ -94,22 +94,9 @@ public class FuelIntakeSubsystem extends SubsystemBase {
         );
     }
 
-    public Command intakeCommand() {
-        return startEnd(() -> {set(Speed.INTAKE);},
-                        () -> set(Speed.STOP)
-        );
-    }
 
-    public Command fastIntakeCommand(){
-        return this.runOnce(() -> set(Speed.INTAKE));
-    }
-
-    public Command slowIntakeCommand(){
-        return this.runOnce(() -> set(Speed.SLOW));
-    }
-
-    public Command stopIntakeCommand(){
-        return this.runOnce(() -> set(Speed.STOP));
+    public void fastIntake(){
+        set(Speed.FAST);
     }
 
     public void slowIntake(){
@@ -120,16 +107,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
         set(Speed.STOP);
     }
 
-    public void resetIntakePower(double power){
-        if ( power > 0.8) {
-            set(Speed.INTAKE);
-        } else if ( power < 0.5 && power > 0.1){
-            set(Speed.SLOW);
-        } else {
-            set(Speed.STOP);
-        }
-    }
-
+    
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);

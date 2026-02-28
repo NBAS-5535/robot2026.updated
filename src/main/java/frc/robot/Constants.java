@@ -8,8 +8,8 @@ import static edu.wpi.first.units.Units.Second;
 public class Constants {
   public static final class FieldConstants {
     // starting point
-    public static double blueStart_Right_X = 3.62;
-    public static double blueStart_Right_Y = 2.35;
+    public static double blueStart_Right_X = 3.5;
+    public static double blueStart_Right_Y = 0.6;
 
     public static double redStart_Right_X = 12.92;
     public static double redStart_Right_Y = 6.10;
@@ -45,7 +45,7 @@ public class Constants {
   }
 
   public static final class GenericSubsystemConstants {
-      public static final int kGenericMotorCanId = 45;
+      public static final int kGenericMotorCanId = 22;
   
       public static double kGenericRampRate = 0.1;
       public static int    kGenericCurrentLimit = 40;
@@ -56,12 +56,13 @@ public class Constants {
       public static final double kGenericKi = 0;
       public static final double kGenericKd = 0.;
       
-      public static final double GenericSetpointTestSpeed = 0.1;
+      public static final double GenericSetpointTestSpeed = 0.5;
     
       public static final class GenericSubSystemSetpoints {
         public static final double kBase = 0;
         public static final double kMoveRightSetpoint = 17.5;//135.;//Math.PI / 4.;
         public static final double kMoveLeftSetpoint = 35.;//Math.PI / 4.;
+        public static final double kPointAtTargetSetpoint = 35.;//Math.PI / 4.;
         }
   
   }
@@ -79,7 +80,7 @@ public class Constants {
    * IntakeSubsystemConstants
    */
   public static final class IntakeSubsystemConstants{
-    public static final int kIntakeMotorCanId = 16;
+    public static final int kIntakeMotorCanId = 19;
 
     public static double kIntakeRampRate = 0.1;
     public static int    kIntakeCurrentLimit = 60;
