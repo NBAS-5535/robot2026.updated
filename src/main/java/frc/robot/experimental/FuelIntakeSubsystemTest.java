@@ -37,7 +37,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 
 
-public class FuelIntakeSubsystem extends SubsystemBase {
+public class FuelIntakeSubsystemTest extends SubsystemBase {
   public static final AngularVelocity kFreeSpeed = RPM.of(6000);
   public static final int kIntakePivot = 10;
   public static final int kIntakeRollers = 11;
@@ -85,7 +85,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
 
     private boolean isHomed = false;
 
-    public FuelIntakeSubsystem() {
+    public FuelIntakeSubsystemTest() {
         pivotMotor = new TalonFX(kIntakePivot, new CANBus("rio"));
         rollerMotor = new TalonFX(kIntakeRollers, new CANBus("rio"));
         configurePivotMotor();

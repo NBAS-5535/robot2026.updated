@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
+import frc.robot.subsystems.FuelIntakeSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -67,7 +68,9 @@ public class RobotContainer {
     private final VisionSubsystem m_vision = new VisionSubsystem();
 
     /* IntakeSubsystem */
-    private final IntakeSubsystem m_intake = new IntakeSubsystem(0.0);
+    //private final IntakeSubsystem m_intake = new IntakeSubsystem(0.0);
+    // using Falcon/TalonFX
+    private final FuelIntakeSubsystem m_intake = new FuelIntakeSubsystem();
 
     /** TurretSubsystem */
     //private final TurretSubsystem m_turretSubsystem = new TurretSubsystem();
@@ -140,8 +143,10 @@ public class RobotContainer {
         /* operate the intakemotor */
         boolean useIntake = true;
         if ( useIntake ) {
-            copilot.a().onTrue(new InstantCommand(() -> m_intake.resetIntakePower(0.9)));
-            copilot.b().onTrue(new InstantCommand(() -> m_intake.resetIntakePower(0.0)));
+            copilot.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
+            copilot.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
+            copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
+            copilot.y().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
         }
         // reset the field-centric heading on left bumper press
         //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
@@ -296,8 +301,8 @@ public class RobotContainer {
     }
 
     private void configureNamedCommands() {
-        NamedCommands.registerCommand("StartIntakeMotor", new InstantCommand(() -> m_intake.resetIntakePower(0.9)));
-        NamedCommands.registerCommand("StopIntakeMotor", new InstantCommand(() -> m_intake.resetIntakePower(0.0)));
+        NamedCommands.registerCommand("StartIntakeMotor", new InstantCommand(() -> m_intake.fastIntakeCommand()));
+        NamedCommands.registerCommand("StopIntakeMotor", new InstantCommand(() -> m_intake.stopIntakeCommand()));
     }
 
     public Command getAutonomousCommand() {

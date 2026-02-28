@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Initialize Intake SPARK. We will use MAXMotion position control for the Intake, so we also need to
   // initialize the closed loop controller and encoder.
-  private SparkFlex hopperMotor =
+  private SparkFlex intakeMotor =
       new SparkFlex(IntakeSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
 
   private double m_motorPower = 0.0;
@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public IntakeSubsystem(double motorPower) {
     this.m_motorPower = motorPower;
-    hopperMotor.configure(
+    intakeMotor.configure(
         Configs.IntakeSubsystem.intakeConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -40,7 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    hopperMotor.set(m_motorPower);
+    intakeMotor.set(m_motorPower);
 
     // Display subsystem values
     SmartDashboard.putNumber("Intake/Current Power Setting", m_motorPower);
@@ -53,7 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   /**
-   * Command to run the hopper motor. 
+   * Command to run the intake motor. 
    * Intended to step through to adjust proper setpoints
    * When the command is interrupted, e.g. the button is released, the motor will stop.
    */
