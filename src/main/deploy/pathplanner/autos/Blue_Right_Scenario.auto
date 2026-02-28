@@ -33,6 +33,12 @@
           "data": {
             "pathName": "Blue_Right_step3"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step4"
+          }
         }
       ]
     }
