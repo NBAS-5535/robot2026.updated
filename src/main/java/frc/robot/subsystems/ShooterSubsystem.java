@@ -38,9 +38,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 
 
-public class FuelIntakeSubsystem extends SubsystemBase {
+public class ShooterSubsystem extends SubsystemBase {
   //blic static final AngularVelocity kFreeSpeed = RPM.of(6000);
-  public static final int kIntakeRollers = IntakeSubsystemConstants.kIntakeMotorCanId;
+  public static final int rightShooterMotorCanId = 55;
+  public static final int leftShooterMotorCanId = 56;
 
     public enum Speed {
         STOP(0),
@@ -58,20 +59,23 @@ public class FuelIntakeSubsystem extends SubsystemBase {
         }
     }
 
-    private final TalonFX rollerMotor;
-    private final VoltageOut rollerVoltageRequest = new VoltageOut(0);
+    private final TalonFX rightShooterMotor;
+    private final TalonFX leftShooterMotor;
+    private final VoltageOut shooterVoltageRequest = new VoltageOut(0);
 
-    public FuelIntakeSubsystem() {
-        rollerMotor = new TalonFX(kIntakeRollers, new CANBus("rio"));
-        configureRollerMotor();
+    public ShooterSubsystem() {
+        rightShooterMotor = new TalonFX(rightShooterMotorCanId, new CANBus("rio"));
+        leftShooterMotor = new TalonFX(leftShooterMotorCanId, new CANBus("rio"));
+        configureRightShooterMotorMotor();
+        configureLeftShooterMotorMotor();
         SmartDashboard.putData(this);
     }
 
-    private void configureRollerMotor() {
+    private void configureRightShooterMotorMotor() {
         final TalonFXConfiguration config = new TalonFXConfiguration()
             .withMotorOutput(
                 new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withInverted(InvertedValue.CounterClockwise_Positive) // <-- verify this is correct after testing
                     .withNeutralMode(NeutralModeValue.Brake)
             )
             .withCurrentLimits(
@@ -81,27 +85,47 @@ public class FuelIntakeSubsystem extends SubsystemBase {
                     .withSupplyCurrentLimit(Amps.of(70))
                     .withSupplyCurrentLimitEnable(true)
             );
-        rollerMotor.getConfigurator().apply(config);
+        rightShooterMotor.getConfigurator().apply(config);
     }
 
+    private void configureLeftShooterMotorMotor() {
+        final TalonFXConfiguration config = new TalonFXConfiguration()
+            .withMotorOutput(
+                new MotorOutputConfigs()
+                    .withInverted(InvertedValue.Clockwise_Positive) // <-- verify this is correct after testing
+                    .withNeutralMode(NeutralModeValue.Brake)
+            )
+            .withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(Amps.of(120))
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(Amps.of(70))
+                    .withSupplyCurrentLimitEnable(true)
+            );
+        rightShooterMotor.getConfigurator().apply(config);
+    }
     
     public void set(Speed speed) {
-        rollerMotor.setControl(
-            rollerVoltageRequest
+        rightShooterMotor.setControl(
+            shooterVoltageRequest
+                .withOutput(speed.voltage())
+        );
+        leftShooterMotor.setControl(
+            shooterVoltageRequest
                 .withOutput(speed.voltage())
         );
     }
 
 
-    public void fastIntake(){
+    public void fastMode(){
         set(Speed.FAST);
     }
 
-    public void slowIntake(){
+    public void slowMode(){
         set(Speed.SLOW);
     }
 
-    public void stopIntake(){
+    public void stopShooter(){
         set(Speed.STOP);
     }
 
@@ -109,7 +133,11 @@ public class FuelIntakeSubsystem extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addStringProperty("Command", () -> getCurrentCommand() != null ? getCurrentCommand().getName() : "null", null);
-        builder.addDoubleProperty("RPM", () -> rollerMotor.getVelocity().getValue().in(RPM), null);
-                builder.addDoubleProperty("Roller Supply Current", () -> rollerMotor.getSupplyCurrent().getValue().in(Amps), null);
+        builder.addDoubleProperty("RPM", () -> rightShooterMotor.getVelocity().getValue().in(RPM), null);
+                builder.addDoubleProperty("Shooter Supply Current", 
+                () -> rightShooterMotor.getSupplyCurrent().getValue().in(Amps), null);
+        builder.addDoubleProperty("RPM", () -> leftShooterMotor.getVelocity().getValue().in(RPM), null);
+                builder.addDoubleProperty("Shooter Supply Current", 
+                () -> leftShooterMotor.getSupplyCurrent().getValue().in(Amps), null);
     }
 }

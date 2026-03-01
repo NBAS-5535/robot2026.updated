@@ -10,7 +10,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.CANRangeConstants;
-import frc.robot.Constants.GenericSubsystemConstants;
+import frc.robot.Constants.HoodSubsystemConstants;
 import frc.robot.Constants.HopperSubsystemConstants;
 import frc.robot.Constants.IntakeSubsystemConstants;
 import frc.robot.Constants.TurretSubsystemConstants;
@@ -54,29 +54,29 @@ public class Configs {
    }
 
    /* *****************
-    * GenericSubsystem 
+    * HoodSubsystem 
     */
-   public static final class GenericSubsystemConfiguration {
-     public static final SparkFlexConfig genericConfig = new SparkFlexConfig();
+   public static final class HoodSubsystemConfiguration {
+     public static final SparkFlexConfig hoodConfig = new SparkFlexConfig();
  
      static {
-       // Configure basic setting of the generic motor
-       genericConfig
-         .smartCurrentLimit(GenericSubsystemConstants.kGenericCurrentLimit)
-         .closedLoopRampRate(GenericSubsystemConstants.kGenericRampRate);
+       // Configure basic setting of the hood motor
+       hoodConfig
+         .smartCurrentLimit(HoodSubsystemConstants.kHoodCurrentLimit)
+         .closedLoopRampRate(HoodSubsystemConstants.kHoodRampRate);
  
        /*
         * Configure the closed loop controller. We want to make sure we set the
         * feedback sensor as the primary encoder.
         */
-       genericConfig
+       hoodConfig
            .closedLoop
            .feedbackSensor(com.revrobotics.spark.FeedbackSensor.kPrimaryEncoder)
            // Set PID values for position control. We don't need to pass a closed
            // loop slot, as it will default to slot 0.
-           .pid(GenericSubsystemConstants.kGenericKp, 
-               GenericSubsystemConstants.kGenericKi, 
-               GenericSubsystemConstants.kGenericKd)
+           .pid(HoodSubsystemConstants.kHoodKp, 
+               HoodSubsystemConstants.kHoodKi, 
+               HoodSubsystemConstants.kHoodKd)
            .outputRange(-1,1)
            .maxMotion
            // Set MAXMotion parameters for position control
@@ -84,7 +84,7 @@ public class Configs {
            .maxAcceleration(1280000)//used to be 10000
            .allowedClosedLoopError(0.25);
  
-       genericConfig.idleMode(IdleMode.kBrake);
+       hoodConfig.idleMode(IdleMode.kBrake);
      }
    }
 

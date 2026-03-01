@@ -26,8 +26,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
 import frc.robot.subsystems.FuelIntakeSubsystem;
-import frc.robot.subsystems.GenericSubsystem;
+import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -81,7 +82,10 @@ public class RobotContainer {
     //private final RangeSensorSubsystem m_sensorSubsystem = new RangeSensorSubsystem();
 
     /** Hood */
-    private final GenericSubsystem m_hood = new GenericSubsystem(drivetrain);
+    private final HoodSubsystem m_hood = new HoodSubsystem();
+
+    /** Shooter */
+    private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
 
      /* Path follower */
@@ -158,8 +162,8 @@ public class RobotContainer {
 
         boolean useHood = true;
         if (useHood){
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runGenericForwardCommand()));
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runGenericBackwardCommand()));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
         }
         /* run turret motor in suck-in and push-out modes */
          
