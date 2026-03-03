@@ -40,8 +40,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 public class ShooterSubsystem extends SubsystemBase {
   //blic static final AngularVelocity kFreeSpeed = RPM.of(6000);
-  public static final int rightShooterMotorCanId = 55;
-  public static final int leftShooterMotorCanId = 56;
+  public static final int rightShooterMotorCanId = 17;
+  public static final int leftShooterMotorCanId = 18;
 
     public enum Speed {
         STOP(0),

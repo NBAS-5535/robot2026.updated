@@ -56,7 +56,7 @@ public class Constants {
       public static final double kHoodKi = 0;
       public static final double kHoodKd = 0.;
       
-      public static final double HoodSetpointTestSpeed = 0.5;
+      public static final double HoodSetpointTestSpeed = 0.9;
     
       public static final class HoodSubSystemSetpoints {
         public static final double kBase = 0;

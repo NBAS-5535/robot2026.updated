@@ -99,12 +99,13 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("PathPlanner Scenario", autoChooser);
-        /* autonomous position chooser 
+        /* autonomous position chooser */
         autonomousChooser = new SendableChooser<>();
         autonomousChooser.setDefaultOption("No Action", "None");
         autonomousChooser.addOption("Blue_1", "Start_Right");
+        autonomousChooser.addOption("Blue_3", "Blue_Right_Scenario");
         SmartDashboard.putData("AutonomousMenu", autonomousChooser);
-        */
+        /**/
 
         configureBindings();
     }
@@ -162,8 +163,10 @@ public class RobotContainer {
 
         boolean useHood = true;
         if (useHood){
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
+            //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
+            //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.5)));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.)));
         }
         /* run turret motor in suck-in and push-out modes */
          
