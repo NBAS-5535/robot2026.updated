@@ -169,10 +169,10 @@ public class RobotContainer {
         // if direction is WRONG reset the field-centric by 180 degrees via rightBumper()
         joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Math.PI))));
 
-        boolean useHood = false;
+        boolean useHood = true;
         if (useHood){
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            copilot.povUp().onTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
+            copilot.povDown().onTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
         }
 
         boolean useShooter = true;
@@ -183,8 +183,8 @@ public class RobotContainer {
 
         boolean useFeeder = true;
         if (useFeeder){
-            copilot.povUp().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
-            copilot.povDown().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
+            copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
         }
         
         /* run turret motor in suck-in and push-out modes */
