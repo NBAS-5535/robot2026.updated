@@ -86,7 +86,8 @@ public class RobotContainer {
     private final HoodSubsystem m_hood = new HoodSubsystem();
 
     /** Shooter */
-    private final TwoMotorShooterSubsystem m_shooter = new TwoMotorShooterSubsystem();
+    //private final TwoMotorShooterSubsystem m_shooter = new TwoMotorShooterSubsystem();
+    private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -173,8 +174,8 @@ public class RobotContainer {
         if (useShooter){
             //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
             //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.setPower(0.5)));
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.setPower(0.)));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
         }
 
         /* run turret motor in suck-in and push-out modes */

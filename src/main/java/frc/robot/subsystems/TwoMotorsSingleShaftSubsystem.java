@@ -63,7 +63,7 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
     /************************************/
     /* TalonFX configs */
        // Motor Output Settings
-    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Current Limiting (Crucial for dual-motor shafts)
