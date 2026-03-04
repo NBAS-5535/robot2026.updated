@@ -30,6 +30,7 @@ import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
+import frc.robot.subsystems.TwoMotorShooterSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
@@ -85,8 +86,7 @@ public class RobotContainer {
     private final HoodSubsystem m_hood = new HoodSubsystem();
 
     /** Shooter */
-    private final ShooterSubsystem m_shooter = new ShooterSubsystem();
-
+    private final TwoMotorShooterSubsystem m_shooter = new TwoMotorShooterSubsystem();
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -161,13 +161,22 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
         //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        boolean useHood = true;
+        boolean useHood = false;
         if (useHood){
             //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
             //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
             copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.5)));
             copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.)));
         }
+
+        boolean useShooter = true;
+        if (useShooter){
+            //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
+            //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.setPower(0.5)));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.setPower(0.)));
+        }
+
         /* run turret motor in suck-in and push-out modes */
          
         boolean useTurretSubsystem = false;
