@@ -25,13 +25,12 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FuelIntakeSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
 import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.TwoMotorShooterSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
 import frc.robot.commands.AlignCommand;
@@ -42,10 +41,13 @@ import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.NewTurretCommand;
 import frc.robot.commands.ResetPoseFromAprilTagCommand;
 import frc.robot.commands.TurretAlignCommand;
+import frc.robot.experimental.IntakeSubsystem;
 import frc.robot.experimental.LimelightSubsystem;
 import frc.robot.commands.RobotAlignCommand;
 import frc.robot.experimental.RobotAlignCommandTest;
 import frc.robot.experimental.RobotAlignCommandWithLimeLight;
+import frc.robot.experimental.TwoMotorShooterSubsystem;
+
 import com.pathplanner.lib.auto.NamedCommands;
 
 public class RobotContainer {
@@ -86,8 +88,10 @@ public class RobotContainer {
     private final HoodSubsystem m_hood = new HoodSubsystem();
 
     /** Shooter */
-    //private final TwoMotorShooterSubsystem m_shooter = new TwoMotorShooterSubsystem();
     private final ShooterSubsystem m_shooter = new ShooterSubsystem();
+
+    /** Feeder */
+    private final FeederSubsystem m_feeder = new FeederSubsystem();
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -159,25 +163,30 @@ public class RobotContainer {
             copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             copilot.y().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
         }
+
         // reset the field-centric heading on left bumper press
-        //joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        joystick.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        // if direction is WRONG reset the field-centric by 180 degrees via rightBumper()
+        joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Math.PI))));
 
         boolean useHood = false;
         if (useHood){
-            //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
-            //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.5)));
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.setHoodPower(0.)));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
         }
 
         boolean useShooter = true;
         if (useShooter){
-            //copilot.rightBumper().onTrue(new InstantCommand(() -> m_hood.runHoodForwardCommand()));
-            //copilot.leftBumper().onTrue(new InstantCommand(() -> m_hood.runHoodBackwardCommand()));
             copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
             copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
         }
 
+        boolean useFeeder = true;
+        if (useFeeder){
+            copilot.povUp().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
+            copilot.povDown().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+        }
+        
         /* run turret motor in suck-in and push-out modes */
          
         boolean useTurretSubsystem = false;

@@ -56,11 +56,11 @@ public class Constants {
       public static final double kHoodKi = 0;
       public static final double kHoodKd = 0.;
       
-      public static final double HoodSetpointTestSpeed = 0.9;
+      public static final double HoodSetpointTestSpeed = 0.2;
     
       public static final class HoodSubSystemSetpoints {
         public static final double kBase = 0;
-        public static final double kMoveRightSetpoint = 17.5;//135.;//Math.PI / 4.;
+        public static final double kMoveRightSetpoint = 17.5;//135.;//Math.PI / 4.; TODO!!!
         public static final double kMoveLeftSetpoint = 35.;//Math.PI / 4.;
         public static final double kPointAtTargetSetpoint = 35.;//Math.PI / 4.;
         }
@@ -84,6 +84,23 @@ public class Constants {
 
     public static double kIntakeRampRate = 0.1;
     public static int    kIntakeCurrentLimit = 60;
+    public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
+    public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
+
+    public static final double IntakeSetpointTestSpeed = 0.5;
+  }
+
+  /* *********************
+   * IntakeSubsystemConstants
+   */
+  public static final class BallHandlingSubsystemConstants{
+    public static final int kIntakeMotorCanId = 19;
+
+    public static final int kLeaderFeederMotorCanId = 20;
+    public static final int kFollowerFeederMotorCanId = 21;
+
+    public static double kIntakeRampRate = 0.1;
+    public static int    kMaxCurrentLimit = 60;
     public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
     public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
 

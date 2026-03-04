@@ -24,6 +24,7 @@ import frc.robot.Configs;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HoodSubsystemConstants;
 import frc.robot.Constants.HoodSubsystemConstants.HoodSubSystemSetpoints;
+import frc.robot.Constants.HoodSubsystemConstants;
 import edu.wpi.first.math.MathUtil;
 
 
@@ -47,7 +48,9 @@ public class HoodSubsystem extends SubsystemBase {
   // Member variables for subsystem state management
   private double HoodCurrentTarget = HoodSubSystemSetpoints.kBase; // may have to start at 0
 
+  private double m_motorPower = 0.0;
 
+   /** Constructor */
   public HoodSubsystem() {
     /*
      * Apply the appropriate configurations to the SPARKs.
@@ -113,26 +116,6 @@ public class HoodSubsystem extends SubsystemBase {
         });
   }
 
-
-  /**
-   * Command to run the hood motor. 
-   * Intended to step through to adjust proper setpoints for elevator heights
-   * When the command is interrupted, e.g. the button is released, the motor will stop.
-   */
-  /* MUST COMMENT OUT  moveToSetpoint() in execute() to make this work!!! */
-  public Command runHoodForwardCommand() {
-    return this.startEnd(
-        () -> this.setHoodPower(HoodSubsystemConstants.HoodSetpointTestSpeed), 
-        () -> this.setHoodPower(0.0));
-  }
-
-  public Command runHoodBackwardCommand() {
-    return this.startEnd(
-        () -> this.setHoodPower((-1) * HoodSubsystemConstants.HoodSetpointTestSpeed), 
-        () -> this.setHoodPower(0.0));
-
-  }
-
   @Override
   public void periodic() {
     //moveToSetpoint();
@@ -145,4 +128,25 @@ public class HoodSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
   }
 
+  /**
+   * Command to run the intake motor. 
+   * Intended to step through to adjust proper setpoints
+   * When the command is interrupted, e.g. the button is released, the motor will stop.
+   */
+  public Command runHoodInCommand() {
+    return this.startEnd(
+        () -> this.resetHoodPower(HoodSubsystemConstants.HoodSetpointTestSpeed), 
+        () -> this.resetHoodPower(0.0));
+  }
+
+  public Command runHoodOutCommand() {
+    return this.startEnd(
+        () -> this.resetHoodPower((-1) * HoodSubsystemConstants.HoodSetpointTestSpeed), 
+        () -> this.resetHoodPower(0.0));
+  }
+
+     /** Set Hood motor power in the range of [-1, 1]. - TEST Purpose: step through */
+  public void resetHoodPower(double power) {
+    m_motorPower = power;
+  }
 }

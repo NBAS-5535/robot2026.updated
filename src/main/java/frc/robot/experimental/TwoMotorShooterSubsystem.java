@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.experimental;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,16 +21,10 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.spark.SparkBase.PersistMode;
 
-public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
-  private final SparkMax leaderMotor = new SparkMax(51, MotorType.kBrushless);
-  private final SparkMax followerMotor = new SparkMax(52, MotorType.kBrushless);
-
-  private SparkMaxConfig leaderConfig = new SparkMaxConfig();
-  private SparkMaxConfig followerConfig = new SparkMaxConfig();
-
+public class TwoMotorShooterSubsystem extends SubsystemBase {
   /************************************/
-  TalonFX leader = new TalonFX(51, new CANBus("rio")); 
-  TalonFX follower = new TalonFX(52, new CANBus("rio"));
+  TalonFX leader = new TalonFX(17, new CANBus("rio")); 
+  TalonFX follower = new TalonFX(18, new CANBus("rio"));
 
   private final DutyCycleOut driveRequest = new DutyCycleOut(0);
 
@@ -45,25 +39,10 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
 
 
   /** Constructor */
-  public TwoMotorsSingleShaftSubsystem() {
-    /* SparkMax configs */
-    leaderConfig
-        .smartCurrentLimit(maxCurrentLimit)
-        .idleMode(IdleMode.kBrake)
-        .inverted(true);
-
-    followerConfig
-        .smartCurrentLimit(maxCurrentLimit)
-        .idleMode(IdleMode.kBrake)
-        .follow(leaderMotor);
-
-    leaderMotor.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-    /************************************/
-    /* TalonFX configs */
+  public TwoMotorShooterSubsystem() {
+     /* TalonFX configs */
        // Motor Output Settings
-    config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
     // Current Limiting (Crucial for dual-motor shafts)
@@ -85,8 +64,7 @@ public class TwoMotorsSingleShaftSubsystem extends SubsystemBase {
   }
 
   /** Set motor power in the range of [-1, 1]. - TEST Purpose: step through */
-  private void setPower(double power) {
-    leaderMotor.set(power);
+  public void setPower(double power) {
     leader.setControl(driveRequest.withOutput(power));
   }
 }
