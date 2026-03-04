@@ -232,7 +232,7 @@ public class RobotContainer {
         */
 
         /* align robot */
-        boolean alignTesting = true;
+        boolean alignTesting = false;//true;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;

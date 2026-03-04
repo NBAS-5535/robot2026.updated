@@ -96,7 +96,7 @@ public class Constants {
   public static final class BallHandlingSubsystemConstants{
     public static final int kIntakeMotorCanId = 19;
 
-    public static final int kLeaderFeederMotorCanId = 20;
+    public static final int kLeaderFeederMotorCanId = 23; // previously 20
     public static final int kFollowerFeederMotorCanId = 21;
 
     public static double kIntakeRampRate = 0.1;
@@ -111,7 +111,7 @@ public class Constants {
    * HopperSubsystemConstants
    */
   public static final class HopperSubsystemConstants{
-    public static final int kHopperMotorCanId = 50;
+    public static final int kHopperMotorCanId = 20; // previously 50
 
     public static double kHopperRampRate = 0.1;
     public static int    kHopperCurrentLimit = 40;

@@ -31,14 +31,14 @@ public class FeederSubsystem extends SubsystemBase {
     /* SparkFlex configs */ // Verify which motor is inverted!!!!
     leaderConfig
         .smartCurrentLimit(BallHandlingSubsystemConstants.kMaxCurrentLimit)
-        .idleMode(IdleMode.kBrake)
-        .inverted(true);
+        .idleMode(IdleMode.kBrake);
+        //.inverted(true);
 
     followerConfig
         .smartCurrentLimit(BallHandlingSubsystemConstants.kMaxCurrentLimit)
         .idleMode(IdleMode.kBrake)
-        .inverted(true);
-        //.follow(leaderMotor);
+        //.inverted(true);
+        .follow(leaderMotor);
 
     leaderMotor.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     followerMotor.configure(followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
