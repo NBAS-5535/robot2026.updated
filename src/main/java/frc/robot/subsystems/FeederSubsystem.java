@@ -52,9 +52,13 @@ public class FeederSubsystem extends SubsystemBase {
   }
 
   public void setPower(String label, double power) {
-    if ( label == "lead")
+    if ( label == "lead") {
       m_leaderPower = power;
-    else if ( label == "follow")
+    }else if ( label == "follow") {
       m_followerPower = power;
+    }else if ( label == "both") {
+      m_leaderPower = power;
+      m_followerPower = power;
+    }
   }
 }

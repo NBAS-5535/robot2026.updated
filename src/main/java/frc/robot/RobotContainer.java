@@ -183,8 +183,12 @@ public class RobotContainer {
 
         boolean useFeeder = true;
         if (useFeeder){
-            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
-            copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+            //copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
+            //copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+            // may have to start both motors at the same time to prevent jamming
+            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
+            // STOP command for feeder motors
+            copilot.povDown().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }
         
         /* run turret motor in suck-in and push-out modes */
@@ -339,6 +343,10 @@ public class RobotContainer {
     private void configureNamedCommands() {
         NamedCommands.registerCommand("StartIntakeMotor", new InstantCommand(() -> m_intake.fastIntake()));
         NamedCommands.registerCommand("StopIntakeMotor", new InstantCommand(() -> m_intake.stopIntake()));
+        NamedCommands.registerCommand("StartFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
+        NamedCommands.registerCommand("StopFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
+        NamedCommands.registerCommand("StartShooterMotors", new InstantCommand(() -> m_shooter.fastMode()));
+        NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
     }
 
     public Command getAutonomousCommand() {
