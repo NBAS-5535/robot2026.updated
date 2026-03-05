@@ -188,7 +188,7 @@ public class RobotContainer {
             // may have to start both motors at the same time to prevent jamming
             copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
             // STOP command for feeder motors
-            copilot.povDown().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
+            copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }
         
         /* run turret motor in suck-in and push-out modes */
