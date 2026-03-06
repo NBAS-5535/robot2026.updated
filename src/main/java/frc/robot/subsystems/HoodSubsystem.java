@@ -33,9 +33,9 @@ public class HoodSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum HoodSetpoints {
     kBase,
-    kMoveRightSetpoint,
-    kMoveLeftSetpoint,
-    kPointAtTargetSetpoint,
+    k9ft,
+    k13ft,
+    k15ft,
   }
 
   // Initialize Hood SPARK. We will use MAXMotion position control for the Hood, so we also need to
@@ -99,17 +99,17 @@ public class HoodSubsystem extends SubsystemBase {
     return this.runOnce(
         () -> {
           switch (setpoint) {
-            case kMoveRightSetpoint:
-              HoodCurrentTarget = HoodSubSystemSetpoints.kMoveRightSetpoint;
+            case k9ft:
+              HoodCurrentTarget = HoodSubSystemSetpoints.k9ftSetpoint;
               break;
-            case kMoveLeftSetpoint:
-              HoodCurrentTarget = HoodSubSystemSetpoints.kMoveLeftSetpoint;
+            case k13ft:
+              HoodCurrentTarget = HoodSubSystemSetpoints.k13ftSetpoint;
               break;
             case kBase:
               HoodCurrentTarget = HoodSubSystemSetpoints.kBase;
               break;
-            case kPointAtTargetSetpoint:
-              //HoodCurrentTarget = kPointAtTargetSetpointValue;
+            case k15ft:
+              HoodCurrentTarget = HoodSubSystemSetpoints.k15ftSetpoint;
               break;
 
           }
@@ -118,7 +118,7 @@ public class HoodSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //moveToSetpoint();
+    moveToSetpoint();
     // Display subsystem values
     SmartDashboard.putNumber("Hood/Target Position", HoodCurrentTarget);
     SmartDashboard.putNumber("Hood/CurrentEncoderPosition", hoodEncoder.getPosition());
@@ -135,14 +135,14 @@ public class HoodSubsystem extends SubsystemBase {
    */
   public Command runHoodInCommand() {
     return this.startEnd(
-        () -> this.resetHoodPower(HoodSubsystemConstants.HoodSetpointTestSpeed), 
-        () -> this.resetHoodPower(0.0));
+        () -> this.setHoodPower(HoodSubsystemConstants.HoodSetpointTestSpeed), 
+        () -> this.setHoodPower(0.0));
   }
 
   public Command runHoodOutCommand() {
     return this.startEnd(
-        () -> this.resetHoodPower((-1) * HoodSubsystemConstants.HoodSetpointTestSpeed), 
-        () -> this.resetHoodPower(0.0));
+        () -> this.setHoodPower((-1) * HoodSubsystemConstants.HoodSetpointTestSpeed), 
+        () -> this.setHoodPower(0.0));
   }
 
      /** Set Hood motor power in the range of [-1, 1]. - TEST Purpose: step through */

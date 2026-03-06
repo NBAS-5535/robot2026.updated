@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
+import frc.robot.subsystems.HoodSubsystem.HoodSetpoints;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FuelIntakeSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -171,8 +172,14 @@ public class RobotContainer {
 
         boolean useHood = true;
         if (useHood){
-            copilot.povUp().onTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
-            copilot.povDown().onTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
+            //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            copilot.povUp().onTrue(
+                m_hood.setSetpointCommand(HoodSetpoints.k9ft)
+            );
+            copilot.povDown().onTrue(
+                m_hood.setSetpointCommand(HoodSetpoints.k13ft)
+            );
         }
 
         boolean useShooter = true;
