@@ -33,6 +33,7 @@ public class HoodSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum HoodSetpoints {
     kBase,
+    k6ft,
     k9ft,
     k13ft,
     k15ft,
@@ -99,15 +100,18 @@ public class HoodSubsystem extends SubsystemBase {
     return this.runOnce(
         () -> {
           switch (setpoint) {
+            case kBase:
+              HoodCurrentTarget = HoodSubSystemSetpoints.kBase;
+              break;
+            case k6ft:
+              HoodCurrentTarget = HoodSubSystemSetpoints.k6ftSetpoint;
+              break;
             case k9ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k9ftSetpoint;
               break;
             case k13ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k13ftSetpoint;
-              break;
-            case kBase:
-              HoodCurrentTarget = HoodSubSystemSetpoints.kBase;
-              break;
+              break;            
             case k15ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k15ftSetpoint;
               break;

@@ -354,6 +354,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         NamedCommands.registerCommand("StartShooterMotors", new InstantCommand(() -> m_shooter.fastMode()));
         NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
+        NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.k6ft));
     }
 
     public Command getAutonomousCommand() {
