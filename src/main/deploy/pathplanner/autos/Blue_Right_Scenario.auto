@@ -39,6 +39,18 @@
           "data": {
             "pathName": "Blue_Right_step4"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
         }
       ]
     }
