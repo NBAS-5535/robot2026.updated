@@ -360,6 +360,11 @@ public class RobotContainer {
                                     m_hood.setSetpointCommand(HoodSetpoints.k6ft),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)),
                                     new InstantCommand(() -> m_shooter.fastMode())));
+        NamedCommands.registerCommand("StopShooting", 
+                                new SequentialCommandGroup(
+                                    
+                                    new InstantCommand(() -> m_feeder.setPower("both", 0.0)),
+                                    new InstantCommand(() -> m_shooter.stopShooter())));
     }
 
     public Command getAutonomousCommand() {
