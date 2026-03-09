@@ -355,14 +355,19 @@ public class RobotContainer {
         NamedCommands.registerCommand("StartShooterMotors", new InstantCommand(() -> m_shooter.fastMode()));
         NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
         NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.k6ft));
+        NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
                                     m_hood.setSetpointCommand(HoodSetpoints.k6ft),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)),
                                     new InstantCommand(() -> m_shooter.fastMode())));
-        NamedCommands.registerCommand("StopShooting", 
+        NamedCommands.registerCommand("SetupAndStartShootingOnTheRight", 
                                 new SequentialCommandGroup(
-                                    
+                                    new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)),
+                                    new InstantCommand(() -> m_feeder.setPower("both", 0.8)),
+                                    new InstantCommand(() -> m_shooter.fastMode())));
+        NamedCommands.registerCommand("StopShooting", 
+                                new SequentialCommandGroup(                               
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.0)),
                                     new InstantCommand(() -> m_shooter.stopShooter())));
     }

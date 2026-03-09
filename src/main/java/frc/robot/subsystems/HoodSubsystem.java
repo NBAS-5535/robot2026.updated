@@ -37,6 +37,7 @@ public class HoodSubsystem extends SubsystemBase {
     k9ft,
     k13ft,
     k15ft,
+    kvariable
   }
 
   // Initialize Hood SPARK. We will use MAXMotion position control for the Hood, so we also need to
@@ -115,7 +116,9 @@ public class HoodSubsystem extends SubsystemBase {
             case k15ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k15ftSetpoint;
               break;
-
+            case kvariable:
+              HoodCurrentTarget = HoodSubSystemSetpoints.kVariableSetpoint;
+              break;
           }
         });
   }
@@ -149,8 +152,14 @@ public class HoodSubsystem extends SubsystemBase {
         () -> this.setHoodPower(0.0));
   }
 
-     /** Set Hood motor power in the range of [-1, 1]. - TEST Purpose: step through */
+  /** Set Hood motor power in the range of [-1, 1]. - TEST Purpose: step through */
   public void resetHoodPower(double power) {
     m_motorPower = power;
+  }
+
+  /* interpolate the distance to setpoint  */
+  public void setVariableHoodSetpoint(double distance) {
+    // Interpolate the distance to setpoint
+    HoodSubSystemSetpoints.kVariableSetpoint = -2. + 0.8 *distance;
   }
 }

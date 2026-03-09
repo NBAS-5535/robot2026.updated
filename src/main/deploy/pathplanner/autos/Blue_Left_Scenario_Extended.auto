@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step1"
+            "pathName": " Blue_left_step1"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step2"
+            "pathName": "Blue_Left_step2"
           }
         },
         {
@@ -31,25 +31,55 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step3_closer"
+            "pathName": "Blue_Left_step3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step4_closer"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.1
+            "pathName": "Blue_Left_step4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SetupAndStartShootingOnTheRight"
+            "name": "StartIntakeMotor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Left_step5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Left_step6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShooting"
           }
         },
         {
