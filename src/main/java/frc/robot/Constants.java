@@ -7,12 +7,16 @@ import static edu.wpi.first.units.Units.Second;
 
 public class Constants {
   public static final class FieldConstants {
-    // starting point
+    // starting points field dims: 27ft x 54ft = 8.07m x 16.54m
     public static double blueStart_Right_X = 3.5;
     public static double blueStart_Right_Y = 0.6;
+    public static double blueStart_Left_X = 3.5;
+    public static double blueStart_Left_Y = 7.38;
 
-    public static double redStart_Right_X = 12.92;
-    public static double redStart_Right_Y = 6.10;
+    public static double redStart_Right_X = 13.04;
+    public static double redStart_Right_Y = 7.38;
+    public static double redStart_Left_X = 13.04;
+    public static double redStart_Left_Y = 0.6;
 
     // Fuel Towers
     public static double blueTower_X = 4.62;

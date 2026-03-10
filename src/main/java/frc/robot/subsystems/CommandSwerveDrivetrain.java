@@ -406,7 +406,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     /* set starting dimensions to preset values */
-    public void setInitializePose(){
+    public void setInitializePose(int test){
         if ( DriverStation.getAlliance().get() == Alliance.Red ) {
             SmartDashboard.putString("Initialize/Alliance","red");
             this.m_initialPose = m_initialPose_Red;
@@ -415,6 +415,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             this.m_initialPose = m_initialPose_Blue;
             SmartDashboard.putString("Initialize/Alliance","blue");
         } 
+        this.resetPose(m_initialPose);
+        SmartDashboard.putNumber("Initialize/PoseX", this.getState().Pose.getX());
+        SmartDashboard.putNumber("Initialize/PoseY", this.getState().Pose.getY());
+    }
+
+    /* set starting dimensions to preset values */
+    public void setInitializePose(){
+        int stationNumber = DriverStation.getLocation().getAsInt();
+        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
+            if ( stationNumber == 3 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.redStart_Right_X, 
+                                                     FieldConstants.redStart_Right_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            } else if ( DriverStation.getLocation().getAsInt() == 1 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.redStart_Left_X, 
+                                                     FieldConstants.redStart_Left_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            }
+            SmartDashboard.putString("Initialize/Alliance","red");
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){  
+            if ( stationNumber == 3 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.blueStart_Right_X, 
+                                                     FieldConstants.blueStart_Right_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            } else if ( DriverStation.getLocation().getAsInt() == 1 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.blueStart_Left_X, 
+                                                     FieldConstants.blueStart_Left_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            }    
+            //this.m_initialPose = m_initialPose_Blue;
+            SmartDashboard.putString("Initialize/Alliance","blue");
+        }
+        SmartDashboard.putNumber("Initialize/Station",stationNumber); 
         this.resetPose(m_initialPose);
         SmartDashboard.putNumber("Initialize/PoseX", this.getState().Pose.getX());
         SmartDashboard.putNumber("Initialize/PoseY", this.getState().Pose.getY());
