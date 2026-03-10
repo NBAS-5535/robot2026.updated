@@ -427,11 +427,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if ( stationNumber == 3 ) {
                 this.m_initialPose = new Pose2d(FieldConstants.redStart_Right_X, 
                                                      FieldConstants.redStart_Right_Y, 
-                                                     Rotation2d.fromDegrees(0.));
+                                                     Rotation2d.fromDegrees(180.));
             } else if ( DriverStation.getLocation().getAsInt() == 1 ) {
                 this.m_initialPose = new Pose2d(FieldConstants.redStart_Left_X, 
                                                      FieldConstants.redStart_Left_Y, 
-                                                     Rotation2d.fromDegrees(0.));
+                                                     Rotation2d.fromDegrees(180.));
             }
             SmartDashboard.putString("Initialize/Alliance","red");
         } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){  

@@ -160,9 +160,9 @@ public class RobotContainer {
         if ( useIntake ) {
             //copilot.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
             //copilot.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
-            copilot.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
-            copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
-            copilot.y().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
+            joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
+            //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
+            joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
         }
 
         // reset the field-centric heading on left bumper press
@@ -174,11 +174,17 @@ public class RobotContainer {
         if (useHood){
             //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
             //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
-            copilot.povUp().onTrue(
+            copilot.a().onTrue(
+                m_hood.setSetpointCommand(HoodSetpoints.k6ft)
+            );
+            copilot.b().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k9ft)
             );
-            copilot.povDown().onTrue(
+             copilot.x().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft)
+            );
+            copilot.y().onTrue(
+                m_hood.setSetpointCommand(HoodSetpoints.k15ft)
             );
         }
 
@@ -243,7 +249,7 @@ public class RobotContainer {
         */
 
         /* align robot */
-        boolean alignTesting = false;//true;
+        boolean alignTesting = false;
         if (alignTesting) {
             /* odd behavior when 3D tracking is ON!!!!!
             int testTagId = 0;
@@ -256,12 +262,13 @@ public class RobotContainer {
                 new AlignCommand(drivetrain, m_vision, 1)
             ));
             */
-
+            joystick.povLeft().onTrue(
+                new InstantCommand(() -> drivetrain.setInitializePose()));
             /* Experimental */
             joystick.povUp().onTrue(
                 new AlignToClosestAprilTag(drivetrain)
             );  
-
+            /*
             joystick.povDown().onTrue(new SequentialCommandGroup(
                 new RobotAlignCommand(drivetrain, 10)
             )); 
@@ -276,35 +283,35 @@ public class RobotContainer {
                 new RobotAlignCommand(drivetrain, 9)
             ));
 
-            /* reset pipeline to generic and align to the closest AprilTag*/
+            // reset pipeline to generic and align to the closest AprilTag
             joystick.x().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(0)),
                 new AlignCommand(drivetrain, m_vision, 0)
             ));
 
 
-            /* Face the April Tag while moving*/
+            // Face the April Tag while moving
             joystick.back().whileTrue(
                 new FollowAprilTagCommand(drivetrain, m_vision)
-            ); /**/
+            ); 
 
-            /* Align with a specific AprilTag: 12*/
+            // Align with a specific AprilTag: 12
             joystick.y().onTrue(
                 new AlignCommand(drivetrain, m_vision, 13)
             );
     
-            /* use a preset pipeline index = 5 */
+            // use a preset pipeline index = 5 
             joystick.rightBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
                 new AlignCommand(drivetrain, m_vision, 0)
             )); 
 
-            /* use a preset pipeline index = 3 */
+            //use a preset pipeline index = 3 
             joystick.leftBumper().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
                 new AlignCommand(drivetrain, m_vision, 13)
             ));
-             /* use a preset pipeline index = 0 */
+             // use a preset pipeline index = 0 
             joystick.start().onTrue(new SequentialCommandGroup(
                 new InstantCommand(() -> VisionSubsystem.setPipeline(0))
             ));
@@ -359,13 +366,13 @@ public class RobotContainer {
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
                                     m_hood.setSetpointCommand(HoodSetpoints.k6ft),
-                                    new InstantCommand(() -> m_shooter.fastMode()),
+                                    new InstantCommand(() -> m_shooter.fastMode()).withTimeout(1),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
         NamedCommands.registerCommand("SetupAndStartShootingOnTheRight", 
                                 new SequentialCommandGroup(
                                     new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)),
-                                    new InstantCommand(() -> m_shooter.fastMode()),
+                                    new InstantCommand(() -> m_shooter.fastMode()).withTimeout(1),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
         NamedCommands.registerCommand("StopShooting", 
