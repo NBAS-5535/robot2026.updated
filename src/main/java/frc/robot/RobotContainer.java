@@ -68,7 +68,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
-    private final CommandXboxController codriver = new CommandXboxController(1);
+    private final CommandXboxController copilot = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -163,10 +163,10 @@ public class RobotContainer {
         /* operate the intakemotor */
         boolean useIntake = true;
         if ( useIntake ) {
-            //codriver.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
-            //codriver.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
+            //copilot.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
+            //copilot.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
             joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
-            //codriver.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
+            //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
         }
 
@@ -177,26 +177,29 @@ public class RobotContainer {
 
         boolean useHood = true;
         if (useHood){
-            //codriver.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
-            //codriver.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
-            codriver.a().onTrue(
+            //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
+            //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            joystick.x().onTrue(
+                m_hood.setSetpointCommand(HoodSetpoints.kBase)
+            );
+            copilot.a().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k6ft)
             );
-            codriver.b().onTrue(
+            copilot.b().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k9ft)
             );
-             codriver.x().onTrue(
+             copilot.x().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft)
             );
-            codriver.y().onTrue(
+            copilot.y().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k15ft)
             );
         }
 
         boolean useShooter = true;
         if (useShooter){
-            codriver.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
-            codriver.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
+            copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
+            copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
         }
 
         boolean useHopper = true;
@@ -207,12 +210,12 @@ public class RobotContainer {
 
         boolean useFeeder = true;
         if (useFeeder){
-            //codriver.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
-            //codriver.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+            //copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
+            //copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
             // may have to start both motors at the same time to prevent jamming
-            codriver.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
+            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
             // STOP command for feeder motors
-            codriver.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
+            copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }
         
         /* run turret motor in suck-in and push-out modes */
@@ -377,13 +380,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
                                     m_hood.setSetpointCommand(HoodSetpoints.k6ft),
-                                    new InstantCommand(() -> m_shooter.fastMode()).withTimeout(1),
+                                    new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(2),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
         NamedCommands.registerCommand("SetupAndStartShootingOnTheRight", 
                                 new SequentialCommandGroup(
-                                    new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)),
-                                    new InstantCommand(() -> m_shooter.fastMode()).withTimeout(1),
+                                    //new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)),
+                                    m_hood.setSetpointCommand(HoodSetpoints.k13ft),
+                                    new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(2),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
         NamedCommands.registerCommand("StopShooting", 

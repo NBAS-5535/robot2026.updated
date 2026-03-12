@@ -128,11 +128,11 @@ public class Constants {
     public static final double kHopperKi = 0;
     public static final double kHopperKd = 0.;
 
-    public static final double HopperSetpointTestSpeed = 0.5;
+    public static final double HopperSetpointTestSpeed = 0.8;
     // Hopper control parameters
     public static final class HopperSubSystemSetpoints {
       public static final double kBase = 0;
-      public static final double ktiltedSetpoint = 0.;
+      public static final double ktiltedSetpoint = 1.94;
      }
 
   }

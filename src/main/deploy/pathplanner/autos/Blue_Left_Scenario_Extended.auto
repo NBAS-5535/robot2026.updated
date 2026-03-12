@@ -43,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "StartIntakeMotor"
+            "name": "StartFeederMotors"
           }
         },
         {
@@ -71,9 +71,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StartIntakeMotor"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Left_step6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntakeMotor"
           }
         },
         {
