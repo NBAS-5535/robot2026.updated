@@ -66,7 +66,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
-    private final CommandXboxController copilot = new CommandXboxController(1);
+    private final CommandXboxController codriver = new CommandXboxController(1);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
@@ -158,10 +158,10 @@ public class RobotContainer {
         /* operate the intakemotor */
         boolean useIntake = true;
         if ( useIntake ) {
-            //copilot.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
-            //copilot.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
+            //codriver.a().onTrue(new InstantCommand(() -> m_intake.fastIntakeCommand()));
+            //codriver.b().onTrue(new InstantCommand(() -> m_intake.stopIntakeCommand()));
             joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
-            //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
+            //codriver.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
         }
 
@@ -172,36 +172,36 @@ public class RobotContainer {
 
         boolean useHood = true;
         if (useHood){
-            //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
-            //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
-            copilot.a().onTrue(
+            //codriver.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
+            //codriver.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            codriver.a().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k6ft)
             );
-            copilot.b().onTrue(
+            codriver.b().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k9ft)
             );
-             copilot.x().onTrue(
+             codriver.x().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft)
             );
-            copilot.y().onTrue(
+            codriver.y().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k15ft)
             );
         }
 
         boolean useShooter = true;
         if (useShooter){
-            copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
-            copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
+            codriver.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
+            codriver.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
         }
 
         boolean useFeeder = true;
         if (useFeeder){
-            //copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
-            //copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
+            //codriver.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
+            //codriver.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
             // may have to start both motors at the same time to prevent jamming
-            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
+            codriver.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
             // STOP command for feeder motors
-            copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
+            codriver.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }
         
         /* run turret motor in suck-in and push-out modes */
