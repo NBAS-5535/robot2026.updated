@@ -26,6 +26,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DynamicTurretSubsystem;
 import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
 import frc.robot.subsystems.HoodSubsystem.HoodSetpoints;
+import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.HopperSubsystem.HopperSetpoints;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FuelIntakeSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
@@ -93,6 +95,9 @@ public class RobotContainer {
 
     /** Feeder */
     private final FeederSubsystem m_feeder = new FeederSubsystem();
+
+    /** Hopper */
+    private final HopperSubsystem m_hopper = new HopperSubsystem();
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -192,6 +197,12 @@ public class RobotContainer {
         if (useShooter){
             codriver.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
             codriver.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
+        }
+
+        boolean useHopper = true;
+        if (useHopper){
+            copilot.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBase));
+            copilot.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
         }
 
         boolean useFeeder = true;
