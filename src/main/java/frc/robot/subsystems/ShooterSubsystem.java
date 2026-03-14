@@ -68,7 +68,7 @@ public class ShooterSubsystem extends SubsystemBase {
         leftShooterMotor = new TalonFX(leftShooterMotorCanId, new CANBus("rio"));
         configureRightShooterMotorMotor();
         configureLeftShooterMotorMotor();
-        SmartDashboard.putData(this);
+        //SmartDashboard.putData(this);
     }
 
     private void configureRightShooterMotorMotor() {

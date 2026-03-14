@@ -133,6 +133,7 @@ public class Constants {
     public static final class HopperSubSystemSetpoints {
       public static final double kBase = 0;
       public static final double ktiltedSetpoint = 1.94;
+      public static final double kUprightSetpoint = 1.94;
      }
 
   }

@@ -64,7 +64,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
     public FuelIntakeSubsystem() {
         rollerMotor = new TalonFX(kIntakeRollers, new CANBus("rio"));
         configureRollerMotor();
-        SmartDashboard.putData(this);
+        //SmartDashboard.putData(this);
     }
 
     private void configureRollerMotor() {

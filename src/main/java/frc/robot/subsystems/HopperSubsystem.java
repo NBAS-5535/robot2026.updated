@@ -23,7 +23,8 @@ public class HopperSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum HopperSetpoints {
     kBase,
-    ktiltSetpoint
+    ktiltSetpoint,
+    kUprightSetpoint
   }
 
   // Initialize Hopper SPARK. We will use MAXMotion position control for the Hopper, so we also need to
@@ -68,6 +69,9 @@ public class HopperSubsystem extends SubsystemBase {
           switch (setpoint) {
             case ktiltSetpoint:
               HopperCurrentTarget = HopperSubSystemSetpoints.ktiltedSetpoint;
+              break;
+            case kUprightSetpoint:
+              HopperCurrentTarget = HopperSubSystemSetpoints.kUprightSetpoint;
               break;
             case kBase:
               HopperCurrentTarget = HopperSubSystemSetpoints.kBase;
