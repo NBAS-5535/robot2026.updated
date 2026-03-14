@@ -44,8 +44,6 @@ public class HopperSubsystem extends SubsystemBase {
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
-    this.setHopperPower(HopperSubsystemConstants.HopperSetpointTestSpeed);
-
     // Zero Hopper and elevator encoders on initialization
     hopperEncoder.setPosition(0);
   }
@@ -86,12 +84,10 @@ public class HopperSubsystem extends SubsystemBase {
   public void periodic() {
     // Move the hopper to its setpoint when called once per scheduler run
     moveToSetpoint();
-    //hopperMotor.set(HopperSubsystemConstants.HopperSetpointTestSpeed);
 
     // Display subsystem values
     SmartDashboard.putNumber("Hopper/Target Position", HopperCurrentTarget);
     SmartDashboard.putNumber("Hopper/Actual Position", hopperEncoder.getPosition());
-    SmartDashboard.putNumber("Hopper/Power", HopperSubsystemConstants.HopperSetpointTestSpeed);
   }
   
   /** Set Hopper motor power in the range of [-1, 1]. - TEST Purpose: step through */

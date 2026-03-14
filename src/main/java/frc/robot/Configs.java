@@ -145,8 +145,8 @@ public class Configs {
           .outputRange(-1., 1)
           .maxMotion
           // Set MAXMotion parameters for position control
-          .maxVelocity(2000)
-          .maxAcceleration(10000)
+          .maxVelocity(300000)
+          .maxAcceleration(1000000)
           .allowedClosedLoopError(0.25);
 
       hopperConfig.idleMode(IdleMode.kBrake);
