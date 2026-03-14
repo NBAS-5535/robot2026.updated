@@ -428,6 +428,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this.m_initialPose = new Pose2d(FieldConstants.redStart_Right_X, 
                                                      FieldConstants.redStart_Right_Y, 
                                                      Rotation2d.fromDegrees(180.));
+            } else if ( DriverStation.getLocation().getAsInt() == 2 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.redStart_Middle_X,
+                                                     FieldConstants.redStart_Middle_Y, 
+                                                     Rotation2d.fromDegrees(180.));
             } else if ( DriverStation.getLocation().getAsInt() == 1 ) {
                 this.m_initialPose = new Pose2d(FieldConstants.redStart_Left_X, 
                                                      FieldConstants.redStart_Left_Y, 
@@ -438,6 +442,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if ( stationNumber == 3 ) {
                 this.m_initialPose = new Pose2d(FieldConstants.blueStart_Right_X, 
                                                      FieldConstants.blueStart_Right_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            } else if ( DriverStation.getLocation().getAsInt() == 2 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.blueStart_Middle_X, 
+                                                     FieldConstants.blueStart_Middle_Y, 
                                                      Rotation2d.fromDegrees(0.));
             } else if ( DriverStation.getLocation().getAsInt() == 1 ) {
                 this.m_initialPose = new Pose2d(FieldConstants.blueStart_Left_X, 

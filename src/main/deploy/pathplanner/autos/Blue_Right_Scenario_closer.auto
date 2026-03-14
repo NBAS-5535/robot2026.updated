@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "HopperDown"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step1"

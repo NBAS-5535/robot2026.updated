@@ -22,9 +22,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class HopperSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum HopperSetpoints {
-    kBase,
+    kBaseUpright,
     ktiltSetpoint,
-    kUprightSetpoint
+    kDownSetpoint
   }
 
   // Initialize Hopper SPARK. We will use MAXMotion position control for the Hopper, so we also need to
@@ -35,7 +35,7 @@ public class HopperSubsystem extends SubsystemBase {
   private RelativeEncoder hopperEncoder = hopperMotor.getEncoder();
 
   // starting Setpoint for the Hopper. This will be updated when setSetpointCommand is called.
-  private double HopperCurrentTarget = HopperSubSystemSetpoints.kBase;
+  private double HopperCurrentTarget = HopperSubSystemSetpoints.kBaseUpright;
 
   /** Creates a new HopperSubsystem. */
   public HopperSubsystem() {
@@ -70,11 +70,11 @@ public class HopperSubsystem extends SubsystemBase {
             case ktiltSetpoint:
               HopperCurrentTarget = HopperSubSystemSetpoints.ktiltedSetpoint;
               break;
-            case kUprightSetpoint:
-              HopperCurrentTarget = HopperSubSystemSetpoints.kUprightSetpoint;
+            case kDownSetpoint:
+              HopperCurrentTarget = HopperSubSystemSetpoints.kDownSetpoint;
               break;
-            case kBase:
-              HopperCurrentTarget = HopperSubSystemSetpoints.kBase;
+            case kBaseUpright:
+              HopperCurrentTarget = HopperSubSystemSetpoints.kBaseUpright;
               break;
 
           }

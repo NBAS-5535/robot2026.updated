@@ -204,8 +204,8 @@ public class RobotContainer {
 
         boolean useHopper = true;
         if (useHopper){
-            copilot.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBase));
-            copilot.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
+            copilot.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
+            copilot.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
         }
 
         boolean useFeeder = true;
@@ -375,6 +375,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         NamedCommands.registerCommand("StartShooterMotors", new InstantCommand(() -> m_shooter.fastMode()));
         NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
+        NamedCommands.registerCommand("HopperDown", m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
+        NamedCommands.registerCommand("HopperUp", m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
         NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.k6ft));
         NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 

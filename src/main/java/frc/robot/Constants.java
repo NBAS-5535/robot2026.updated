@@ -12,11 +12,15 @@ public class Constants {
     public static double blueStart_Right_Y = 0.6;
     public static double blueStart_Left_X = 3.5;
     public static double blueStart_Left_Y = 7.38;
+    public static double blueStart_Middle_X = 3.5;
+    public static double blueStart_Middle_Y = 4.035;
 
     public static double redStart_Right_X = 13.04;
     public static double redStart_Right_Y = 7.38;
     public static double redStart_Left_X = 13.04;
     public static double redStart_Left_Y = 0.6;
+    public static double redStart_Middle_X = 13.04;
+    public static double redStart_Middle_Y = 4.035;
 
     // Fuel Towers
     public static double blueTower_X = 4.62;
@@ -131,9 +135,9 @@ public class Constants {
     public static final double HopperSetpointTestSpeed = 0.8;
     // Hopper control parameters
     public static final class HopperSubSystemSetpoints {
-      public static final double kBase = 0;
+      public static final double kBaseUpright = 0;
       public static final double ktiltedSetpoint = 1.94;
-      public static final double kUprightSetpoint = 1.94;
+      public static final double kDownSetpoint = 1.94;
      }
 
   }
