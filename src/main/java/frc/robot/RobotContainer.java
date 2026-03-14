@@ -381,7 +381,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
-                                    m_hood.setSetpointCommand(HoodSetpoints.k6ft),
+                                    m_hood.setSetpointCommand(HoodSetpoints.k9ft),
                                     new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(2),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
