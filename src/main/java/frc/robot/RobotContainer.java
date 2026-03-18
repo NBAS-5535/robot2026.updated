@@ -179,9 +179,10 @@ public class RobotContainer {
         if (useHood){
             //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
             //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
+            /* 
             joystick.x().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.kBase)
-            );
+            );*/
             copilot.a().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k6ft)
             );
@@ -190,10 +191,10 @@ public class RobotContainer {
             );
              copilot.x().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft)
-            );
+            );/* 
             copilot.y().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k15ft)
-            );
+            );*/
         }
 
         boolean useShooter = true;
@@ -206,6 +207,7 @@ public class RobotContainer {
         if (useHopper){
             copilot.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
             copilot.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
+            copilot.y().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
         }
 
         boolean useFeeder = true;
@@ -381,7 +383,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
-                                    m_hood.setSetpointCommand(HoodSetpoints.k9ft),
+                                    m_hood.setSetpointCommand(HoodSetpoints.k6ft),
                                     new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(2),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );

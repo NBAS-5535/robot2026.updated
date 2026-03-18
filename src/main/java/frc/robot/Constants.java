@@ -53,28 +53,27 @@ public class Constants {
   }
 
   public static final class HoodSubsystemConstants {
-      public static final int kHoodMotorCanId = 22;
+    public static final int kHoodMotorCanId = 22;
   
-      public static double kHoodRampRate = 0.1;
-      public static int    kHoodCurrentLimit = 40;
-      public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
-      public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
+    public static double kHoodRampRate = 0.01;
+    public static int    kHoodCurrentLimit = 40;
+    public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
+    public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
   
-      public static final double kHoodKp = 0.5;
-      public static final double kHoodKi = 0;
-      public static final double kHoodKd = 0.;
+    public static final double kHoodKp = 0.5;
+    public static final double kHoodKi = 0;
+    public static final double kHoodKd = 0.;
       
-      public static final double HoodSetpointTestSpeed = 0.5;
+    public static final double HoodSetpointTestSpeed = 0.05;
     
-      public static final class HoodSubSystemSetpoints {
-        public static final double kBase = 0;
-        public static final double k6ftSetpoint = 2.9;
-        public static final double k9ftSetpoint = 5.2;
-        public static final double k13ftSetpoint = 8.58;
-        public static final double k15ftSetpoint = 10.08;
-        public static double kVariableSetpoint = 7.5;
-        }
-  
+    public static final class HoodSubSystemSetpoints {
+      public static final double kBase = 0;
+      public static final double k6ftSetpoint = 2.9; //2.9
+      public static final double k9ftSetpoint = 6.9; //5.2
+      public static final double k13ftSetpoint = 8.58;
+      public static final double k15ftSetpoint = 8.53;
+      public static double kVariableSetpoint = 7.5;
+    }
   }
 
   public static final class CANRangeConstants {
@@ -128,16 +127,16 @@ public class Constants {
     public static double kMaxVelocity = Meters.of(4).per(Second).in(MetersPerSecond);
     public static double kMaxAcceleration = Meters.of(8).per(Second).per(Second).in(MetersPerSecondPerSecond);
 
-    public static final double kHopperKp = 0.1;
+    public static final double kHopperKp = 0.3;
     public static final double kHopperKi = 0;
     public static final double kHopperKd = 0.;
 
-    public static final double HopperSetpointTestSpeed = 0.5;
+    public static final double HopperSetpointTestSpeed = 0.25;
     // Hopper control parameters
     public static final class HopperSubSystemSetpoints {
       public static final double kBaseUpright = 0;
       public static final double ktiltedSetpoint = -3.4;
-      public static final double kDownSetpoint = -6.8;
+      public static final double kDownSetpoint = -6.4;
      }
 
   }
