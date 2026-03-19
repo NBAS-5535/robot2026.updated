@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StartShooterMotors"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Middle_Step"

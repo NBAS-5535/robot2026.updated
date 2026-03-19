@@ -205,8 +205,8 @@ public class RobotContainer {
 
         boolean useHopper = true;
         if (useHopper){
-            copilot.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
-            copilot.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
+            //joystick.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
+            //joystick.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
             copilot.y().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
         }
 
@@ -215,7 +215,7 @@ public class RobotContainer {
             //copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("lead", 0.5)));
             //copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("follow", 0.5)));
             // may have to start both motors at the same time to prevent jamming
-            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.8)));
+            copilot.povRight().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.7)));
             // STOP command for feeder motors
             copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }

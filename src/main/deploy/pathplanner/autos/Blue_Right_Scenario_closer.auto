@@ -41,6 +41,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StartShooterMotors"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.1
