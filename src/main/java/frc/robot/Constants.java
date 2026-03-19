@@ -136,8 +136,8 @@ public class Constants {
     // Hopper control parameters
     public static final class HopperSubSystemSetpoints {
       public static final double kBaseUpright = 0;
-      public static final double ktiltedSetpoint = -3.4;
-      public static final double kDownSetpoint = -6.4;
+      public static final double ktiltedSetpoint = -0.5;
+      public static final double kDownSetpoint = -22.32;
      }
 
   }

@@ -7,7 +7,19 @@
         {
           "type": "named",
           "data": {
+            "name": "LowerHopper"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "StartShooterMotors"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
           }
         },
         {
@@ -68,6 +80,12 @@
           "type": "named",
           "data": {
             "name": "SetupAndStartShooting"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RaiseHopper"
           }
         },
         {

@@ -402,6 +402,14 @@ public class RobotContainer {
                                 new SequentialCommandGroup(
                                     m_hood.setSetpointCommand(HoodSetpoints.kauto6ft))
                                     );
+        NamedCommands.registerCommand("LowerHopper", 
+                                new SequentialCommandGroup(
+                                    m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint))
+                                    );
+        NamedCommands.registerCommand("RaiseHopper", 
+                                new SequentialCommandGroup(
+                                    m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright))
+                                    );
     }
 
     public Command getAutonomousCommand() {
