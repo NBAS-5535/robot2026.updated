@@ -379,11 +379,11 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
         NamedCommands.registerCommand("HopperDown", m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
         NamedCommands.registerCommand("HopperUp", m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
-        NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.k6ft));
+        NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.kauto6ft));
         NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 
                                 new SequentialCommandGroup(
-                                    m_hood.setSetpointCommand(HoodSetpoints.k6ft),
+                                    m_hood.setSetpointCommand(HoodSetpoints.kauto6ft),
                                     new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(2),
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.8)))
                                     );
@@ -398,6 +398,10 @@ public class RobotContainer {
                                 new SequentialCommandGroup(                               
                                     new InstantCommand(() -> m_feeder.setPower("both", 0.0)),
                                     new InstantCommand(() -> m_shooter.stopShooter())));
+        NamedCommands.registerCommand("SetHood", 
+                                new SequentialCommandGroup(
+                                    m_hood.setSetpointCommand(HoodSetpoints.kauto6ft))
+                                    );
     }
 
     public Command getAutonomousCommand() {

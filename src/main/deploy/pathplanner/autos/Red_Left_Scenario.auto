@@ -5,9 +5,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StartShooterMotors"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step1"
+            "pathName": "Red_Left_step1"
           }
         },
         {
@@ -19,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step2"
+            "pathName": "Red_Left_step2"
           }
         },
         {
@@ -31,13 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step3_closer"
+            "pathName": "Red_Left_step3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step4_closer"
+            "pathName": "Red_Left_step4"
           }
         },
         {
@@ -49,13 +55,25 @@
         {
           "type": "named",
           "data": {
-            "name": "SetupAndStartShootingOnTheRight"
+            "name": "SetHood"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
           }
         },
         {
