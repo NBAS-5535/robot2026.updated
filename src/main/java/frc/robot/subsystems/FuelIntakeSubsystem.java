@@ -45,7 +45,8 @@ public class FuelIntakeSubsystem extends SubsystemBase {
     public enum Speed {
         STOP(0),
         SLOW(0.5),
-        FAST(0.8);
+        FAST(0.8),
+        REVERSE(-0.5);
 
         private final double percentOutput;
 
@@ -103,6 +104,10 @@ public class FuelIntakeSubsystem extends SubsystemBase {
 
     public void stopIntake(){
         set(Speed.STOP);
+    }
+
+    public void reverseIntake(){
+        set(Speed.REVERSE);
     }
 
     

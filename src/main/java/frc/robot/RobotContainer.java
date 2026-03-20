@@ -168,6 +168,7 @@ public class RobotContainer {
             joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
             //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
+            joystick.povDown().whileTrue(new InstantCommand(() -> m_intake.reverseIntake()));
         }
 
         // reset the field-centric heading on left bumper press
@@ -203,7 +204,7 @@ public class RobotContainer {
             copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
         }
 
-        boolean useHopper = true;
+        boolean useHopper = false;
         if (useHopper){
             //joystick.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
             //joystick.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
