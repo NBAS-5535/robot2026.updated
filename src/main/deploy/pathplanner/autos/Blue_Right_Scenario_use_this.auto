@@ -5,9 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Blue_Right_step1"
+            "name": "StartShooterMotors"
           }
         },
         {
@@ -19,13 +19,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Right_step2"
+            "pathName": "Blue_Right_step1"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "StopIntakeMotor"
+            "pathName": "Blue_Right_step2"
           }
         },
         {
@@ -38,12 +38,6 @@
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step4_closer"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StartShooterMotors"
           }
         },
         {
@@ -68,12 +62,6 @@
           "type": "named",
           "data": {
             "name": "StopShooting"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StartIntakeMotor"
           }
         },
         {
