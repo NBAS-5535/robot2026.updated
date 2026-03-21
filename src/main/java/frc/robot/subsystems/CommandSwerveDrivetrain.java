@@ -61,7 +61,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public final SwerveRequest.RobotCentricFacingAngle visionFollowRequest = new SwerveRequest.RobotCentricFacingAngle();
 
     /* user command-related markers */
-    private Pose2d m_initialPose;
+    private Pose2d m_initialPose = new Pose2d(0., 0., Rotation2d.fromDegrees(180.));;
     private Pose2d m_initialPose_Blue = new Pose2d(FieldConstants.blueStart_Right_X, 
                                                    FieldConstants.blueStart_Right_Y, 
                                                    Rotation2d.fromDegrees(180.));
@@ -432,6 +432,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this.m_initialPose = new Pose2d(FieldConstants.redStart_Left_X, 
                                                      FieldConstants.redStart_Left_Y, 
                                                      Rotation2d.fromDegrees(180.));
+            } else if ( DriverStation.getLocation().getAsInt() == 2 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.redStart_Middle_X, 
+                                                     FieldConstants.redStart_Middle_Y, 
+                                                     Rotation2d.fromDegrees(180.));
             }
             SmartDashboard.putString("Initialize/Alliance","red");
         } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){  
@@ -443,7 +447,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 this.m_initialPose = new Pose2d(FieldConstants.blueStart_Left_X, 
                                                      FieldConstants.blueStart_Left_Y, 
                                                      Rotation2d.fromDegrees(0.));
-            }    
+            } else if ( DriverStation.getLocation().getAsInt() == 2 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.blueStart_Middle_X, 
+                                                     FieldConstants.blueStart_Middle_Y, 
+                                                     Rotation2d.fromDegrees(0.));
+            }  
             //this.m_initialPose = m_initialPose_Blue;
             SmartDashboard.putString("Initialize/Alliance","blue");
         }
