@@ -164,6 +164,8 @@ public class HoodSubsystem extends SubsystemBase {
   /* interpolate the distance to setpoint  */
   public void setVariableHoodSetpoint(double distance) {
     // Interpolate the distance to setpoint
-    HoodSubSystemSetpoints.kVariableSetpoint = -2. + 0.8 *distance;
+    distance *= 3.281;
+    HoodSubSystemSetpoints.kVariableSetpoint = -1.9 + 0.84 *distance;
+    SmartDashboard.putNumber("Hood/New Target Position", HoodSubSystemSetpoints.kVariableSetpoint);
   }
 }

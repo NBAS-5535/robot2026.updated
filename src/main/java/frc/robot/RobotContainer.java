@@ -196,9 +196,10 @@ public class RobotContainer {
             copilot.y().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k15ft)
             );*/
-            copilot.y().onTrue(
-                new InstantCommand(() -> m_hood.setVariableHoodSetpoint(drivetrain.computeDistanceToTower()))
-            );
+            copilot.y().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> m_hood.setVariableHoodSetpoint(drivetrain.computeDistanceToTower())),
+                m_hood.setSetpointCommand(HoodSetpoints.kvariable)
+            ));
         }
 
         boolean useShooter = true;
