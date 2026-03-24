@@ -479,6 +479,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return condition;
     }
 
+    public double computeDistanceToTower(){
+        Pose2d currentPose = getCurrentPose();
+        double xDistance = 0.;
+        double yDistance = 0.;
+        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
+            xDistance = Math.abs(FieldConstants.redTower_X);
+            yDistance = Math.abs(FieldConstants.redTower_Y);
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){  
+            xDistance = Math.abs(FieldConstants.blueTower_X);
+            yDistance = Math.abs(FieldConstants.blueTower_Y);
+        }
+        double distanceInX = Math.abs(currentPose.getX()) - xDistance;
+        double distanceInY = Math.abs(currentPose.getY()) - yDistance;
+
+        double actualDistance = Math.sqrt(distanceInX * distanceInX + distanceInY * distanceInY);
+        SmartDashboard.putNumber("ComputePose/xLocation", currentPose.getX());
+        SmartDashboard.putNumber("ComputePose/yLocation", currentPose.getY());
+        SmartDashboard.putNumber("ComputePose/DistanceToTower", actualDistance);
+        return actualDistance;
+    }
+
     /* store the current Pose */
     public void setCurrentPose() {
         m_initialPose = getState().Pose;

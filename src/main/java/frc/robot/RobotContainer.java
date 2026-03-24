@@ -196,6 +196,9 @@ public class RobotContainer {
             copilot.y().onTrue(
                 m_hood.setSetpointCommand(HoodSetpoints.k15ft)
             );*/
+            copilot.y().onTrue(
+                new InstantCommand(() -> m_hood.setVariableHoodSetpoint(drivetrain.computeDistanceToTower()))
+            );
         }
 
         boolean useShooter = true;
@@ -208,7 +211,7 @@ public class RobotContainer {
         if (useHopper){
             //joystick.povUp().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
             //joystick.povDown().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
-            copilot.y().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
+            //copilot.y().onTrue(m_hopper.setSetpointCommand(HopperSetpoints.ktiltSetpoint));
         }
 
         boolean useFeeder = true;
