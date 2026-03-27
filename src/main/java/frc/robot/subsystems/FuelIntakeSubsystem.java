@@ -45,7 +45,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
     public enum Speed {
         STOP(0),
         SLOW(0.5),
-        FAST(0.8),
+        FAST(1.0),
         REVERSE(-0.5);
 
         private final double percentOutput;
