@@ -168,7 +168,7 @@ public class RobotContainer {
             joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
             //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
-            joystick.povDown().whileTrue(new InstantCommand(() -> m_intake.reverseIntake()));
+            //joystick.povDown().whileTrue(new InstantCommand(() -> m_intake.reverseIntake()));
         }
 
         // reset the field-centric heading on left bumper press
@@ -176,7 +176,7 @@ public class RobotContainer {
         // if direction is WRONG reset the field-centric by 180 degrees via rightBumper()
         joystick.rightBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric(new Rotation2d(Math.PI))));
 
-        boolean useHood = true;
+        boolean useHood = false;
         if (useHood){
             //copilot.povUp().whileTrue(new InstantCommand(() -> m_hood.runHoodInCommand()));
             //copilot.povDown().whileTrue(new InstantCommand(() -> m_hood.runHoodOutCommand()));
@@ -202,7 +202,7 @@ public class RobotContainer {
             ));
         }
 
-        boolean useShooter = true;
+        boolean useShooter = false;
         if (useShooter){
             copilot.leftBumper().onTrue(new InstantCommand(() -> m_shooter.fastMode()));
             copilot.rightBumper().onTrue(new InstantCommand(() -> m_shooter.stopShooter()));
@@ -269,7 +269,7 @@ public class RobotContainer {
         }
         */
 
-        boolean comboControlsTesting = false;
+        boolean comboControlsTesting = true;
         if (comboControlsTesting) {
             // close shooting position
             copilot.a().onTrue(new SequentialCommandGroup(
@@ -288,6 +288,14 @@ public class RobotContainer {
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft),
                 new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
                 new InstantCommand(() -> m_feeder.setPower("both", 0.8))
+            ));
+            copilot.y().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> m_hood.setVariableHoodSetpoint(drivetrain.computeDistanceToTower()))
+            ));
+
+            copilot.rightBumper().onTrue(new SequentialCommandGroup(
+                new InstantCommand(() -> m_feeder.setPower("both", 0.0)),
+                new InstantCommand(() -> m_shooter.stopShooter())
             ));
         }
 
