@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -103,6 +104,8 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
     /*  autonomous dropdown menu */
     private SendableChooser<String> autonomousChooser;
+
+    private final double feederDelay = 0.5;
 
     public RobotContainer() {
         // create some NamedCommands for PathPlanner
@@ -274,19 +277,22 @@ public class RobotContainer {
             // close shooting position
             copilot.a().onTrue(new SequentialCommandGroup(
                 m_hood.setSetpointCommand(HoodSetpoints.k6ft),
-                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(feederDelay),
+                new WaitCommand(feederDelay),
                 new InstantCommand(() -> m_feeder.setPower("both", 0.8))
             ));
             // medium shooting position
             copilot.b().onTrue(new SequentialCommandGroup(
                 m_hood.setSetpointCommand(HoodSetpoints.k9ft),
-                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(feederDelay),
+                new WaitCommand(feederDelay),
                 new InstantCommand(() -> m_feeder.setPower("both", 0.8))
             ));
             // far shooting position
             copilot.x().onTrue(new SequentialCommandGroup(
                 m_hood.setSetpointCommand(HoodSetpoints.k13ft),
-                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_shooter.fastMode()),//.withTimeout(feederDelay),
+                new WaitCommand(feederDelay),
                 new InstantCommand(() -> m_feeder.setPower("both", 0.8))
             ));
             copilot.y().onTrue(new SequentialCommandGroup(
@@ -297,6 +303,11 @@ public class RobotContainer {
                 new InstantCommand(() -> m_feeder.setPower("both", 0.0)),
                 new InstantCommand(() -> m_shooter.stopShooter())
             ));
+
+            // can we dare to add Limelight adjustment?
+            joystick.povUp().onTrue(
+                new AlignToClosestAprilTag(drivetrain)
+            );
         }
 
         /* align robot */
