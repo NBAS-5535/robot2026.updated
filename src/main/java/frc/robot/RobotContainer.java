@@ -269,6 +269,28 @@ public class RobotContainer {
         }
         */
 
+        boolean comboControlsTesting = false;
+        if (comboControlsTesting) {
+            // close shooting position
+            copilot.a().onTrue(new SequentialCommandGroup(
+                m_hood.setSetpointCommand(HoodSetpoints.k6ft),
+                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_feeder.setPower("both", 0.8))
+            ));
+            // medium shooting position
+            copilot.b().onTrue(new SequentialCommandGroup(
+                m_hood.setSetpointCommand(HoodSetpoints.k9ft),
+                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_feeder.setPower("both", 0.8))
+            ));
+            // far shooting position
+            copilot.x().onTrue(new SequentialCommandGroup(
+                m_hood.setSetpointCommand(HoodSetpoints.k13ft),
+                new InstantCommand(() -> m_shooter.fastMode()).withTimeout(0.5),
+                new InstantCommand(() -> m_feeder.setPower("both", 0.8))
+            ));
+        }
+
         /* align robot */
         boolean alignTesting = false;
         if (alignTesting) {
