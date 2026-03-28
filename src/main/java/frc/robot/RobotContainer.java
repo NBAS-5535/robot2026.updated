@@ -171,7 +171,7 @@ public class RobotContainer {
             joystick.a().onTrue(new InstantCommand(() -> m_intake.fastIntake()));
             //copilot.x().onTrue(new InstantCommand(() -> m_intake.slowIntake()));
             joystick.b().onTrue(new InstantCommand(() -> m_intake.stopIntake()));
-            //joystick.povDown().whileTrue(new InstantCommand(() -> m_intake.reverseIntake()));
+            joystick.povDown().whileTrue(new InstantCommand(() -> m_intake.reverseIntake()));
         }
 
         // reset the field-centric heading on left bumper press
