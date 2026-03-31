@@ -164,8 +164,13 @@ public class HoodSubsystem extends SubsystemBase {
   /* interpolate the distance to setpoint  */
   public void setVariableHoodSetpoint(double distance) {
     // Interpolate the distance to setpoint
-    HoodSubSystemSetpoints.kVariableSetpoint = 0.163 + 4.114 *distance;
-    //HoodSubSystemSetpoints.kVariableSetpoint = 0.957 + 3.245 *distance;
+    // convert to ft
+    distance *= 3.821;
+    double encoderValue = -1.03 + distance * 0.728; // linear interpolation
+    // limit to min and max setpoints
+    double absoluteMin = HoodSubSystemSetpoints.k6ftSetpoint;
+    double absoluteMax = HoodSubSystemSetpoints.k13ftSetpoint;
+    HoodSubSystemSetpoints.kVariableSetpoint = Math.max(absoluteMin, Math.min(absoluteMax, encoderValue));
     SmartDashboard.putNumber("Hood/New Target Position", HoodSubSystemSetpoints.kVariableSetpoint);
   }
 }

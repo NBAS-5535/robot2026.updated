@@ -7,49 +7,43 @@
         {
           "type": "named",
           "data": {
-            "name": "StartIntakeMotor"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "StartShooterMotors"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": " Blue_left_step1"
+            "name": "StartIntakeMotor"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Left_step2"
+            "pathName": "Blue_Right_step1_2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Left_step3"
+            "pathName": "Blue_Right_step3_closer"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Left_step4"
+            "pathName": "Blue_Right_step4_closer"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SetupAndStartShooting"
+            "name": "SetupAndStartShootingOnTheRight"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.0
+            "waitTime": 1.0
           }
         },
         {
@@ -61,13 +55,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Left_step5"
+            "pathName": "Blue_Right_step5_closer"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 2.0
+            "pathName": "Blue_Right_step6_closer.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step2_closer.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step3_closer2.2"
           }
         },
         {
@@ -79,13 +85,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue_Left_step6"
+            "pathName": "Blue_Right_step4_closer_2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "StartFeederMotors"
+            "name": "SetupAndStartShootingOnTheRight"
           }
         }
       ]
