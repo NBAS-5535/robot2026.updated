@@ -39,6 +39,18 @@
           "data": {
             "pathName": "Blue_Right_step7_closer_mahman"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step8_closer_mahman"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step5_closer"
+          }
         }
       ]
     }
