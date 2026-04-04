@@ -98,7 +98,7 @@ public class RobotContainer {
     private final FeederSubsystem m_feeder = new FeederSubsystem();
 
     /** Hopper */
-    private final HopperSubsystem m_hopper = new HopperSubsystem();
+    //private final HopperSubsystem m_hopper = new HopperSubsystem();
 
      /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -423,8 +423,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         NamedCommands.registerCommand("StartShooterMotors", new InstantCommand(() -> m_shooter.fastMode()));
         NamedCommands.registerCommand("StopShooterMotors", new InstantCommand(() -> m_shooter.stopShooter()));
-        NamedCommands.registerCommand("HopperDown", m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
-        NamedCommands.registerCommand("HopperUp", m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
+        //NamedCommands.registerCommand("HopperDown", m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint));
+        //NamedCommands.registerCommand("HopperUp", m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright));
         NamedCommands.registerCommand("MoveHoodTo6ftSetpoint", m_hood.setSetpointCommand(HoodSetpoints.kauto6ft));
         NamedCommands.registerCommand("MoveHoodToVariableSetpoint", new InstantCommand(() -> m_hood.setVariableHoodSetpoint(12.)));
         NamedCommands.registerCommand("SetupAndStartShooting", 
@@ -448,14 +448,14 @@ public class RobotContainer {
                                 new SequentialCommandGroup(
                                     m_hood.setSetpointCommand(HoodSetpoints.kauto6ft))
                                     );
-        NamedCommands.registerCommand("LowerHopper", 
-                                new SequentialCommandGroup(
-                                    m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint))
-                                    );
-        NamedCommands.registerCommand("RaiseHopper", 
-                                new SequentialCommandGroup(
-                                    m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright))
-                                    );
+        //NamedCommands.registerCommand("LowerHopper", 
+        //                       new SequentialCommandGroup(
+        //                            m_hopper.setSetpointCommand(HopperSetpoints.kDownSetpoint))
+        //                            );
+        //NamedCommands.registerCommand("RaiseHopper", 
+        //                        new SequentialCommandGroup(
+        //                            m_hopper.setSetpointCommand(HopperSetpoints.kBaseUpright))
+        //                            );
     }
 
     public Command getAutonomousCommand() {

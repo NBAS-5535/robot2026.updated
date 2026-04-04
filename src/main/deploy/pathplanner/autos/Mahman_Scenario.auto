@@ -5,9 +5,27 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StartIntakeMotor"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooterMotors"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step1_2_mahman"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
           }
         },
         {
@@ -20,6 +38,24 @@
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step4_closer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShootingOnTheRight"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
           }
         },
         {
@@ -53,9 +89,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StartShooterMotors"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Blue_Right_step4_closer"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SetupAndStartShootingOnTheRight"
           }
         }
       ]
