@@ -68,11 +68,11 @@ public class Constants {
     
     public static final class HoodSubSystemSetpoints {
       public static final double kBase = 0;
-      public static final double k6ftSetpoint = 2.5;
-      public static final double kauto6ftSetpoint = 2.9; //2.9
-      public static final double k9ftSetpoint = 6.9; //5.2
+      public static final double k6ftSetpoint = 1.25; //2.5
+      public static final double k9ftSetpoint = 5.75; //6.9
       public static final double k13ftSetpoint = 8.58;
-      public static final double k15ftSetpoint = 8.53;
+      public static final double kauto13ftSetpoint = 8.38;
+      public static final double k15ftSetpoint = 3.5;//2.9
       public static double kVariableSetpoint = 7.5;
     }
   }

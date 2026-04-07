@@ -34,7 +34,7 @@ public class HoodSubsystem extends SubsystemBase {
   public enum HoodSetpoints {
     kBase,
     k6ft,
-    kauto6ft,
+    kauto13ft,
     k9ft,
     k13ft,
     k15ft,
@@ -108,8 +108,8 @@ public class HoodSubsystem extends SubsystemBase {
             case k6ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k6ftSetpoint;
               break;
-            case kauto6ft:
-              HoodCurrentTarget = HoodSubSystemSetpoints.kauto6ftSetpoint;
+            case kauto13ft:
+              HoodCurrentTarget = HoodSubSystemSetpoints.kauto13ftSetpoint;
               break;
             case k9ft:
               HoodCurrentTarget = HoodSubSystemSetpoints.k9ftSetpoint;

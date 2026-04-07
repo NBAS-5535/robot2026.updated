@@ -11,6 +11,24 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Blue_Right_step4_closer_2"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartFeederMotors"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "StartIntakeMotor"
