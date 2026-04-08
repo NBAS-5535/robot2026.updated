@@ -417,6 +417,7 @@ public class RobotContainer {
     }
 
     private void configureNamedCommands() {
+        NamedCommands.registerCommand("ReInitializeComboPose", new InstantCommand(() -> drivetrain.reInitializePoseForBRCombo()));
         NamedCommands.registerCommand("StartIntakeMotor", new InstantCommand(() -> m_intake.fastIntake()));
         NamedCommands.registerCommand("StopIntakeMotor", new InstantCommand(() -> m_intake.stopIntake()));
         NamedCommands.registerCommand("StartFeederMotors", new InstantCommand(() -> m_feeder.setPower("both", 0.8)));

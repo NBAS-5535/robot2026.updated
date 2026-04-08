@@ -22,6 +22,12 @@ public class Constants {
     public static double redStart_Middle_X = 13.04;
     public static double redStart_Middle_Y = 4.035;
 
+    // for the Right-side special combo scenario
+    public static double blueStart_Combo_Right_X = 2.95;
+    public static double blueStart_Combo_Right_Y = 0.95;
+    public static double redStart_Combo_Right_X = 13.59;
+    public static double redStart_Combo_Right_Y = 7.03;
+
     // Fuel Towers
     public static double blueTower_X = 4.62;
     public static double blueTower_Y = 4.035;

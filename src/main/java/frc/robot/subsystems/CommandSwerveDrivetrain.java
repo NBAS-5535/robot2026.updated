@@ -461,6 +461,31 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Initialize/PoseY", this.getState().Pose.getY());
     }
 
+    // call if the specialized combo scenario is used
+    public void reInitializePoseForBRCombo(){
+        int stationNumber = DriverStation.getLocation().getAsInt();
+        if ( DriverStation.getAlliance().get() == Alliance.Red ) {
+            if ( stationNumber == 3 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.redStart_Combo_Right_X, 
+                                                     FieldConstants.redStart_Combo_Right_Y, 
+                                                     Rotation2d.fromDegrees(60.));
+            }
+            SmartDashboard.putString("Initialize/Alliance","red");
+        } else if ( DriverStation.getAlliance().get() == Alliance.Blue ){  
+            if ( stationNumber == 3 ) {
+                this.m_initialPose = new Pose2d(FieldConstants.blueStart_Combo_Right_X, 
+                                                     FieldConstants.blueStart_Combo_Right_Y, 
+                                                     Rotation2d.fromDegrees(-60.));
+            }  
+            //this.m_initialPose = m_initialPose_Blue;
+            SmartDashboard.putString("Initialize/Alliance","blue");
+        }
+        SmartDashboard.putNumber("Initialize/Station",stationNumber); 
+        this.resetPose(m_initialPose);
+        SmartDashboard.putNumber("Initialize/PoseX", this.getState().Pose.getX());
+        SmartDashboard.putNumber("Initialize/PoseY", this.getState().Pose.getY());
+    }
+
     /* check if the desired Pose is reached */
     public Boolean isDesiredPoseReached(double distanceToGo){
         Pose2d currentPose = getCurrentPose(); //getState().Pose;
