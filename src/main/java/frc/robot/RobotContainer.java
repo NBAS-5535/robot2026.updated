@@ -24,33 +24,14 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.DynamicTurretSubsystem;
-import frc.robot.subsystems.DynamicTurretSubsystem.DynamicTurretSetpoints;
 import frc.robot.subsystems.HoodSubsystem.HoodSetpoints;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.HopperSubsystem.HopperSetpoints;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.FuelIntakeSubsystem;
 import frc.robot.subsystems.HoodSubsystem;
-import frc.robot.subsystems.RangeSensorSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.TurretSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Vision.LimelightHelpers;
-import frc.robot.commands.AlignCommand;
-import frc.robot.commands.AlignToClosestAprilTag;
-import frc.robot.commands.AutoAlignCommand;
-import frc.robot.commands.FindAndAlignCommand;
-import frc.robot.commands.FollowAprilTagCommand;
-import frc.robot.commands.NewTurretCommand;
-import frc.robot.commands.ResetPoseFromAprilTagCommand;
-import frc.robot.commands.TurretAlignCommand;
-import frc.robot.experimental.IntakeSubsystem;
-import frc.robot.experimental.LimelightSubsystem;
-import frc.robot.commands.RobotAlignCommand;
-import frc.robot.experimental.RobotAlignCommandTest;
-import frc.robot.experimental.RobotAlignCommandWithLimeLight;
-import frc.robot.experimental.TwoMotorShooterSubsystem;
 
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -74,7 +55,6 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     
     //private final LimelightSubsystem limelight = new LimelightSubsystem();
-    private final VisionSubsystem m_vision = new VisionSubsystem();
 
     /* IntakeSubsystem */
     //private final IntakeSubsystem m_intake = new IntakeSubsystem(0.0);
@@ -228,51 +208,7 @@ public class RobotContainer {
             copilot.povLeft().onTrue(new InstantCommand(() -> m_feeder.setPower("both", 0.0)));
         }
         
-        /* run turret motor in suck-in and push-out modes */
-         
-        boolean useTurretSubsystem = false;
-        if ( useTurretSubsystem ) {
-             //original TurretSubsustem
-            //joystick.a().onTrue(new NewTurretCommand(m_dynamicTurretSubsystem, drivetrain));
-            //joystick.a().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretRightCommand());
-            //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
-            
-
-            /* to determine encoder setting versus deg of rotation */
-            /*
-            joystick.a().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kPointAtTargetSetpoint));
-            joystick.b().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveLeftSetpoint));
-            //joystick.povUp().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kMoveRightSetpoint));
-            joystick.povRight().onTrue(m_dynamicTurretSubsystem.setSetpointCommand(DynamicTurretSetpoints.kBase));
-            joystick.x().whileTrue(new AutoAlignCommand(m_dynamicTurretSubsystem, drivetrain));
-            joystick.y().onTrue(new ResetPoseFromAprilTagCommand(drivetrain, m_dynamicTurretSubsystem));
-            */
-            joystick.povLeft().onTrue(
-                new InstantCommand(() -> drivetrain.setInitializePose()));
-
-                /* Experimental */
-            joystick.povDown().onTrue(
-                new AlignToClosestAprilTag(drivetrain)
-            );
-
-            joystick.povUp().onTrue(new InstantCommand(() -> drivetrain.updateVisionPose_MT_1and2()));
-            //joystick.b().whileTrue(m_dynamicTurretSubsystem.runDynamicTurretLeftCommand());
-        }
-            
-
-        /* get distance and move for that amount */
-        /*
-        boolean getRangeAndGoTest = false;
-        if (getRangeAndGoTest) {
-            joystick.y().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> drivetrain.setCurrentPose()),
-                drivetrain.sysIdDynamic(Direction.kForward)
-                    .until(() -> drivetrain.isDesiredPoseReached(m_sensorSubsystem.getDistance() - 1.))
-            ));
-        }
-        */
-
-        boolean comboControlsTesting = true;
+         boolean comboControlsTesting = true;
         if (comboControlsTesting) {
             // close shooting position
             copilot.a().onTrue(new SequentialCommandGroup(
@@ -304,113 +240,6 @@ public class RobotContainer {
                 new InstantCommand(() -> m_shooter.stopShooter())
             ));
 
-            // can we dare to add Limelight adjustment?
-            joystick.povUp().onTrue(
-                new AlignToClosestAprilTag(drivetrain)
-            );
-        }
-
-        /* align robot */
-        boolean alignTesting = false;
-        if (alignTesting) {
-            /* odd behavior when 3D tracking is ON!!!!!
-            int testTagId = 0;
-            joystick.x().onTrue(
-                new AlignCommand(drivetrain, m_vision, testTagId)
-            );
-            
-            joystick.back().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> AlignCommand.setTagId(1)),
-                new AlignCommand(drivetrain, m_vision, 1)
-            ));
-            */
-            joystick.povLeft().onTrue(
-                new InstantCommand(() -> drivetrain.setInitializePose()));
-            /* Experimental */
-            joystick.povUp().onTrue(
-                new AlignToClosestAprilTag(drivetrain)
-            );  
-            /*
-            joystick.povDown().onTrue(new SequentialCommandGroup(
-                new RobotAlignCommand(drivetrain, 10)
-            )); 
-
-            joystick.povRight().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> RobotAlignCommandWithLimeLight.setTagId(13)),
-                new RobotAlignCommandWithLimeLight(drivetrain, 13)
-            ));
-
-            joystick.povLeft().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> RobotAlignCommand.setTagId(9)),
-                new RobotAlignCommand(drivetrain, 9)
-            ));
-
-            // reset pipeline to generic and align to the closest AprilTag
-            joystick.x().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(0)),
-                new AlignCommand(drivetrain, m_vision, 0)
-            ));
-
-
-            // Face the April Tag while moving
-            joystick.back().whileTrue(
-                new FollowAprilTagCommand(drivetrain, m_vision)
-            ); 
-
-            // Align with a specific AprilTag: 12
-            joystick.y().onTrue(
-                new AlignCommand(drivetrain, m_vision, 13)
-            );
-    
-            // use a preset pipeline index = 5 
-            joystick.rightBumper().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
-                new AlignCommand(drivetrain, m_vision, 0)
-            )); 
-
-            //use a preset pipeline index = 3 
-            joystick.leftBumper().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
-                new AlignCommand(drivetrain, m_vision, 13)
-            ));
-             // use a preset pipeline index = 0 
-            joystick.start().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(0))
-            ));
-            /*
-            joystick.back().whileTrue(
-                drivetrain.applyRequest(() ->
-                    drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-LimelightHelpers.getTA("") * MaxAngularRate) // Drive counterclockwise with negative X (left)
-                )
-            );
-            */
-        }
-
-        /* align robot */
-        boolean findAndAlignTesting = false;
-        if (findAndAlignTesting) {
-            int testTagId = 0;
-            joystick.povRight().onTrue(
-                new FindAndAlignCommand(drivetrain, m_vision, testTagId)
-            );
-
-            joystick.povLeft().onTrue(
-                new FindAndAlignCommand(drivetrain, m_vision, 12)
-            );
-            
-            /* use a preset pipeline index = 5 */
-            joystick.povDown().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(5)),
-                new FindAndAlignCommand(drivetrain, m_vision, 1)
-            )); 
-
-            /* use a preset pipeline index = 3 */
-            joystick.povUp().onTrue(new SequentialCommandGroup(
-                new InstantCommand(() -> VisionSubsystem.setPipeline(3)),
-                new FindAndAlignCommand(drivetrain, m_vision, 12)
-            ));
         }
         
         drivetrain.registerTelemetry(logger::telemeterize);
